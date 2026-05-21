@@ -1,0 +1,354 @@
+[
+  {
+    "id": "amazing_stories",
+    "name": "Amazing Stories",
+    "type": "Science fiction magazine",
+    "start": 1926,
+    "end": null,
+    "wiki": "https://en.wikipedia.org/wiki/Amazing_Stories",
+    "publication_type": "Magazine",
+    "notes": "First dedicated SF magazine; after 1958 the title sometimes included Science Fiction along with or instead of Stories.",
+    "title_history": [
+      {
+        "title": "Amazing Stories",
+        "start_year": 1926,
+        "end_year": 1958
+      },
+      {
+        "title": "Amazing Science Fiction",
+        "start_year": 1958,
+        "end_year": 1958,
+        "notes": "Brief title form used in 1958."
+      },
+      {
+        "title": "Amazing Science Fiction Stories",
+        "start_year": 1958,
+        "end_year": 1960,
+        "notes": "Title form used from 1958 to 1960."
+      },
+      {
+        "title": "Amazing Stories",
+        "start_year": 1960,
+        "end_year": null,
+        "notes": "The title later continued with fluctuations, merges, revivals, and relaunches."
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "astounding",
+    "name": "Astounding Science Fiction / Analog",
+    "type": "Science fiction magazine",
+    "start": 1930,
+    "end": null,
+    "wiki": "https://en.wikipedia.org/wiki/Analog_Science_Fiction_and_Fact",
+    "notes": "Long-running SF magazine whose title shifted from Astounding to Analog; John W. Campbell Jr. edited it from 1937 to 1971.",
+    "publication_type": "Magazine",
+    "title_history": [
+      {
+        "title": "Astounding Stories of Super-Science",
+        "start_year": 1930,
+        "end_year": 1931,
+        "notes": "First issue January 1930; shortened from February 1931."
+      },
+      {
+        "title": "Astounding Stories",
+        "start_year": 1931,
+        "end_year": 1932,
+        "notes": "Used from February 1931 to November 1932."
+      },
+      {
+        "title": "Astounding Stories of Super-Science",
+        "start_year": 1933,
+        "end_year": 1933,
+        "notes": "Longer title briefly returned for the final Clayton issues in early 1933."
+      },
+      {
+        "title": "Astounding Stories",
+        "start_year": 1933,
+        "end_year": 1938,
+        "notes": "Street & Smith period before the Science-Fiction title change."
+      },
+      {
+        "title": "Astounding Science-Fiction",
+        "start_year": 1938,
+        "end_year": 1946,
+        "notes": "Title changed in March 1938."
+      },
+      {
+        "title": "Astounding Science Fiction",
+        "start_year": 1946,
+        "end_year": 1960,
+        "notes": "Hyphen dropped with the November 1946 issue."
+      },
+      {
+        "title": "Analog Science Fact & Fiction",
+        "start_year": 1960,
+        "end_year": 1965,
+        "notes": "Analog title phased in between February and October 1960."
+      },
+      {
+        "title": "Analog Science Fiction & Fact",
+        "start_year": 1965,
+        "end_year": null,
+        "notes": "Subtitle order changed in April 1965; later stylistic variations exist."
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "unknown_worlds",
+    "name": "Unknown / Unknown Worlds",
+    "type": "Fantasy pulp magazine",
+    "start": 1939,
+    "end": 1943,
+    "wiki": "https://en.wikipedia.org/wiki/Unknown_(magazine)",
+    "notes": "Fantasy companion to Astounding; edited by John W. Campbell Jr. throughout its run.",
+    "publication_type": "Magazine",
+    "title_history": [
+      {
+        "title": "Unknown",
+        "start_year": 1939,
+        "end_year": 1940,
+        "notes": "Launched March 1939."
+      },
+      {
+        "title": "Unknown Fantasy Fiction",
+        "start_year": 1940,
+        "end_year": 1941,
+        "notes": "Intermediate title/subtitle usage appears in issue listings."
+      },
+      {
+        "title": "Unknown Worlds",
+        "start_year": 1941,
+        "end_year": 1943,
+        "notes": "Title changed to Unknown Worlds; sources differ slightly on exact month because of cover/subtitle usage."
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "galaxy",
+    "name": "Galaxy Science Fiction",
+    "type": "Science fiction magazine",
+    "start": 1950,
+    "end": 1980,
+    "wiki": "https://en.wikipedia.org/wiki/Galaxy_Science_Fiction",
+    "publication_type": "Magazine",
+    "notes": "Absorbed If / Worlds of If beginning with the January 1975 issue.",
+    "title_history": [
+      {
+        "title": "Galaxy Science Fiction",
+        "start_year": 1950,
+        "end_year": 1980
+      }
+    ],
+    "related_publications": [
+      {
+        "relationship": "absorbed",
+        "publication_id": "if_mag",
+        "year": 1975
+      }
+    ]
+  },
+  {
+    "id": "if_mag",
+    "name": "If / Worlds of If",
+    "type": "Science fiction magazine",
+    "start": 1952,
+    "end": 1974,
+    "wiki": "https://en.wikipedia.org/wiki/If_(magazine)",
+    "publication_type": "Magazine",
+    "notes": "Merged into Galaxy beginning with the January 1975 issue; later revival attempts are not represented in this main span.",
+    "title_history": [
+      {
+        "title": "If: Worlds of Science Fiction",
+        "start_year": 1952,
+        "end_year": 1961,
+        "notes": "Originally titled If with Worlds of Science Fiction as subtitle."
+      },
+      {
+        "title": "Worlds of If Science Fiction",
+        "start_year": 1961,
+        "end_year": 1972,
+        "notes": "Cover logo changed in November 1961."
+      },
+      {
+        "title": "Worlds of If",
+        "start_year": 1972,
+        "end_year": 1974,
+        "notes": "UPD formally changed title in the January/February 1972 issue."
+      }
+    ],
+    "related_publications": [
+      {
+        "relationship": "merged_into",
+        "publication_id": "galaxy",
+        "year": 1975
+      }
+    ],
+    "merged_into": "galaxy"
+  },
+  {
+    "id": "weird_tales",
+    "name": "Weird Tales",
+    "type": "Weird fiction / fantasy / horror magazine",
+    "start": 1923,
+    "end": null,
+    "wiki": "https://en.wikipedia.org/wiki/Weird_Tales",
+    "publication_type": "Magazine",
+    "notes": "",
+    "title_history": [
+      {
+        "title": "Weird Tales",
+        "start_year": 1923,
+        "end_year": null
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "planet_stories",
+    "name": "Planet Stories",
+    "type": "Science fiction pulp magazine",
+    "start": 1939,
+    "end": 1955,
+    "wiki": "https://en.wikipedia.org/wiki/Planet_Stories",
+    "publication_type": "Magazine",
+    "notes": "",
+    "title_history": [
+      {
+        "title": "Planet Stories",
+        "start_year": 1939,
+        "end_year": 1955
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "fantastic_adventures",
+    "name": "Fantastic Adventures",
+    "type": "Fantasy / science fiction pulp magazine",
+    "start": 1939,
+    "end": 1953,
+    "wiki": "https://en.wikipedia.org/wiki/Fantastic_Adventures",
+    "publication_type": "Magazine",
+    "notes": "",
+    "title_history": [
+      {
+        "title": "Fantastic Adventures",
+        "start_year": 1939,
+        "end_year": 1953
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "fantastic_universe",
+    "name": "Fantastic Universe",
+    "type": "Science fiction magazine",
+    "start": 1953,
+    "end": 1960,
+    "wiki": "https://en.wikipedia.org/wiki/Fantastic_Universe",
+    "publication_type": "Magazine",
+    "notes": "",
+    "title_history": [
+      {
+        "title": "Fantastic Universe",
+        "start_year": 1953,
+        "end_year": 1960
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "argosy",
+    "name": "Argosy",
+    "type": "Pulp magazine",
+    "start": 1882,
+    "end": 1978,
+    "wiki": "https://en.wikipedia.org/wiki/Argosy_(magazine)",
+    "publication_type": "Magazine",
+    "notes": "",
+    "title_history": [
+      {
+        "title": "Argosy",
+        "start_year": 1882,
+        "end_year": 1978
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "adventure",
+    "name": "Adventure",
+    "type": "Pulp magazine",
+    "start": 1910,
+    "end": 1971,
+    "wiki": "https://en.wikipedia.org/wiki/Adventure_(magazine)",
+    "publication_type": "Magazine",
+    "notes": "",
+    "title_history": [
+      {
+        "title": "Adventure",
+        "start_year": 1910,
+        "end_year": 1971
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "blue_book",
+    "name": "Blue Book",
+    "type": "Pulp magazine",
+    "start": 1905,
+    "end": 1975,
+    "wiki": "https://en.wikipedia.org/wiki/Blue_Book_(magazine)",
+    "publication_type": "Magazine",
+    "notes": "",
+    "title_history": [
+      {
+        "title": "Blue Book",
+        "start_year": 1905,
+        "end_year": 1975
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "short_stories",
+    "name": "Short Stories",
+    "type": "Pulp magazine",
+    "start": 1890,
+    "end": 1959,
+    "wiki": "https://en.wikipedia.org/wiki/Short_Stories_(magazine)",
+    "publication_type": "Magazine",
+    "notes": "",
+    "title_history": [
+      {
+        "title": "Short Stories",
+        "start_year": 1890,
+        "end_year": 1959
+      }
+    ],
+    "related_publications": []
+  },
+  {
+    "id": "del_rey_books",
+    "name": "Del Rey Books",
+    "type": "Book-publishing imprint",
+    "start": 1977,
+    "end": null,
+    "wiki": "https://en.wikipedia.org/wiki/Del_Rey_Books",
+    "notes": "A book-publishing imprint, not a magazine; kept with publishing entities so editor/imprint spans can be visualized.",
+    "publication_type": "Book-publishing imprint",
+    "title_history": [
+      {
+        "title": "Del Rey Books",
+        "start_year": 1977,
+        "end_year": null
+      }
+    ],
+    "related_publications": []
+  }
+]

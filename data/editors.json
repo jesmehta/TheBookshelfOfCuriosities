@@ -1,0 +1,62 @@
+[
+  {
+    "person": "Hugo Gernsback",
+    "publication": "Amazing Stories",
+    "role": "Founder / publisher",
+    "start": 1926,
+    "end": 1929,
+    "publication_id": "amazing_stories"
+  },
+  {
+    "person": "John W. Campbell Jr.",
+    "publication": "Astounding Science Fiction / Analog",
+    "role": "Editor",
+    "start": 1937,
+    "end": 1971,
+    "notes": "Campbell took over editorial duties in late 1937 and edited Astounding/Analog until his death in 1971.",
+    "publication_id": "astounding"
+  },
+  {
+    "person": "John W. Campbell Jr.",
+    "publication": "Unknown / Unknown Worlds",
+    "role": "Editor",
+    "start": 1939,
+    "end": 1943,
+    "notes": "Campbell edited Unknown / Unknown Worlds throughout its publication run.",
+    "publication_id": "unknown_worlds"
+  },
+  {
+    "person": "Frederik Pohl",
+    "publication": "Galaxy Science Fiction",
+    "role": "Editor",
+    "start": 1959,
+    "end": 1969,
+    "publication_id": "galaxy"
+  },
+  {
+    "person": "Frederik Pohl",
+    "publication": "If / Worlds of If",
+    "role": "Editor",
+    "start": 1959,
+    "end": 1969,
+    "publication_id": "if_mag"
+  },
+  {
+    "person": "Lester del Rey",
+    "publication": "Del Rey Books",
+    "role": "Founding editor / fantasy editor",
+    "start": 1977,
+    "end": null,
+    "notes": "Del Rey Books is a book-publishing imprint, not a magazine.",
+    "publication_id": "del_rey_books"
+  },
+  {
+    "person": "Judy-Lynn del Rey",
+    "publication": "Del Rey Books",
+    "role": "Founding editor / imprint editor",
+    "start": 1977,
+    "end": null,
+    "notes": "Del Rey Books is a book-publishing imprint, not a magazine.",
+    "publication_id": "del_rey_books"
+  }
+]

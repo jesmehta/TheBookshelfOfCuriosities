@@ -14,7 +14,9 @@ const EMBEDDED_DATA = {
       "birth": 1797,
       "death": 1851,
       "wiki": "https://en.wikipedia.org/wiki/Mary_Shelley",
-      "goodreads": "https://www.goodreads.com/author/show/11139.Mary_Wollstonecraft_Shelley"
+      "goodreads": "https://www.goodreads.com/author/show/11139.Mary_Wollstonecraft_Shelley",
+      "birth_date": "1797-08-30",
+      "death_date": "1851-02-01"
     },
     {
       "id": "jules_verne",
@@ -248,7 +250,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/39058.Lost_Horizon",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "frankenstein",
@@ -264,7 +266,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/35031085-frankenstein",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "voyages_extraordinaires",
@@ -280,7 +282,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "journey_centre_earth",
@@ -296,7 +298,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "twenty_thousand_leagues",
@@ -312,7 +314,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "around_the_moon",
@@ -328,7 +330,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "the_lost_world",
@@ -344,7 +346,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "the_hobbit",
@@ -360,7 +362,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/5907.The_Hobbit",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "connecticut_yankee",
@@ -376,7 +378,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "war_worlds",
@@ -392,7 +394,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "war_worlds_radio",
@@ -408,7 +410,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "time_machine",
@@ -424,7 +426,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "island_dr_moreau",
@@ -440,7 +442,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "invisible_man",
@@ -456,7 +458,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "first_men_moon",
@@ -472,7 +474,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "war_that_will_end_war",
@@ -488,7 +490,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "men_like_gods",
@@ -504,7 +506,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "shape_things_to_come",
@@ -520,7 +522,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "things_to_come",
@@ -536,7 +538,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "pellucidar",
@@ -552,7 +554,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "tarzan",
@@ -568,7 +570,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "john_carter",
@@ -584,7 +586,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "amtor",
@@ -600,7 +602,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "caspak",
@@ -616,7 +618,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "princess_mars",
@@ -632,7 +634,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "pirates_venus",
@@ -648,7 +650,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "moon_maid",
@@ -664,7 +666,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "at_earths_core",
@@ -680,7 +682,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "son_of_tarzan",
@@ -696,7 +698,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "man_without_soul",
@@ -712,7 +714,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "meccania",
@@ -728,7 +730,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "we_zamyatin",
@@ -744,7 +746,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/76171.We",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "metropolis_novel",
@@ -760,7 +762,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "metropolis_film",
@@ -776,7 +778,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "brave_new_world",
@@ -792,7 +794,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/5129.Brave_New_World",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "when_world_tottered",
@@ -808,7 +810,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Fantastic Adventures",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "wind_between_worlds",
@@ -824,7 +826,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Galaxy Science Fiction",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "life_watch",
@@ -840,7 +842,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Fantastic Universe",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "mission_to_moon",
@@ -856,7 +858,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "police_your_planet",
@@ -872,7 +874,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "siege_perilous",
@@ -888,7 +890,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "nerves",
@@ -904,7 +906,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "day_of_giants",
@@ -920,7 +922,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "pstalemate",
@@ -936,7 +938,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "scheme_things",
@@ -952,7 +954,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "uncertainty",
@@ -968,7 +970,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Amazing Stories",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "and_now_you_dont",
@@ -984,7 +986,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Astounding Science Fiction",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "pebble_sky",
@@ -1000,7 +1002,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "tyrann",
@@ -1016,7 +1018,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "foundation",
@@ -1032,7 +1034,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/29579.Foundation",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "foundation_empire",
@@ -1048,7 +1050,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "second_foundation",
@@ -1064,7 +1066,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "foundation_edge",
@@ -1080,7 +1082,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "foundation_earth",
@@ -1096,7 +1098,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "prelude_foundation",
@@ -1112,7 +1114,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "end_of_eternity",
@@ -1128,7 +1130,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "nemesis",
@@ -1144,7 +1146,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "cosmic_knights",
@@ -1160,7 +1162,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "short_history_chemistry",
@@ -1176,7 +1178,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "new_guide_science",
@@ -1192,7 +1194,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "king_slayer",
@@ -1208,7 +1210,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "doomed_planet",
@@ -1224,7 +1226,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "battlefield_earth",
@@ -1240,7 +1242,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "mission_earth",
@@ -1256,7 +1258,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "invaders_plan",
@@ -1272,7 +1274,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "black_genesis",
@@ -1288,7 +1290,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "enemy_within",
@@ -1304,7 +1306,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "alien_affair",
@@ -1320,7 +1322,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "fortune_fear",
@@ -1336,7 +1338,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "death_quest",
@@ -1352,7 +1354,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "voyage_vengeance",
@@ -1368,7 +1370,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "disaster",
@@ -1384,7 +1386,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "villainy_victorious",
@@ -1400,7 +1402,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "time_quarry",
@@ -1416,7 +1418,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Galaxy Science Fiction",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "installment_plan",
@@ -1432,7 +1434,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Galaxy Magazine",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "city",
@@ -1448,7 +1450,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "cemetery_world",
@@ -1464,7 +1466,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "choice_of_gods",
@@ -1480,7 +1482,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "world_couldnt_be",
@@ -1496,7 +1498,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "design_for_life",
@@ -1512,7 +1514,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Astounding Science Fiction",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "viagens_interplanetarias",
@@ -1528,7 +1530,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "pusadian",
@@ -1544,7 +1546,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "ward_argonaut",
@@ -1560,7 +1562,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "tritonian_ring",
@@ -1576,7 +1578,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "carnelian_cube",
@@ -1592,7 +1594,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "lovecraft_bio",
@@ -1608,7 +1610,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "northwest_smith",
@@ -1624,7 +1626,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "scarlet_dream",
@@ -1640,7 +1642,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "there_shall_be_darkness",
@@ -1656,7 +1658,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "vintage_season",
@@ -1672,7 +1674,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "mask_circe",
@@ -1688,7 +1690,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "black_gods_kiss",
@@ -1704,7 +1706,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Weird Tales",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "thongor_wizard_lemuria",
@@ -1720,7 +1722,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "xothic_legend_cycle",
@@ -1736,7 +1738,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "lovecraft_look_behind",
@@ -1752,7 +1754,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "sandalwood_jade",
@@ -1768,7 +1770,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "galleon_dream",
@@ -1784,7 +1786,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "wizard_lemuria",
@@ -1800,7 +1802,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "conan_buccaneer",
@@ -1816,7 +1818,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "perfect_host",
@@ -1832,7 +1834,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Weird Tales",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "dreaming_jewels",
@@ -1848,7 +1850,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "baby_is_three",
@@ -1864,7 +1866,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "more_than_human",
@@ -1880,7 +1882,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "a_way_home",
@@ -1896,7 +1898,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "two_thousand_one_novel",
@@ -1912,7 +1914,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "two_thousand_one_film",
@@ -1928,7 +1930,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "exploration_space",
@@ -1944,7 +1946,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "seeker_sphinx",
@@ -1960,7 +1962,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "songs_distant_earth",
@@ -1976,7 +1978,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "rendezvous_rama",
@@ -1992,7 +1994,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "twenty_ten",
@@ -2008,7 +2010,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "childhoods_end",
@@ -2024,7 +2026,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "three_thousand_one",
@@ -2040,7 +2042,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "twenty_sixty_one",
@@ -2056,7 +2058,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "rama_ii",
@@ -2072,7 +2074,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "fountains_paradise",
@@ -2088,7 +2090,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "garden_rama",
@@ -2104,7 +2106,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "rama_revealed",
@@ -2120,7 +2122,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "city_and_stars",
@@ -2136,7 +2138,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "fall_moondust",
@@ -2152,7 +2154,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "imperial_earth",
@@ -2168,7 +2170,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "dolphin_island",
@@ -2184,7 +2186,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "ghost_grand_banks",
@@ -2200,7 +2202,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "sands_mars",
@@ -2216,7 +2218,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "glide_path",
@@ -2232,7 +2234,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "against_fall_night",
@@ -2248,7 +2250,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "earthlight",
@@ -2264,7 +2266,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "prelude_space",
@@ -2280,7 +2282,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "deep_range",
@@ -2296,7 +2298,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "reach_tomorrow",
@@ -2312,7 +2314,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "beyond_fall_night",
@@ -2328,7 +2330,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "cradle",
@@ -2344,7 +2346,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "trigger",
@@ -2360,7 +2362,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "light_other_days",
@@ -2376,7 +2378,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "last_theorem",
@@ -2392,7 +2394,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "hammer_god",
@@ -2408,7 +2410,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "richter_10",
@@ -2424,7 +2426,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "web_between_worlds",
@@ -2440,7 +2442,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "stranger_strange_land",
@@ -2456,7 +2458,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "starship_troopers",
@@ -2472,7 +2474,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "moon_harsh_mistress",
@@ -2488,7 +2490,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "friday",
@@ -2504,7 +2506,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "puppet_masters",
@@ -2520,7 +2522,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "podkayne_mars",
@@ -2536,7 +2538,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "beyond_horizon",
@@ -2552,7 +2554,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "cat_who_walks",
@@ -2568,7 +2570,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "ship_darkness",
@@ -2584,7 +2586,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "transfinite",
@@ -2600,7 +2602,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "slan",
@@ -2616,7 +2618,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "space_beagle",
@@ -2632,7 +2634,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "battle_forever",
@@ -2648,7 +2650,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "world_of_a",
@@ -2664,7 +2666,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "war_against_rull",
@@ -2680,7 +2682,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "darkness_diamondia",
@@ -2696,7 +2698,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "wolves_darkness",
@@ -2712,7 +2714,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "angel_hell",
@@ -2728,7 +2730,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "hocus_pocus_universe",
@@ -2744,7 +2746,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "terraforming_earth",
@@ -2760,7 +2762,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "jim_eden",
@@ -2776,7 +2778,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "starchild",
@@ -2792,7 +2794,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "cuckoo",
@@ -2808,7 +2810,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "reefs_space",
@@ -2824,7 +2826,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "rogue_star",
@@ -2840,7 +2842,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "elegy_dead_satellite",
@@ -2856,7 +2858,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "all_lives_led",
@@ -2872,7 +2874,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "gateway",
@@ -2888,7 +2890,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "years_city",
@@ -2904,7 +2906,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "jem",
@@ -2920,7 +2922,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "broken_sword",
@@ -2936,7 +2938,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "ensign_flandry",
@@ -2952,7 +2954,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "tau_zero",
@@ -2968,7 +2970,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "planet_no_return",
@@ -2984,7 +2986,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "captive_centaurianess",
@@ -3000,7 +3002,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "three_hearts",
@@ -3016,7 +3018,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "earth_book_stormgate_1",
@@ -3032,7 +3034,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "earth_book_stormgate_2",
@@ -3048,7 +3050,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "earth_book_stormgate_3",
@@ -3064,7 +3066,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "time_and_stars",
@@ -3080,7 +3082,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "time_patrolman",
@@ -3096,7 +3098,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "agent_terran_empire",
@@ -3112,7 +3114,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "satans_world",
@@ -3128,7 +3130,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "psychotechnic_league",
@@ -3144,7 +3146,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "there_will_be_time",
@@ -3160,7 +3162,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "world_without_stars",
@@ -3176,7 +3178,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "goodbye_atlantis",
@@ -3192,7 +3194,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "witch_demon_seas",
@@ -3208,7 +3210,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "ringworld",
@@ -3224,7 +3226,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "mote_gods_eye",
@@ -3240,7 +3242,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "lucifers_hammer",
@@ -3256,7 +3258,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "magic_goes_away",
@@ -3272,7 +3274,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "convergent_series",
@@ -3288,7 +3290,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "neutron_star",
@@ -3304,7 +3306,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "protector",
@@ -3320,7 +3322,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "draco_tavern",
@@ -3336,7 +3338,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "fallen_angels",
@@ -3352,7 +3354,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "Original reading list"
+      "list_source": "Reading list"
     },
     {
       "id": "asimov_robbie",
@@ -3368,7 +3370,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "First published as 'Strange Playfellow'.",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_reason",
@@ -3384,7 +3386,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_liar",
@@ -3400,7 +3402,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_runaround",
@@ -3416,7 +3418,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Introduces the Three Laws of Robotics.",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_catch_that_rabbit",
@@ -3432,7 +3434,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_escape",
@@ -3448,7 +3450,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_evidence",
@@ -3464,7 +3466,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_little_lost_robot",
@@ -3480,7 +3482,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_the_evitable_conflict",
@@ -3496,7 +3498,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_i_robot",
@@ -3512,7 +3514,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/41804.I_Robot",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_the_rest_of_the_robots",
@@ -3528,7 +3530,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_mirror_image",
@@ -3544,7 +3546,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "Elijah Baley / R. Daneel Olivaw story.",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_the_bicentennial_man",
@@ -3560,7 +3562,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_the_complete_robot",
@@ -3576,7 +3578,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/45003.The_Complete_Robot",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_robot_dreams",
@@ -3592,7 +3594,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_robot_visions",
@@ -3608,7 +3610,7 @@ const EMBEDDED_DATA = {
       "goodreads": "",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_the_caves_of_steel",
@@ -3624,7 +3626,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/41811.The_Caves_of_Steel",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_the_naked_sun",
@@ -3640,7 +3642,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/30016.The_Naked_Sun",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_the_robots_of_dawn",
@@ -3656,7 +3658,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/41810.The_Robots_of_Dawn",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_robots_and_empire",
@@ -3672,7 +3674,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/41813.Robots_and_Empire",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_the_currents_of_space",
@@ -3688,7 +3690,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/76680.The_Currents_of_Space",
       "first_publication_context": "",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     },
     {
       "id": "asimov_forward_the_foundation",
@@ -3704,7 +3706,7 @@ const EMBEDDED_DATA = {
       "goodreads": "https://www.goodreads.com/book/show/76679.Forward_the_Foundation",
       "first_publication_context": "Posthumously published.",
       "notes": "",
-      "list_source": "User addition"
+      "list_source": "Additional Favourites"
     }
   ],
   "magazines": [
@@ -3714,7 +3716,35 @@ const EMBEDDED_DATA = {
       "type": "Science fiction magazine",
       "start": 1926,
       "end": null,
-      "wiki": "https://en.wikipedia.org/wiki/Amazing_Stories"
+      "wiki": "https://en.wikipedia.org/wiki/Amazing_Stories",
+      "publication_type": "Magazine",
+      "notes": "First dedicated SF magazine; after 1958 the title sometimes included Science Fiction along with or instead of Stories.",
+      "title_history": [
+        {
+          "title": "Amazing Stories",
+          "start_year": 1926,
+          "end_year": 1958
+        },
+        {
+          "title": "Amazing Science Fiction",
+          "start_year": 1958,
+          "end_year": 1958,
+          "notes": "Brief title form used in 1958."
+        },
+        {
+          "title": "Amazing Science Fiction Stories",
+          "start_year": 1958,
+          "end_year": 1960,
+          "notes": "Title form used from 1958 to 1960."
+        },
+        {
+          "title": "Amazing Stories",
+          "start_year": 1960,
+          "end_year": null,
+          "notes": "The title later continued with fluctuations, merges, revivals, and relaunches."
+        }
+      ],
+      "related_publications": []
     },
     {
       "id": "astounding",
@@ -3722,7 +3752,60 @@ const EMBEDDED_DATA = {
       "type": "Science fiction magazine",
       "start": 1930,
       "end": null,
-      "wiki": "https://en.wikipedia.org/wiki/Analog_Science_Fiction_and_Fact"
+      "wiki": "https://en.wikipedia.org/wiki/Analog_Science_Fiction_and_Fact",
+      "notes": "Long-running SF magazine whose title shifted from Astounding to Analog; John W. Campbell Jr. edited it from 1937 to 1971.",
+      "publication_type": "Magazine",
+      "title_history": [
+        {
+          "title": "Astounding Stories of Super-Science",
+          "start_year": 1930,
+          "end_year": 1931,
+          "notes": "First issue January 1930; shortened from February 1931."
+        },
+        {
+          "title": "Astounding Stories",
+          "start_year": 1931,
+          "end_year": 1932,
+          "notes": "Used from February 1931 to November 1932."
+        },
+        {
+          "title": "Astounding Stories of Super-Science",
+          "start_year": 1933,
+          "end_year": 1933,
+          "notes": "Longer title briefly returned for the final Clayton issues in early 1933."
+        },
+        {
+          "title": "Astounding Stories",
+          "start_year": 1933,
+          "end_year": 1938,
+          "notes": "Street & Smith period before the Science-Fiction title change."
+        },
+        {
+          "title": "Astounding Science-Fiction",
+          "start_year": 1938,
+          "end_year": 1946,
+          "notes": "Title changed in March 1938."
+        },
+        {
+          "title": "Astounding Science Fiction",
+          "start_year": 1946,
+          "end_year": 1960,
+          "notes": "Hyphen dropped with the November 1946 issue."
+        },
+        {
+          "title": "Analog Science Fact & Fiction",
+          "start_year": 1960,
+          "end_year": 1965,
+          "notes": "Analog title phased in between February and October 1960."
+        },
+        {
+          "title": "Analog Science Fiction & Fact",
+          "start_year": 1965,
+          "end_year": null,
+          "notes": "Subtitle order changed in April 1965; later stylistic variations exist."
+        }
+      ],
+      "related_publications": []
     },
     {
       "id": "unknown_worlds",
@@ -3730,7 +3813,30 @@ const EMBEDDED_DATA = {
       "type": "Fantasy pulp magazine",
       "start": 1939,
       "end": 1943,
-      "wiki": "https://en.wikipedia.org/wiki/Unknown_(magazine)"
+      "wiki": "https://en.wikipedia.org/wiki/Unknown_(magazine)",
+      "notes": "Fantasy companion to Astounding; edited by John W. Campbell Jr. throughout its run.",
+      "publication_type": "Magazine",
+      "title_history": [
+        {
+          "title": "Unknown",
+          "start_year": 1939,
+          "end_year": 1940,
+          "notes": "Launched March 1939."
+        },
+        {
+          "title": "Unknown Fantasy Fiction",
+          "start_year": 1940,
+          "end_year": 1941,
+          "notes": "Intermediate title/subtitle usage appears in issue listings."
+        },
+        {
+          "title": "Unknown Worlds",
+          "start_year": 1941,
+          "end_year": 1943,
+          "notes": "Title changed to Unknown Worlds; sources differ slightly on exact month because of cover/subtitle usage."
+        }
+      ],
+      "related_publications": []
     },
     {
       "id": "galaxy",
@@ -3738,15 +3844,61 @@ const EMBEDDED_DATA = {
       "type": "Science fiction magazine",
       "start": 1950,
       "end": 1980,
-      "wiki": "https://en.wikipedia.org/wiki/Galaxy_Science_Fiction"
+      "wiki": "https://en.wikipedia.org/wiki/Galaxy_Science_Fiction",
+      "publication_type": "Magazine",
+      "notes": "Absorbed If / Worlds of If beginning with the January 1975 issue.",
+      "title_history": [
+        {
+          "title": "Galaxy Science Fiction",
+          "start_year": 1950,
+          "end_year": 1980
+        }
+      ],
+      "related_publications": [
+        {
+          "relationship": "absorbed",
+          "publication_id": "if_mag",
+          "year": 1975
+        }
+      ]
     },
     {
       "id": "if_mag",
-      "name": "If / If: Worlds of Science Fiction",
+      "name": "If / Worlds of If",
       "type": "Science fiction magazine",
       "start": 1952,
       "end": 1974,
-      "wiki": "https://en.wikipedia.org/wiki/If_(magazine)"
+      "wiki": "https://en.wikipedia.org/wiki/If_(magazine)",
+      "publication_type": "Magazine",
+      "notes": "Merged into Galaxy beginning with the January 1975 issue; later revival attempts are not represented in this main span.",
+      "title_history": [
+        {
+          "title": "If: Worlds of Science Fiction",
+          "start_year": 1952,
+          "end_year": 1961,
+          "notes": "Originally titled If with Worlds of Science Fiction as subtitle."
+        },
+        {
+          "title": "Worlds of If Science Fiction",
+          "start_year": 1961,
+          "end_year": 1972,
+          "notes": "Cover logo changed in November 1961."
+        },
+        {
+          "title": "Worlds of If",
+          "start_year": 1972,
+          "end_year": 1974,
+          "notes": "UPD formally changed title in the January/February 1972 issue."
+        }
+      ],
+      "related_publications": [
+        {
+          "relationship": "merged_into",
+          "publication_id": "galaxy",
+          "year": 1975
+        }
+      ],
+      "merged_into": "galaxy"
     },
     {
       "id": "weird_tales",
@@ -3754,7 +3906,17 @@ const EMBEDDED_DATA = {
       "type": "Weird fiction / fantasy / horror magazine",
       "start": 1923,
       "end": null,
-      "wiki": "https://en.wikipedia.org/wiki/Weird_Tales"
+      "wiki": "https://en.wikipedia.org/wiki/Weird_Tales",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Weird Tales",
+          "start_year": 1923,
+          "end_year": null
+        }
+      ],
+      "related_publications": []
     },
     {
       "id": "planet_stories",
@@ -3762,7 +3924,17 @@ const EMBEDDED_DATA = {
       "type": "Science fiction pulp magazine",
       "start": 1939,
       "end": 1955,
-      "wiki": "https://en.wikipedia.org/wiki/Planet_Stories"
+      "wiki": "https://en.wikipedia.org/wiki/Planet_Stories",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Planet Stories",
+          "start_year": 1939,
+          "end_year": 1955
+        }
+      ],
+      "related_publications": []
     },
     {
       "id": "fantastic_adventures",
@@ -3770,7 +3942,17 @@ const EMBEDDED_DATA = {
       "type": "Fantasy / science fiction pulp magazine",
       "start": 1939,
       "end": 1953,
-      "wiki": "https://en.wikipedia.org/wiki/Fantastic_Adventures"
+      "wiki": "https://en.wikipedia.org/wiki/Fantastic_Adventures",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Fantastic Adventures",
+          "start_year": 1939,
+          "end_year": 1953
+        }
+      ],
+      "related_publications": []
     },
     {
       "id": "fantastic_universe",
@@ -3778,7 +3960,17 @@ const EMBEDDED_DATA = {
       "type": "Science fiction magazine",
       "start": 1953,
       "end": 1960,
-      "wiki": "https://en.wikipedia.org/wiki/Fantastic_Universe"
+      "wiki": "https://en.wikipedia.org/wiki/Fantastic_Universe",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Fantastic Universe",
+          "start_year": 1953,
+          "end_year": 1960
+        }
+      ],
+      "related_publications": []
     },
     {
       "id": "argosy",
@@ -3786,7 +3978,17 @@ const EMBEDDED_DATA = {
       "type": "Pulp magazine",
       "start": 1882,
       "end": 1978,
-      "wiki": "https://en.wikipedia.org/wiki/Argosy_(magazine)"
+      "wiki": "https://en.wikipedia.org/wiki/Argosy_(magazine)",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Argosy",
+          "start_year": 1882,
+          "end_year": 1978
+        }
+      ],
+      "related_publications": []
     },
     {
       "id": "adventure",
@@ -3794,7 +3996,17 @@ const EMBEDDED_DATA = {
       "type": "Pulp magazine",
       "start": 1910,
       "end": 1971,
-      "wiki": "https://en.wikipedia.org/wiki/Adventure_(magazine)"
+      "wiki": "https://en.wikipedia.org/wiki/Adventure_(magazine)",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Adventure",
+          "start_year": 1910,
+          "end_year": 1971
+        }
+      ],
+      "related_publications": []
     },
     {
       "id": "blue_book",
@@ -3802,7 +4014,17 @@ const EMBEDDED_DATA = {
       "type": "Pulp magazine",
       "start": 1905,
       "end": 1975,
-      "wiki": "https://en.wikipedia.org/wiki/Blue_Book_(magazine)"
+      "wiki": "https://en.wikipedia.org/wiki/Blue_Book_(magazine)",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Blue Book",
+          "start_year": 1905,
+          "end_year": 1975
+        }
+      ],
+      "related_publications": []
     },
     {
       "id": "short_stories",
@@ -3810,7 +4032,35 @@ const EMBEDDED_DATA = {
       "type": "Pulp magazine",
       "start": 1890,
       "end": 1959,
-      "wiki": "https://en.wikipedia.org/wiki/Short_Stories_(magazine)"
+      "wiki": "https://en.wikipedia.org/wiki/Short_Stories_(magazine)",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Short Stories",
+          "start_year": 1890,
+          "end_year": 1959
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "del_rey_books",
+      "name": "Del Rey Books",
+      "type": "Book-publishing imprint",
+      "start": 1977,
+      "end": null,
+      "wiki": "https://en.wikipedia.org/wiki/Del_Rey_Books",
+      "notes": "A book-publishing imprint, not a magazine; kept with publishing entities so editor/imprint spans can be visualized.",
+      "publication_type": "Book-publishing imprint",
+      "title_history": [
+        {
+          "title": "Del Rey Books",
+          "start_year": 1977,
+          "end_year": null
+        }
+      ],
+      "related_publications": []
     }
   ],
   "editors": [
@@ -3819,49 +4069,414 @@ const EMBEDDED_DATA = {
       "publication": "Amazing Stories",
       "role": "Founder / publisher",
       "start": 1926,
-      "end": 1929
+      "end": 1929,
+      "publication_id": "amazing_stories"
     },
     {
       "person": "John W. Campbell Jr.",
-      "publication": "Astounding Science Fiction",
+      "publication": "Astounding Science Fiction / Analog",
       "role": "Editor",
       "start": 1937,
-      "end": 1971
+      "end": 1971,
+      "notes": "Campbell took over editorial duties in late 1937 and edited Astounding/Analog until his death in 1971.",
+      "publication_id": "astounding"
     },
     {
       "person": "John W. Campbell Jr.",
       "publication": "Unknown / Unknown Worlds",
       "role": "Editor",
       "start": 1939,
-      "end": 1943
+      "end": 1943,
+      "notes": "Campbell edited Unknown / Unknown Worlds throughout its publication run.",
+      "publication_id": "unknown_worlds"
     },
     {
       "person": "Frederik Pohl",
       "publication": "Galaxy Science Fiction",
       "role": "Editor",
       "start": 1959,
-      "end": 1969
+      "end": 1969,
+      "publication_id": "galaxy"
     },
     {
       "person": "Frederik Pohl",
-      "publication": "If / If: Worlds of Science Fiction",
+      "publication": "If / Worlds of If",
       "role": "Editor",
       "start": 1959,
-      "end": 1969
+      "end": 1969,
+      "publication_id": "if_mag"
     },
     {
       "person": "Lester del Rey",
       "publication": "Del Rey Books",
-      "role": "Fantasy editor",
+      "role": "Founding editor / fantasy editor",
       "start": 1977,
-      "end": null
+      "end": null,
+      "notes": "Del Rey Books is a book-publishing imprint, not a magazine.",
+      "publication_id": "del_rey_books"
     },
     {
       "person": "Judy-Lynn del Rey",
       "publication": "Del Rey Books",
-      "role": "Editorial / publishing figure",
+      "role": "Founding editor / imprint editor",
       "start": 1977,
-      "end": null
+      "end": null,
+      "notes": "Del Rey Books is a book-publishing imprint, not a magazine.",
+      "publication_id": "del_rey_books"
+    }
+  ],
+  "publications": [
+    {
+      "id": "amazing_stories",
+      "name": "Amazing Stories",
+      "type": "Science fiction magazine",
+      "start": 1926,
+      "end": null,
+      "wiki": "https://en.wikipedia.org/wiki/Amazing_Stories",
+      "publication_type": "Magazine",
+      "notes": "First dedicated SF magazine; after 1958 the title sometimes included Science Fiction along with or instead of Stories.",
+      "title_history": [
+        {
+          "title": "Amazing Stories",
+          "start_year": 1926,
+          "end_year": 1958
+        },
+        {
+          "title": "Amazing Science Fiction",
+          "start_year": 1958,
+          "end_year": 1958,
+          "notes": "Brief title form used in 1958."
+        },
+        {
+          "title": "Amazing Science Fiction Stories",
+          "start_year": 1958,
+          "end_year": 1960,
+          "notes": "Title form used from 1958 to 1960."
+        },
+        {
+          "title": "Amazing Stories",
+          "start_year": 1960,
+          "end_year": null,
+          "notes": "The title later continued with fluctuations, merges, revivals, and relaunches."
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "astounding",
+      "name": "Astounding Science Fiction / Analog",
+      "type": "Science fiction magazine",
+      "start": 1930,
+      "end": null,
+      "wiki": "https://en.wikipedia.org/wiki/Analog_Science_Fiction_and_Fact",
+      "notes": "Long-running SF magazine whose title shifted from Astounding to Analog; John W. Campbell Jr. edited it from 1937 to 1971.",
+      "publication_type": "Magazine",
+      "title_history": [
+        {
+          "title": "Astounding Stories of Super-Science",
+          "start_year": 1930,
+          "end_year": 1931,
+          "notes": "First issue January 1930; shortened from February 1931."
+        },
+        {
+          "title": "Astounding Stories",
+          "start_year": 1931,
+          "end_year": 1932,
+          "notes": "Used from February 1931 to November 1932."
+        },
+        {
+          "title": "Astounding Stories of Super-Science",
+          "start_year": 1933,
+          "end_year": 1933,
+          "notes": "Longer title briefly returned for the final Clayton issues in early 1933."
+        },
+        {
+          "title": "Astounding Stories",
+          "start_year": 1933,
+          "end_year": 1938,
+          "notes": "Street & Smith period before the Science-Fiction title change."
+        },
+        {
+          "title": "Astounding Science-Fiction",
+          "start_year": 1938,
+          "end_year": 1946,
+          "notes": "Title changed in March 1938."
+        },
+        {
+          "title": "Astounding Science Fiction",
+          "start_year": 1946,
+          "end_year": 1960,
+          "notes": "Hyphen dropped with the November 1946 issue."
+        },
+        {
+          "title": "Analog Science Fact & Fiction",
+          "start_year": 1960,
+          "end_year": 1965,
+          "notes": "Analog title phased in between February and October 1960."
+        },
+        {
+          "title": "Analog Science Fiction & Fact",
+          "start_year": 1965,
+          "end_year": null,
+          "notes": "Subtitle order changed in April 1965; later stylistic variations exist."
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "unknown_worlds",
+      "name": "Unknown / Unknown Worlds",
+      "type": "Fantasy pulp magazine",
+      "start": 1939,
+      "end": 1943,
+      "wiki": "https://en.wikipedia.org/wiki/Unknown_(magazine)",
+      "notes": "Fantasy companion to Astounding; edited by John W. Campbell Jr. throughout its run.",
+      "publication_type": "Magazine",
+      "title_history": [
+        {
+          "title": "Unknown",
+          "start_year": 1939,
+          "end_year": 1940,
+          "notes": "Launched March 1939."
+        },
+        {
+          "title": "Unknown Fantasy Fiction",
+          "start_year": 1940,
+          "end_year": 1941,
+          "notes": "Intermediate title/subtitle usage appears in issue listings."
+        },
+        {
+          "title": "Unknown Worlds",
+          "start_year": 1941,
+          "end_year": 1943,
+          "notes": "Title changed to Unknown Worlds; sources differ slightly on exact month because of cover/subtitle usage."
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "galaxy",
+      "name": "Galaxy Science Fiction",
+      "type": "Science fiction magazine",
+      "start": 1950,
+      "end": 1980,
+      "wiki": "https://en.wikipedia.org/wiki/Galaxy_Science_Fiction",
+      "publication_type": "Magazine",
+      "notes": "Absorbed If / Worlds of If beginning with the January 1975 issue.",
+      "title_history": [
+        {
+          "title": "Galaxy Science Fiction",
+          "start_year": 1950,
+          "end_year": 1980
+        }
+      ],
+      "related_publications": [
+        {
+          "relationship": "absorbed",
+          "publication_id": "if_mag",
+          "year": 1975
+        }
+      ]
+    },
+    {
+      "id": "if_mag",
+      "name": "If / Worlds of If",
+      "type": "Science fiction magazine",
+      "start": 1952,
+      "end": 1974,
+      "wiki": "https://en.wikipedia.org/wiki/If_(magazine)",
+      "publication_type": "Magazine",
+      "notes": "Merged into Galaxy beginning with the January 1975 issue; later revival attempts are not represented in this main span.",
+      "title_history": [
+        {
+          "title": "If: Worlds of Science Fiction",
+          "start_year": 1952,
+          "end_year": 1961,
+          "notes": "Originally titled If with Worlds of Science Fiction as subtitle."
+        },
+        {
+          "title": "Worlds of If Science Fiction",
+          "start_year": 1961,
+          "end_year": 1972,
+          "notes": "Cover logo changed in November 1961."
+        },
+        {
+          "title": "Worlds of If",
+          "start_year": 1972,
+          "end_year": 1974,
+          "notes": "UPD formally changed title in the January/February 1972 issue."
+        }
+      ],
+      "related_publications": [
+        {
+          "relationship": "merged_into",
+          "publication_id": "galaxy",
+          "year": 1975
+        }
+      ],
+      "merged_into": "galaxy"
+    },
+    {
+      "id": "weird_tales",
+      "name": "Weird Tales",
+      "type": "Weird fiction / fantasy / horror magazine",
+      "start": 1923,
+      "end": null,
+      "wiki": "https://en.wikipedia.org/wiki/Weird_Tales",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Weird Tales",
+          "start_year": 1923,
+          "end_year": null
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "planet_stories",
+      "name": "Planet Stories",
+      "type": "Science fiction pulp magazine",
+      "start": 1939,
+      "end": 1955,
+      "wiki": "https://en.wikipedia.org/wiki/Planet_Stories",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Planet Stories",
+          "start_year": 1939,
+          "end_year": 1955
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "fantastic_adventures",
+      "name": "Fantastic Adventures",
+      "type": "Fantasy / science fiction pulp magazine",
+      "start": 1939,
+      "end": 1953,
+      "wiki": "https://en.wikipedia.org/wiki/Fantastic_Adventures",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Fantastic Adventures",
+          "start_year": 1939,
+          "end_year": 1953
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "fantastic_universe",
+      "name": "Fantastic Universe",
+      "type": "Science fiction magazine",
+      "start": 1953,
+      "end": 1960,
+      "wiki": "https://en.wikipedia.org/wiki/Fantastic_Universe",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Fantastic Universe",
+          "start_year": 1953,
+          "end_year": 1960
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "argosy",
+      "name": "Argosy",
+      "type": "Pulp magazine",
+      "start": 1882,
+      "end": 1978,
+      "wiki": "https://en.wikipedia.org/wiki/Argosy_(magazine)",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Argosy",
+          "start_year": 1882,
+          "end_year": 1978
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "adventure",
+      "name": "Adventure",
+      "type": "Pulp magazine",
+      "start": 1910,
+      "end": 1971,
+      "wiki": "https://en.wikipedia.org/wiki/Adventure_(magazine)",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Adventure",
+          "start_year": 1910,
+          "end_year": 1971
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "blue_book",
+      "name": "Blue Book",
+      "type": "Pulp magazine",
+      "start": 1905,
+      "end": 1975,
+      "wiki": "https://en.wikipedia.org/wiki/Blue_Book_(magazine)",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Blue Book",
+          "start_year": 1905,
+          "end_year": 1975
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "short_stories",
+      "name": "Short Stories",
+      "type": "Pulp magazine",
+      "start": 1890,
+      "end": 1959,
+      "wiki": "https://en.wikipedia.org/wiki/Short_Stories_(magazine)",
+      "publication_type": "Magazine",
+      "notes": "",
+      "title_history": [
+        {
+          "title": "Short Stories",
+          "start_year": 1890,
+          "end_year": 1959
+        }
+      ],
+      "related_publications": []
+    },
+    {
+      "id": "del_rey_books",
+      "name": "Del Rey Books",
+      "type": "Book-publishing imprint",
+      "start": 1977,
+      "end": null,
+      "wiki": "https://en.wikipedia.org/wiki/Del_Rey_Books",
+      "notes": "A book-publishing imprint, not a magazine; kept with publishing entities so editor/imprint spans can be visualized.",
+      "publication_type": "Book-publishing imprint",
+      "title_history": [
+        {
+          "title": "Del Rey Books",
+          "start_year": 1977,
+          "end_year": null
+        }
+      ],
+      "related_publications": []
     }
   ]
 };
