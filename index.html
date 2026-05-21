@@ -4,12 +4,13 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Science Fiction Reading Timeline</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 </head>
 <body>
 <header class="hero">
   <p class="eyebrow">Reading list + historical timeline</p>
   <h1>Science Fiction Reading Timeline</h1>
-  <p class="intro">A navigable map of science-fiction authors, works, magazines, adaptations, and publication histories across time.</p>
+  <p class="intro">A navigable map of science-fiction authors, works, publications, adaptations, and publishing histories across time.</p>
 </header>
 <main>
   <section class="controls card">
@@ -18,6 +19,7 @@
     <label>Timeline detail<select id="levelFilter"><option value="3">All listed works</option><option value="2">Major + important</option><option value="1">Major only</option></select></label>
     <label>From<input id="startYear" type="number" value="1800"></label>
     <label>To<input id="endYear" type="number" value="2020"></label>
+    <label>Theme<select id="themeSelect"><option value="archive" selected>Archive</option><option value="pulp">Pulp</option><option value="space">Space chart</option><option value="archivePlus">Archive + accents</option></select></label>
     <button id="resetBtn">Reset</button>
   </section>
 
@@ -25,7 +27,7 @@
     <button class="tab active" data-tab="lifelines">Author timeline</button>
     <button class="tab" data-tab="global">Global timeline</button>
     <button class="tab" data-tab="reading">Reading list</button>
-    <button class="tab" data-tab="magazines">Magazines & editors</button>
+    <button class="tab" data-tab="magazines">Publications & editors</button>
     <button class="tab" data-tab="about">About</button>
   </nav>
 
@@ -37,8 +39,40 @@
   </section>
 
   <section id="global" class="panel">
-    <h2>Global timeline</h2>
-    <div id="globalLegend" class="legend card"><span><b class="swatch type-novel"></b> Novel / novel subtype</span><span><b class="swatch type-short"></b> Short fiction / novella</span><span><b class="swatch type-collection"></b> Collection / anthology / poetry</span><span><b class="swatch type-nonfiction"></b> Nonfiction</span><span><b class="swatch type-media"></b> Film / radio / media</span><span><b class="swatch type-person birth"></b> Author birth</span><span><b class="swatch type-person death"></b> Author death</span><span><b class="swatch type-mag"></b> Magazine run</span><span><b class="swatch type-editor"></b> Editor tenure</span></div><div id="globalTimeline" class="viz card"></div>
+    <div class="section-head split-head">
+      <div>
+        <h2>Global timeline</h2>
+        <p class="hint">A hybrid view: horizontal bands for long-running entities and a vertical event stream for the historical sequence.</p>
+      </div>
+      <div id="globalLegend" class="legend card stacked-legend"><span><b class="swatch type-novel"></b> Works</span><span><b class="swatch type-person birth"></b> Author birth</span><span><b class="swatch type-person death"></b> Author death</span><span><b class="swatch type-mag"></b> Publication run</span><span><b class="swatch type-editor"></b> Editor tenure / start-exit</span></div>
+    </div>
+
+    <section class="global-controls card">
+      <div class="control-group">
+        <strong>Works</strong>
+        <label><input type="checkbox" class="global-event-filter" value="works" checked> Works / books</label>
+        <label><input type="checkbox" class="global-event-filter" value="media" checked> Films / radio / media</label>
+      </div>
+      <div class="control-group">
+        <strong>People</strong>
+        <label><input type="checkbox" class="global-event-filter" value="birth" checked> Author births</label>
+        <label><input type="checkbox" class="global-event-filter" value="death" checked> Author deaths</label>
+      </div>
+      <div class="control-group">
+        <strong>Publishing</strong>
+        <label><input type="checkbox" class="global-event-filter" value="magazines" checked> Publication lifetimes</label>
+        <label><input type="checkbox" class="global-event-filter" value="editor-tenures" checked> Editor tenures</label>
+        <label><input type="checkbox" class="global-event-filter" value="editor-events" checked> Editor start / exit events</label>
+      </div>
+      <div class="control-group compact-controls">
+        <label>Scale / spacing <input id="globalScale" type="range" min="4" max="18" value="9"></label>
+        <label>Label density <input id="globalLabelDensity" type="range" min="1" max="3" value="2"></label>
+        <div class="button-row"><button type="button" id="globalAll">All</button><button type="button" id="globalNone">Clear</button></div>
+      </div>
+    </section>
+
+    <div id="globalTimeline" class="viz card global-viz"></div>
+    <div id="globalEventStream" class="card global-stream"></div>
   </section>
 
   <section id="reading" class="panel">
@@ -47,8 +81,8 @@
   </section>
 
   <section id="magazines" class="panel">
-    <h2>Magazines & editors</h2>
-    <div class="card tablewrap"><table id="magTable"><thead><tr><th>Publication</th><th>Type</th><th>Years</th><th>Person</th><th>Role</th><th>Tenure</th><th>Link</th></tr></thead><tbody></tbody></table></div>
+    <h2>Publications & editors</h2>
+    <div class="card tablewrap"><table id="magTable"><thead><tr><th>Publication / title history</th><th>Type</th><th>Years</th><th>Person</th><th>Role</th><th>Tenure</th><th>Link</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="about" class="panel">
