@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Science Fiction Reading Timeline</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hero">
+  <p class="eyebrow">Reading list + historical timeline</p>
+  <h1>Science Fiction Reading Timeline</h1>
+  <p class="intro">A navigable map of science-fiction authors, works, magazines, adaptations, and publication histories across time.</p>
+</header>
+<main>
+  <section class="controls card">
+    <label>Search<input id="search" type="search" placeholder="Author, title, collaborator…"></label>
+    <label>Type<select id="typeFilter"><option value="">All</option></select></label>
+    <label>Timeline detail<select id="levelFilter"><option value="3">All listed works</option><option value="2">Major + important</option><option value="1">Major only</option></select></label>
+    <label>From<input id="startYear" type="number" value="1800"></label>
+    <label>To<input id="endYear" type="number" value="2020"></label>
+    <button id="resetBtn">Reset</button>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="lifelines">Author timeline</button>
+    <button class="tab" data-tab="global">Global timeline</button>
+    <button class="tab" data-tab="reading">Reading list</button>
+    <button class="tab" data-tab="magazines">Magazines & editors</button>
+    <button class="tab" data-tab="about">About</button>
+  </nav>
+
+  <section id="lifelines" class="panel active">
+    <h2>Author timeline</h2>
+    <p class="hint">Click an author name to open an all-in-list bibliography timeline below the selected author row.</p>
+    <div class="legend card"><span><b class="swatch type-novel"></b> Novel / novel subtype</span><span><b class="swatch type-short"></b> Short fiction / novella</span><span><b class="swatch type-collection"></b> Collection / anthology / poetry</span><span><b class="swatch type-nonfiction"></b> Nonfiction</span><span><b class="swatch type-media"></b> Film / radio / media</span><span><b class="swatch type-other"></b> Other</span><span><b class="swatch type-mag"></b> Magazine context</span><span><b class="swatch type-editor"></b> Editor tenure</span></div><div id="lifelineChart" class="viz card"></div><div id="inlineAuthorDetail" class="inline-detail-slot"></div>
+    <div id="authorDetail" class="card detail empty">Click an author to view their bibliography timeline.</div>
+  </section>
+
+  <section id="global" class="panel">
+    <h2>Global timeline</h2>
+    <div id="globalLegend" class="legend card"><span><b class="swatch type-novel"></b> Novel / novel subtype</span><span><b class="swatch type-short"></b> Short fiction / novella</span><span><b class="swatch type-collection"></b> Collection / anthology / poetry</span><span><b class="swatch type-nonfiction"></b> Nonfiction</span><span><b class="swatch type-media"></b> Film / radio / media</span><span><b class="swatch type-person birth"></b> Author birth</span><span><b class="swatch type-person death"></b> Author death</span><span><b class="swatch type-mag"></b> Magazine run</span><span><b class="swatch type-editor"></b> Editor tenure</span></div><div id="globalTimeline" class="viz card"></div>
+  </section>
+
+  <section id="reading" class="panel">
+    <h2>Reading list</h2>
+    <div class="card tablewrap"><table id="worksTable"><thead><tr><th>Author</th><th>Title</th><th>Type</th><th>Year</th><th>Collaborator</th><th>Series</th><th>List source</th><th>Links</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section id="magazines" class="panel">
+    <h2>Magazines & editors</h2>
+    <div class="card tablewrap"><table id="magTable"><thead><tr><th>Publication</th><th>Type</th><th>Years</th><th>Person</th><th>Role</th><th>Tenure</th><th>Link</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section id="about" class="panel">
+    <h2>About the data</h2>
+    <div class="card prose">
+      <p>This page treats <strong>type</strong> as a publication/object format, not a genre label. The reading list uses a slash-separated tree such as <code>Novel</code>, <code>Novel/Series</code>, <code>Novel/Fix-up</code>, <code>Collection/Anthology</code>, <code>Short story</code>, <code>Nonfiction/Popular science</code>, and <code>Media/Film</code>.</p>
+      <p>Author detail panels show all works currently included for that author. For authors with especially rich internal structures, such as Isaac Asimov and Arthur C. Clarke, the detail view uses multiple lanes for major sequences.</p>
+      <p>Dates and links are a working dataset and should be reviewed before formal publication.</p>
+    </div>
+  </section>
+</main>
+<div id="tooltip"></div>
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body></html>
