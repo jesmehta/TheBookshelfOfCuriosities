@@ -68,7 +68,7 @@ The `type_path` field describes publication/object format, not genre. Examples:
 
 ## v9 notes
 
-- Author sort uses Option C: the public control remains clean.
+- Author sort removes 2 options and sorts by author birthdate, and when missing author birthdate (eg. Meccania) then only that author sorts by first publication date as compared to other authors first publication date; the public control remains clean.
 - In Author birthdate mode, authors with known birth years are sorted by birth year.
 - If an author birth year is missing, the internal fallback is that author's earliest included publication year.
 - The UI still shows only two sort modes: Author birthdate and First listed publication.
