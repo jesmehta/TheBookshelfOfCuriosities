@@ -255,6 +255,34 @@ D3 is useful for timeline rendering, but a native SVG fallback is kept so the Gl
 
 ## Changelog
 
+### v30 Lower Global Timeline spacing range
+
+- Added two lower Global Timeline scale/spacing levels by changing the slider range from `4-18` to `2-16`.
+- The lowest spacing is now half of the previous minimum.
+
+Design decision:
+
+- Dense publication/history views need a more compact horizontal option. Trimming the highest spacing levels keeps the slider range practical.
+
+### v29 Compact publication lane spacing
+
+- Reduced vertical spacing between publication lanes in the Global Timeline.
+- Slightly tightened publication label-row spacing while preserving the existing editor/title label packing behavior.
+
+Design decision:
+
+- The publication zone should be shorter overall, but the internal lane layout should remain readable because the current editor/title spacing is working well.
+
+### v28 Related-publication merger labels
+
+- Updated Global Timeline merger/absorbed labels to read from `related_publications` instead of `title_history`.
+- Placed `merged_into` labels at the end of the source publication's time band.
+- Kept `absorbed` labels at the recorded relationship year on the receiving publication.
+
+Design decision:
+
+- Title history represents names used by the same publication entity. Mergers and absorptions are relationships between different publication entities and should be drawn from relationship data.
+
 ### v27 Softer 20-year publication guides
 
 - Aligned Global Timeline vertical guide lines and year-axis labels to 20-year intervals.

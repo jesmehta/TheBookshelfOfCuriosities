@@ -20,6 +20,7 @@ Status key:
 | Not started | Confirm Global Timeline fallback render | Verify fallback does not go blank if D3 is unavailable. |
 | Not started | Improve Author Detail timeline | Main next feature area. See dedicated section below. |
 | Not started | Keep README updated after each change | Include files changed, behavior changed, design decisions, visual side effects, and test notes. |
+| Not started | Rename Event stream to TimeStream | Public label change only unless the underlying concept changes later. |
 
 ## Author Detail Improvements
 
@@ -32,6 +33,14 @@ Status key:
 | Not started | Reduce label overlap | Improve label placement/staggering in Author Detail timelines. |
 | Not started | Review selected-author feedback | Keep selected state visible but subtle: color, underline, or font change is enough. |
 
+## Author Timeline Rework
+
+| Status | Task | Notes |
+| --- | --- | --- |
+| Not started | Explore D3-based Author Timeline renderer | Rework the Author Timeline for better label management, clarity, and data-viz options while keeping the same essence. |
+| Not started | Preserve current vertical compactness | Any Author Timeline rework should not increase vertical spacing. |
+| Not started | Keep current Author Timeline stable during experiments | Build experimental versions separately or behind a clearly reversible path before replacing the stable renderer. |
+
 ## Global Timeline Refinements
 
 | Status | Task | Notes |
@@ -40,8 +49,11 @@ Status key:
 | Not started | Review label clipping | Make sure labels above and below the axis are not clipped at common viewport widths. |
 | Done | Add title-history labels to publication bands | v20 marks publication title changes above the relevant band positions. |
 | In progress | Refine publication/editor label packing | v22 packs publication names, title-history labels, and editor names per lane; needs browser review around Astounding. |
-| Done | Add publication merger labels | v23 shows merged/absorbed relationships from title-history data at the relevant year. |
+| Done | Add publication merger labels | v28 shows merged/absorbed relationships from `related_publications`; merged-into labels sit at the source band end. |
 | Done | Add publication and year guide lines | v24 adds faint label-to-band guides and fading year marks across the publication zone. |
+| Not started | Prototype author isolation from birth/death events | Experimental: clicking an author birth/death event could show that author's timeline as an isolated band above the main Global Timeline. |
+| Not started | Prototype work isolation from book/media events | Experimental: clicking a work event could show all works by that author as a separate series above the main Global Timeline. |
+| Not started | Keep Global Timeline interaction experiments separate | These pop-up/isolation features should be tested as separate experimental versions so the stable core remains intact. |
 | Not started | Refine label density slider behavior | Confirm density settings feel meaningful and predictable. |
 | Not started | Review Event Stream spacing | Keep it readable without internal scrolling. |
 | Not started | Check filter sync | Filters should affect both horizontal timeline and Event Stream. |
@@ -53,6 +65,7 @@ Status key:
 | Status | Task | Notes |
 | --- | --- | --- |
 | Not started | Evaluate current four themes | Archive, Pulp, Space chart, Archive + accents. |
+| Not started | Rework theme system | Revisit theme names, palette logic, contrast, texture, and final public visual direction. |
 | Not started | Refine likely final direction | Preferred direction is archive with subtle pulp accents. |
 | Not started | Check background texture subtlety | CSS-only textures should stay low contrast and non-distracting. |
 | Not started | Review mobile layout | Check controls, tables, timeline labels, and event stream on narrow screens. |
@@ -93,6 +106,9 @@ Status key:
 | v25 | Strengthen Global Timeline guide lines | Horizontal guides are darker; vertical year guides use visible dashed theme strokes. |
 | v26 | Make vertical year guides visible | Vertical guides now use a fixed stroke and render above publication bands. |
 | v27 | Refine vertical year guides | Guides now align to 20-year ticks, are lighter/thinner, and stop before the main event entries. |
+| v28 | Use related-publication merger labels | Merger/absorbed labels now come from `related_publications`, not title history. |
+| v29 | Compact publication lane spacing | Reduced overall publication-zone height while preserving internal label packing. |
+| v30 | Lower Global Timeline spacing range | Scale slider now runs `2-16`, adding two compact levels and trimming the high end. |
 
 ## New Ideas Parking Lot
 

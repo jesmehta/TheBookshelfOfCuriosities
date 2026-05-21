@@ -348,7 +348,7 @@ function renderGlobal(){
   const pxPerYear=scale*7;
   const margin={top:112,right:70,bottom:150,left:150};
   const width=Math.max(960,(f.end-f.start)*pxPerYear+margin.left+margin.right);
-  const spanLaneGap=16, spanRowGap=22, spanLabelRowH=12, eventLaneH=26;
+  const spanLaneGap=8, spanRowGap=21, spanLabelRowH=11, eventLaneH=26;
   const labelRows=Math.max(8, density*6);
   const axisY=46;
   const x=yr=>margin.left+((yr-f.start)/(f.end-f.start))*(width-margin.left-margin.right);
@@ -408,12 +408,20 @@ function renderGlobal(){
       .map(h=>({year:h.start_year,label:h.title}));
   }
   function relationMarkers(pub){
-    return (pub.title_history||[])
-      .filter(h=>h.relationship && h.year>=f.start && h.year<=f.end)
-      .map(h=>{
-        const target=PUBLICATION_BY_ID.get(h.publication_id)?.name || h.publication_id || "another publication";
-        const verb=h.relationship==="merged_into" ? "Merged into" : h.relationship==="absorbed" ? "Absorbed" : h.relationship.replaceAll("_"," ");
-        return {year:h.year,label:`${verb} ${target}`};
+    return (pub.related_publications||[])
+      .map(rel=>{
+        const target=PUBLICATION_BY_ID.get(rel.publication_id)?.name || rel.publication_id || "another publication";
+        if(rel.relationship==="merged_into"){
+          return {year:pub.end||rel.year,label:`Merged into ${target}`};
+        }
+        if(rel.relationship==="absorbed"){
+          return {year:rel.year,label:`Absorbed ${target}`};
+        }
+        return {year:rel.year,label:`${rel.relationship.replaceAll("_"," ")} ${target}`};
+      })
+      .filter(rel=>{
+        const yr=y(rel.year);
+        return yr && yr>=f.start && yr<=f.end;
       });
   }
   function labelRowCountForLane(items){
@@ -439,7 +447,7 @@ function renderGlobal(){
   spanLanes.forEach(lane=>{
     const laneItems=spans.filter(s=>s.lane===lane).sort((a,b)=>a.kind.localeCompare(b.kind)||a.start-b.start || (b.end-b.start)-(a.end-a.start));
     const layout=layoutSpanRows(laneItems);
-    const labelTopPad=14 + labelRowCountForLane(layout.items)*spanLabelRowH;
+    const labelTopPad=10 + labelRowCountForLane(layout.items)*spanLabelRowH;
     spanRowsByLane[lane]={baseY:spanCursor+labelTopPad,items:layout.items};
     spanCursor += labelTopPad + (layout.maxRow+1)*spanRowGap + spanLaneGap;
   });
