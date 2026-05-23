@@ -277,6 +277,115 @@ function openAuthorDetail(authorId, scrollIntoView=false){
 }
 
 function renderLifelines(){
+  if(window.d3) renderLifelinesD3();
+  else renderLifelinesNative();
+}
+
+function renderLifelinesD3(){
+  const el=$("#lifelineChart");
+  el.innerHTML="";
+  const f=filters(), left=240, right=60, top=52, rowH=44, contextRowH=30, w=Math.max(1180,el.clientWidth-40), plot=w-left-right;
+  const x=d3.scaleLinear().domain([f.start,f.end]).range([left,w-right]);
+  const fw=filteredWorks(true);
+  let authors=data.authors.filter(a=>fw.some(w=>w.author_id===a.id));
+  authors=sortAuthorsForTimeline(authors, fw);
+  const showContext=!!$("#showMagazineContext")?.checked;
+  const contexts=showContext?majorMagazineContext().filter(m=>m.start<=f.end && (m.end||f.end)>=f.start):[];
+  const authorTop=top + (showContext ? contexts.length*contextRowH + 24 : 0);
+  const h=authorTop+authors.length*rowH+46;
+  const svg=d3.select(el).append("svg").attr("width",w).attr("height",h);
+
+  for(let yr=Math.ceil(f.start/25)*25;yr<=f.end;yr+=25){
+    const xx=x(yr);
+    svg.append("line").attr("class","grid").attr("x1",xx).attr("x2",xx).attr("y1",20).attr("y2",h-20);
+    svg.append("text").attr("class","axis").attr("x",xx).attr("y",16).attr("text-anchor","middle").text(yr);
+  }
+
+  if(showContext){
+    contexts.forEach((m,i)=>{
+      const yy=top+i*contextRowH;
+      const x1=x(Math.max(m.start,f.start)), x2=x(Math.min(m.end||f.end,f.end));
+      svg.append("text").attr("class","context-label").attr("x",8).attr("y",yy+5).text(m.name);
+      svg.append("line").attr("class","context-mag-line").attr("x1",x1).attr("x2",x2).attr("y1",yy).attr("y2",yy);
+      svg.append("circle").attr("class","context-start").attr("cx",x1).attr("cy",yy).attr("r",4)
+        .on("mousemove",event=>tip(event,`<strong>${m.name}</strong><br>${m.start}${m.end?"–"+m.end:"–"}`))
+        .on("mouseleave",untip);
+      m.editors.forEach(ed=>{
+        const s=Math.max(ed.start||m.start,f.start), e=Math.min(ed.end||f.end,f.end);
+        if(!s || s>f.end || e<f.start) return;
+        const ey=yy+9;
+        svg.append("line").attr("class","context-editor-line").attr("x1",x(s)).attr("x2",x(e)).attr("y1",ey).attr("y2",ey);
+        svg.append("circle").attr("class","context-editor-dot").attr("cx",x(s)).attr("cy",ey).attr("r",3.5)
+          .on("mousemove",event=>tip(event,`<strong>${ed.person}</strong><br>${ed.role}<br>${ed.publication}<br>${ed.start}${ed.end?"–"+ed.end:"–"}`))
+          .on("mouseleave",untip);
+      });
+    });
+  }
+
+  authors.forEach((a,i)=>{
+    const baseY=authorTop+i*rowH;
+    svg.append("text")
+      .attr("class","author-label"+(selectedAuthor===a.id?" selected":""))
+      .attr("x",8)
+      .attr("y",baseY+5)
+      .text(a.name)
+      .on("click",()=>openAuthorDetail(a.id,true));
+
+    if(a.birth){
+      const d=a.death||f.end;
+      svg.append("line")
+        .attr("class","author-name-guide")
+        .attr("x1",150)
+        .attr("x2",Math.max(150,x(Math.max(a.birth,f.start))-8))
+        .attr("y1",baseY)
+        .attr("y2",baseY);
+      svg.append("line").attr("class","life")
+        .attr("x1",x(Math.max(a.birth,f.start)))
+        .attr("x2",x(Math.min(d,f.end)))
+        .attr("y1",baseY)
+        .attr("y2",baseY);
+    }
+
+    const works=fw.filter(w=>w.author_id===a.id);
+    const labelCandidates=works.filter(w=>y(w.year) && Number(w.timeline_level||3)<=1);
+    const placed=computeLabelLayout(labelCandidates, yr=>x(yr), {minX:left+6,maxX:w-right-6}, {fontSize:10.5,maxTracks:5,maxChars:26,trackOffsets:[-14,14,-26,26,0],dropUnplaced:true});
+
+    placed.forEach(p=>{
+      const labelY=baseY+4+p.offset;
+      const anchorX=p.side==='R' ? p.labelX-3 : p.labelX+3;
+      const baselineY=labelY+3;
+      const tailX=p.side==='R' ? anchorX+17 : anchorX-17;
+      svg.append("polyline")
+        .attr("class","label-leader")
+        .attr("points",`${p.x},${baseY} ${anchorX},${baselineY} ${tailX},${baselineY}`);
+    });
+
+    works.forEach(wk=>{
+      const yr=y(wk.year); if(!yr) return;
+      svg.append("circle")
+        .attr("class","dot "+typClass(wk.type_path))
+        .attr("cx",x(yr))
+        .attr("cy",baseY)
+        .attr("r",5)
+        .on("mousemove",event=>tip(event,`<strong>${wk.title}</strong><br>${a.name}, ${yr}<br>${wk.type_path}`))
+        .on("mouseleave",untip);
+    });
+
+    placed.forEach(p=>{
+      const labelY=baseY+4+p.offset;
+      svg.append("text")
+        .attr("class","work-title work-title-shadow main-label")
+        .attr("x",p.labelX)
+        .attr("y",labelY)
+        .attr("text-anchor",p.side==='R' ? 'start' : 'end')
+        .text(p.label)
+        .on("mousemove",event=>tip(event,`<strong>${p.item.title}</strong><br>${a.name}, ${p.item.year}<br>${p.item.type_path}`))
+        .on("mouseleave",untip);
+    });
+  });
+}
+
+function renderLifelinesNative(){
   const el=$("#lifelineChart");
   el.innerHTML="";
   const f=filters(), left=240, right=60, top=52, rowH=44, contextRowH=30, w=Math.max(1180,el.clientWidth-40), plot=w-left-right, x=yr=>left+((yr-f.start)/(f.end-f.start))*plot;
@@ -327,10 +436,29 @@ function renderLifelines(){
 
     if(a.birth){
       const d=a.death||f.end;
+      const guide=document.createElementNS("http://www.w3.org/2000/svg","line");
+      guide.setAttribute("class","author-name-guide");
+      guide.setAttribute("x1",150);
+      guide.setAttribute("x2",Math.max(150,x(Math.max(a.birth,f.start))-8));
+      guide.setAttribute("y1",baseY);
+      guide.setAttribute("y2",baseY);
+      svg.appendChild(guide);
       svg.insertAdjacentHTML("beforeend",`<line class="life" x1="${x(Math.max(a.birth,f.start))}" x2="${x(Math.min(d,f.end))}" y1="${baseY}" y2="${baseY}"/>`);
     }
 
     const works=fw.filter(w=>w.author_id===a.id);
+    const labelCandidates = works.filter(w=>y(w.year) && Number(w.timeline_level||3)<=1);
+    const placed = computeLabelLayout(labelCandidates, yr=>x(yr), {minX:left+6,maxX:w-right-6}, {fontSize:10.5,maxTracks:4,maxChars:26,trackOffsets:[-14,14,-26,26,0]});
+    placed.forEach(p=>{
+      const labelY=baseY+4+p.offset;
+      const anchorX = p.side==='R' ? p.labelX-3 : p.labelX+3;
+      const baselineY=labelY+3;
+      const tailX=p.side==='R' ? anchorX+17 : anchorX-17;
+      const leader=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+      leader.setAttribute('points',`${p.x},${baseY} ${anchorX},${baselineY} ${tailX},${baselineY}`);
+      leader.setAttribute('class','label-leader');
+      svg.appendChild(leader);
+    });
     works.forEach(wk=>{
       const yr=y(wk.year); if(!yr) return;
       const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
@@ -340,16 +468,8 @@ function renderLifelines(){
       c.onmouseleave=untip;
       svg.appendChild(c);
     });
-
-    const labelCandidates = works.filter(w=>y(w.year) && Number(w.timeline_level||3)<=1);
-    const placed = computeLabelLayout(labelCandidates, yr=>x(yr), {minX:left+6,maxX:w-right-6}, {fontSize:10.5,maxTracks:4,maxChars:26,trackOffsets:[-14,14,-26,26,0]});
     placed.forEach(p=>{
       const labelY=baseY+4+p.offset;
-      const leader=document.createElementNS("http://www.w3.org/2000/svg","line");
-      const anchorX = p.side==='R' ? p.labelX-3 : p.labelX+3;
-      leader.setAttribute('x1',p.x); leader.setAttribute('x2',anchorX); leader.setAttribute('y1',baseY+(p.offset>0?5:-5)); leader.setAttribute('y2',labelY-4);
-      leader.setAttribute('class','label-leader');
-      svg.appendChild(leader);
       const tx=document.createElementNS("http://www.w3.org/2000/svg","text");
       tx.setAttribute('class','work-title work-title-shadow main-label');
       tx.setAttribute('x',p.labelX);

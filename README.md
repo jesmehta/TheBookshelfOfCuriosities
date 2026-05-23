@@ -255,6 +255,45 @@ D3 is useful for timeline rendering, but a native SVG fallback is kept so the Gl
 
 ## Changelog
 
+### v54 Darker Author Timeline name guides
+
+- Matched Author Timeline author-name guide styling to the publication-name guide styling used in the Global Timeline.
+
+Design decision:
+
+- Matching guide styling keeps cross-view visual language consistent.
+
+### v53 Author Timeline guide polish
+
+- Added faint dashed horizontal guide lines from author names toward their lifespan timelines.
+- Shortened the main Author Timeline label baseline segment to better match the smaller mark-to-label distance.
+- Applied both changes to the D3 renderer and native SVG fallback.
+
+Design decision:
+
+- Author names should visually connect to their timeline rows, while main timeline label leaders should stay proportionate to the tighter row spacing.
+
+### v52 D3 Author Timeline renderer
+
+- Added a D3-based renderer for the main Author Timeline.
+- Kept the previous native SVG renderer as a fallback when D3 is unavailable.
+- Preserved the existing row height, layout constants, sorting, magazine context overlay, selected-author styling, and click-to-detail behavior.
+- Applied stricter label placement in the D3 path so unplaceable major-work labels are dropped rather than forced into collisions; work dots and tooltips remain.
+
+Design decision:
+
+- The Author Timeline can now evolve with D3-based data-visualization tooling while keeping the stable native SVG renderer available as a fallback. The first D3 pass intentionally preserves the same compact vertical rhythm and visual essence.
+
+### v51 Main Author Timeline label leaders
+
+- Applied the Author Detail baseline-leader style to main Author Timeline labels.
+- Main timeline leaders now start from the center of the work mark, bend to the label baseline, and extend beneath the first few label characters.
+- Reordered drawing so leader lines render before work marks and labels render last.
+
+Design decision:
+
+- The main Author Timeline and Author Detail should share the same label-to-mark visual language, with marks remaining visually foregrounded over connector lines.
+
 ### v50 Author Detail mark draw order
 
 - Reordered Author Detail mini timeline drawing so connectors and leaders render before work marks.

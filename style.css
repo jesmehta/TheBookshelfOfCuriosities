@@ -97,6 +97,7 @@ td:nth-child(7){white-space:nowrap}
 .check-control input{min-width:0;width:1rem;height:1rem}
 .context-mag-line{stroke:var(--mag);stroke-width:7;stroke-linecap:round;opacity:.38}
 .context-editor-line{stroke:var(--editor);stroke-width:4;stroke-linecap:round;opacity:.75}
+.author-name-guide{stroke:var(--muted);stroke-width:1.35;stroke-dasharray:3 4;opacity:.62;pointer-events:none}
 .context-label{font-size:11px;fill:var(--muted);font-weight:700}
 .context-start{fill:var(--mag);stroke:var(--paper);stroke-width:1.5}
 .context-editor-dot{fill:var(--editor);stroke:var(--paper);stroke-width:1.5}

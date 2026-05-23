@@ -37,9 +37,9 @@ Status key:
 
 | Status | Task | Notes |
 | --- | --- | --- |
-| Not started | Explore D3-based Author Timeline renderer | Rework the Author Timeline for better label management, clarity, and data-viz options while keeping the same essence. |
-| Not started | Preserve current vertical compactness | Any Author Timeline rework should not increase vertical spacing. |
-| Not started | Keep current Author Timeline stable during experiments | Build experimental versions separately or behind a clearly reversible path before replacing the stable renderer. |
+| Done | Explore D3-based Author Timeline renderer | v52 adds a D3 renderer for the main Author Timeline. |
+| Done | Preserve current vertical compactness | v52 keeps the existing row height and layout constants. |
+| Done | Keep current Author Timeline stable during experiments | v52 keeps the previous native SVG renderer as a fallback if D3 is unavailable. |
 
 ## Global Timeline Refinements
 
@@ -130,6 +130,10 @@ Status key:
 | v48 | Make Author Detail label underline visible | Baseline segment is lower and longer so the text halo no longer hides it. |
 | v49 | Center Author Detail leader starts | Leader angled segments now start from the center of the work mark. |
 | v50 | Draw Author Detail marks above leaders | Work marks now render after connector lines so line segments inside circles are hidden. |
+| v51 | Apply baseline leaders to main Author Timeline | Main Author Timeline labels now use the same centered baseline leader style as Author Detail. |
+| v52 | Add D3 Author Timeline renderer | Main Author Timeline now uses D3 when available and keeps native SVG fallback. |
+| v53 | Polish main Author Timeline guides | Added author-name guide lines and shortened main timeline label baselines. |
+| v54 | Match Author Timeline guide styling | Author-name guides now use the same stroke/dash/opacity settings as publication guides. |
 
 ## New Ideas Parking Lot
 
