@@ -20,7 +20,7 @@ Status key:
 | Not started | Confirm Global Timeline fallback render | Verify fallback does not go blank if D3 is unavailable. |
 | Not started | Improve Author Detail timeline | Main next feature area. See dedicated section below. |
 | Not started | Keep README updated after each change | Include files changed, behavior changed, design decisions, visual side effects, and test notes. |
-| Not started | Rename Event stream to TimeStream | Public label change only unless the underlying concept changes later. |
+| Done | Rename Event stream to TimeStream | v31 changed the public heading. |
 
 ## Author Detail Improvements
 
@@ -54,6 +54,7 @@ Status key:
 | Not started | Prototype author isolation from birth/death events | Experimental: clicking an author birth/death event could show that author's timeline as an isolated band above the main Global Timeline. |
 | Not started | Prototype work isolation from book/media events | Experimental: clicking a work event could show all works by that author as a separate series above the main Global Timeline. |
 | Not started | Keep Global Timeline interaction experiments separate | These pop-up/isolation features should be tested as separate experimental versions so the stable core remains intact. |
+| Not started | Explore radial same-year event expansion | Experimental: hover/click on stacked same-year events could expand them radially into separate selectable marks. Needs design review before implementation. |
 | Not started | Refine label density slider behavior | Confirm density settings feel meaningful and predictable. |
 | Not started | Review Event Stream spacing | Keep it readable without internal scrolling. |
 | Not started | Check filter sync | Filters should affect both horizontal timeline and Event Stream. |
@@ -109,6 +110,9 @@ Status key:
 | v28 | Use related-publication merger labels | Merger/absorbed labels now come from `related_publications`, not title history. |
 | v29 | Compact publication lane spacing | Reduced overall publication-zone height while preserving internal label packing. |
 | v30 | Lower Global Timeline spacing range | Scale slider now runs `2-16`, adding two compact levels and trimming the high end. |
+| v31 | Add publication spacing tuning and TimeStream | Added temporary publication-spacing slider and renamed Event Stream heading to TimeStream. |
+| v32 | Make publication spacing minimum true zero | Removed extra hidden inter-lane padding at the slider minimum. |
+| v33 | Hardcode compact publication spacing | Removed temporary slider and fixed publication-lane gap at the chosen compact value. |
 
 ## New Ideas Parking Lot
 

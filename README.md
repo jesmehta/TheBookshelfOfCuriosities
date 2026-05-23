@@ -255,6 +255,34 @@ D3 is useful for timeline rendering, but a native SVG fallback is kept so the Gl
 
 ## Changelog
 
+### v33 Hardcoded compact publication spacing
+
+- Removed the temporary `Publication spacing` slider from Global Timeline controls.
+- Hardcoded the publication-lane gap to the chosen compact minimum value.
+
+Design decision:
+
+- The temporary slider served its tuning purpose. The chosen compact spacing keeps the publication zone shorter without exposing a draft control in the public UI.
+
+### v32 True-zero publication spacing
+
+- Adjusted Global Timeline publication-lane spacing so the `Publication spacing` slider minimum is effectively zero inter-lane gap.
+- Reduced hidden baseline padding between consecutive publication bands while preserving each lane's internal label space.
+
+Design decision:
+
+- The temporary spacing slider should expose the full useful range, including a truly compact no-gap option, so the final hardcoded value can be chosen visually.
+
+### v31 Publication spacing tuning and TimeStream
+
+- Added a temporary Global Timeline `Publication spacing` slider so publication-lane gaps can be tuned visually before hardcoding a final value.
+- Renamed the Event Stream heading to `TimeStream`.
+- Left same-year event expansion as an experimental interaction design item rather than implementing it directly.
+
+Design decision:
+
+- Publication spacing is now close enough that visual tuning is more useful than guessing constants. The TimeStream rename is public-facing copy, while radial event expansion needs interaction design review before it touches the stable timeline.
+
 ### v30 Lower Global Timeline spacing range
 
 - Added two lower Global Timeline scale/spacing levels by changing the slider range from `4-18` to `2-16`.

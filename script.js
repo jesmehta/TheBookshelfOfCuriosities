@@ -348,7 +348,7 @@ function renderGlobal(){
   const pxPerYear=scale*7;
   const margin={top:112,right:70,bottom:150,left:150};
   const width=Math.max(960,(f.end-f.start)*pxPerYear+margin.left+margin.right);
-  const spanLaneGap=8, spanRowGap=21, spanLabelRowH=11, eventLaneH=26;
+  const spanLaneGap=0, spanRowGap=21, spanLabelRowH=11, eventLaneH=26;
   const labelRows=Math.max(8, density*6);
   const axisY=46;
   const x=yr=>margin.left+((yr-f.start)/(f.end-f.start))*(width-margin.left-margin.right);
@@ -447,9 +447,10 @@ function renderGlobal(){
   spanLanes.forEach(lane=>{
     const laneItems=spans.filter(s=>s.lane===lane).sort((a,b)=>a.kind.localeCompare(b.kind)||a.start-b.start || (b.end-b.start)-(a.end-a.start));
     const layout=layoutSpanRows(laneItems);
-    const labelTopPad=10 + labelRowCountForLane(layout.items)*spanLabelRowH;
+    const labelTopPad=6 + labelRowCountForLane(layout.items)*spanLabelRowH;
     spanRowsByLane[lane]={baseY:spanCursor+labelTopPad,items:layout.items};
-    spanCursor += labelTopPad + (layout.maxRow+1)*spanRowGap + spanLaneGap;
+    const laneBottom=(layout.maxRow+1)*spanRowGap;
+    spanCursor += labelTopPad + laneBottom - spanRowGap + 8 + spanLaneGap;
   });
   const publicationGuideEnd=spanCursor-8;
   const yBase=spanCursor + labelRows*eventLaneH + 34;
@@ -636,7 +637,7 @@ function renderGlobal(){
     drawNative();
   }
 
-  stream.innerHTML=`<h3>Event stream</h3><div class="event-stream-list">${sorted.map(d=>`<div class="event-stream-item event-kind-${d.kind}"><div class="event-stream-year">${d.year}</div><div><div class="event-stream-label"><span class="event-symbol">${eventSymbol(d.kind)}</span>${d.label}</div><div class="event-stream-meta">${d.type}${d.detail?` · ${d.detail}`:""}</div></div></div>`).join("")}</div>`;
+  stream.innerHTML=`<h3>TimeStream</h3><div class="event-stream-list">${sorted.map(d=>`<div class="event-stream-item event-kind-${d.kind}"><div class="event-stream-year">${d.year}</div><div><div class="event-stream-label"><span class="event-symbol">${eventSymbol(d.kind)}</span>${d.label}</div><div class="event-stream-meta">${d.type}${d.detail?` · ${d.detail}`:""}</div></div></div>`).join("")}</div>`;
 }
 function renderWorksTable(){const tb=$("#worksTable tbody");tb.innerHTML="";filteredWorks(false).sort((a,b)=>authorName(a.author_id).localeCompare(authorName(b.author_id))||(a.year||9999)-(b.year||9999)).forEach(w=>{const a=A.get(w.author_id)||{};const links=[link("Author Wiki",a.wiki),link("Author GR",a.goodreads),link("Work Wiki",w.wiki),link("Work GR",w.goodreads)].filter(Boolean).join(" · ");tb.insertAdjacentHTML("beforeend",`<tr><td>${authorName(w.author_id)}</td><td><strong>${w.title}</strong>${w.first_publication_context?`<br><small>First publication: ${w.first_publication_context}</small>`:""}</td><td>${w.type_path}</td><td>${w.year||""}</td><td>${w.coauthors||"—"}</td><td>${w.series||"Standalone"}</td><td>${sourceLabel(w.list_source)}</td><td>${links||"—"}</td></tr>`)});}
 function titleHistoryLabel(pub){
