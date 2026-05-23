@@ -18,7 +18,7 @@ Status key:
 | Not started | Confirm Author Timeline default tab | Page should open with Author timeline active. |
 | Not started | Confirm Global Timeline D3 render | Verify horizontal Global Timeline renders when D3 CDN loads. |
 | Not started | Confirm Global Timeline fallback render | Verify fallback does not go blank if D3 is unavailable. |
-| Not started | Improve Author Detail timeline | Main next feature area. See dedicated section below. |
+| Done | Improve Author Detail timeline | v37 adds decade ticks, Life row, simpler row grouping, and cleaner labels. |
 | Not started | Keep README updated after each change | Include files changed, behavior changed, design decisions, visual side effects, and test notes. |
 | Done | Rename Event stream to TimeStream | v31 changed the public heading. |
 
@@ -26,12 +26,12 @@ Status key:
 
 | Status | Task | Notes |
 | --- | --- | --- |
-| Not started | Use decade ticks | Replace or refine current 25-year tick behavior in Author Detail. |
-| Not started | Add author lifeline row | Detail panel should include a `Life` row when birth/death data exists. |
-| Not started | Simplify generic work rows | Use one `Standalone / other works` row rather than separate rows for standalone novels, collections, nonfiction, and similar broad forms. |
-| Not started | Preserve meaningful series rows | Keep distinct rows for real series/subseries such as Foundation, Robot / Spacer, Empire, Space Odyssey, Rama, Tarzan, Barsoom, and Pellucidar. |
-| Not started | Reduce label overlap | Improve label placement/staggering in Author Detail timelines. |
-| Not started | Review selected-author feedback | Keep selected state visible but subtle: color, underline, or font change is enough. |
+| Done | Use decade ticks | v37 uses decade ticks in Author Detail mini timelines. |
+| Done | Add author timeline row | v39 keeps a top `Timeline` row with lifespan band, work markers, and connectors to series lanes. |
+| Done | Simplify generic work rows | v37 collapses broad formats into `Standalone / other works`. |
+| Done | Preserve meaningful series rows | v37 keeps actual series/subseries rows such as Foundation, Robot / Spacer, Empire, Space Odyssey, Rama, Tarzan, Barsoom, and Pellucidar. |
+| Done | Reduce label overlap | v37 drops unplaceable labels while keeping dots and tooltips. |
+| Done | Review selected-author feedback | Existing selected author styling remains subtle and sufficient for now. |
 
 ## Author Timeline Rework
 
@@ -113,6 +113,23 @@ Status key:
 | v31 | Add publication spacing tuning and TimeStream | Added temporary publication-spacing slider and renamed Event Stream heading to TimeStream. |
 | v32 | Make publication spacing minimum true zero | Removed extra hidden inter-lane padding at the slider minimum. |
 | v33 | Hardcode compact publication spacing | Removed temporary slider and fixed publication-lane gap at the chosen compact value. |
+| v34 | Add contextual controls | Top controls now show only on relevant tabs; Publications & editors respects year range. |
+| v35 | Stabilize timeline controls across data views | Timeline detail, From/To, Theme, and Reset remain visible across data tabs; Search/Type stay contextual. |
+| v36 | Rename label density control | Global Timeline control now reads Event labels. |
+| v37 | Clean up Author Detail timeline | Added decade ticks, Life row, simpler work lanes, and cleaner label placement. |
+| v38 | Simplify Author Detail life row | Removed redundant birth/death markers from the Life row. |
+| v39 | Add Author Detail timeline connectors | Work dots remain in series lanes and also connect back to a top author timeline band. |
+| v40 | Set Author Detail lane priority | Lanes now order as Timeline, Standalone, Collections, Series, then Collaborations. |
+| v41 | Add Author Detail nonfiction lane | Nonfiction now appears as the final Author Detail lane after Collaborations. |
+| v42 | Normalize standalone lane labels | `Standalone novels` now maps into `Standalone / other works` for consistent Author Detail sorting. |
+| v43 | Normalize generic Works lane | `Works` now maps into `Standalone / other works` for Author Detail grouping. |
+| v44 | Normalize generic series labels | Generic `series` values such as `Standalone novels` now also map into `Standalone / other works`. |
+| v45 | Improve Author Detail label packing | Labels now use a global collision pass across the mini timeline and prioritize major works. |
+| v46 | Add Author Detail baseline leaders | Label leaders now connect to the label baseline and extend a short horizontal segment. |
+| v47 | Extend Author Detail baseline leaders | Horizontal leader segment now reaches under roughly one or two label letters. |
+| v48 | Make Author Detail label underline visible | Baseline segment is lower and longer so the text halo no longer hides it. |
+| v49 | Center Author Detail leader starts | Leader angled segments now start from the center of the work mark. |
+| v50 | Draw Author Detail marks above leaders | Work marks now render after connector lines so line segments inside circles are hidden. |
 
 ## New Ideas Parking Lot
 

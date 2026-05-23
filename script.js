@@ -16,7 +16,23 @@ function typClass(t){
   return "type-other";
 }
 function link(txt,url){return url?`<a href="${url}" target="_blank" rel="noreferrer">${txt}</a>`:""}
-function filters(){return{q:$("#search").value.toLowerCase().trim(),type:$("#typeFilter").value,level:parseInt($("#levelFilter").value,10),start:parseInt($("#startYear").value,10),end:parseInt($("#endYear").value,10)}}
+function activeTab(){return document.querySelector(".tab.active")?.dataset.tab || "lifelines"}
+function controlApplies(id,tab=activeTab()){
+  const el=$("#"+id);
+  const wrapper=el?.closest(".context-control");
+  if(!wrapper) return true;
+  return (wrapper.dataset.tabs||"").split(/\s+/).includes(tab);
+}
+function filters(){
+  const tab=activeTab();
+  return{
+    q:controlApplies("search",tab)?$("#search").value.toLowerCase().trim():"",
+    type:controlApplies("typeFilter",tab)?$("#typeFilter").value:"",
+    level:controlApplies("levelFilter",tab)?parseInt($("#levelFilter").value,10):3,
+    start:controlApplies("startYear",tab)?parseInt($("#startYear").value,10):1800,
+    end:controlApplies("endYear",tab)?parseInt($("#endYear").value,10):2020
+  }
+}
 function filteredWorks(forTimeline=false){
   const f=filters();
   return data.works.filter(w=>{
@@ -110,10 +126,22 @@ function eventSymbol(kind){
   return "•";
 }
 
+function updateContextualControls(tab=activeTab()){
+  const search=$("#search")?.closest("label");
+  if(search && !search.classList.contains("context-control")){
+    search.classList.add("context-control");
+    search.dataset.tabs="lifelines reading";
+  }
+  document.querySelectorAll(".context-control").forEach(control=>{
+    const tabs=(control.dataset.tabs||"").split(/\s+/);
+    control.classList.toggle("control-hidden",!tabs.includes(tab));
+  });
+}
+
 function setup(){
   document.body.classList.add("theme-archive");
   [...new Set(data.works.map(w=>w.type_path).filter(Boolean))].sort().forEach(t=>{$("#typeFilter").insertAdjacentHTML("beforeend",`<option>${t}</option>`)});
-  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab,.panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("#"+b.dataset.tab).classList.add("active");render()});
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab,.panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("#"+b.dataset.tab).classList.add("active");updateContextualControls(b.dataset.tab);render()});
   ["search","typeFilter","levelFilter","authorSort","startYear","endYear"].forEach(id=>$("#"+id)?.addEventListener("input",render));
   $("#showMagazineContext")?.addEventListener("change",render);
   $("#themeSelect")?.addEventListener("change",e=>{setTheme(e.target.value); render()});
@@ -122,11 +150,12 @@ function setup(){
   $("#globalLabelDensity")?.addEventListener("input",renderGlobal);
   $("#globalAll")?.addEventListener("click",()=>{document.querySelectorAll(".global-event-filter").forEach(cb=>cb.checked=true);renderGlobal()});
   $("#globalNone")?.addEventListener("click",()=>{document.querySelectorAll(".global-event-filter").forEach(cb=>cb.checked=false);renderGlobal()});
-  $("#resetBtn").onclick=()=>{$("#search").value="";$("#typeFilter").value="";$("#levelFilter").value="3";$("#authorSort").value="birth";$("#startYear").value=1800;$("#endYear").value=2020;if($("#themeSelect")){$("#themeSelect").value="archive";setTheme("archive")}render()};
+  $("#resetBtn").onclick=()=>{$("#search").value="";$("#typeFilter").value="";$("#levelFilter").value="3";if($("#authorSort")) $("#authorSort").value="birth";$("#startYear").value=1800;$("#endYear").value=2020;if($("#themeSelect")){$("#themeSelect").value="archive";setTheme("archive")}render()};
   // Explicit default: open the Author timeline first.
   document.querySelectorAll(".tab,.panel").forEach(x=>x.classList.remove("active"));
   document.querySelector('[data-tab="lifelines"]')?.classList.add("active");
   $("#lifelines")?.classList.add("active");
+  updateContextualControls("lifelines");
   render()
 }
 function tip(e,html){const t=$("#tooltip");t.innerHTML=html;t.style.left=e.clientX+"px";t.style.top=e.clientY+"px";t.style.opacity=1}
@@ -178,6 +207,7 @@ function computeLabelLayout(items, xFunc, bounds, opts={}){
     }
 
     if(!chosen){
+      if(opts.dropUnplaced) return;
       const side = canRight ? 'R' : 'L';
       const offset = offsets[(idx)%Math.min(maxTracks,offsets.length)] || 0;
       let labelX;
@@ -645,11 +675,13 @@ function titleHistoryLabel(pub){
   if(!history.length) return "";
   return history.map(h=>`${h.title} (${h.start_year}${h.end_year?"–"+h.end_year:"–"})`).join("; ");
 }
-function renderMagTable(){const tb=$("#magTable tbody");tb.innerHTML="";[...PUBLICATIONS].sort((a,b)=>a.start-b.start).forEach(m=>{const es=data.editors.filter(e=>e.publication_id===m.id||publicationMatches(e.publication,m.name));const history=titleHistoryLabel(m);tb.insertAdjacentHTML("beforeend",`<tr><td><strong>${m.name}</strong>${history?`<br><small>${history}</small>`:""}</td><td>${m.publication_type||m.type}</td><td>${m.start}${m.end?"–"+m.end:"–"}</td><td>${es.map(e=>e.person).join("; ")||"—"}</td><td>${es.map(e=>e.role).join("; ")||"—"}</td><td>${es.map(e=>e.start+(e.end?"–"+e.end:"–")).join("; ")||"—"}</td><td>${link("Wiki",m.wiki)||"—"}</td></tr>`)});}
+function renderMagTable(){const tb=$("#magTable tbody");tb.innerHTML="";const f=filters();[...PUBLICATIONS].filter(m=>(m.start||0)<=f.end&&(m.end||f.end)>=f.start).sort((a,b)=>a.start-b.start).forEach(m=>{const es=data.editors.filter(e=>e.publication_id===m.id||publicationMatches(e.publication,m.name));const history=titleHistoryLabel(m);tb.insertAdjacentHTML("beforeend",`<tr><td><strong>${m.name}</strong>${history?`<br><small>${history}</small>`:""}</td><td>${m.publication_type||m.type}</td><td>${m.start}${m.end?"–"+m.end:"–"}</td><td>${es.map(e=>e.person).join("; ")||"—"}</td><td>${es.map(e=>e.role).join("; ")||"—"}</td><td>${es.map(e=>e.start+(e.end?"–"+e.end:"–")).join("; ")||"—"}</td><td>${link("Wiki",m.wiki)||"—"}</td></tr>`)});}
 
 function seriesLabel(w){
+  const broadLanes=new Set(["works","standalone novels","short fiction","other fiction","other novels","edited anthologies","nonfiction","adaptations","media"]);
   if(w.type_path && w.type_path.startsWith("Nonfiction")) return "Nonfiction";
-  if(w.type_path && (w.type_path.startsWith("Collection") || w.type_path.startsWith("Poetry"))) return "Short story collections";
+  if(w.coauthors) return "Collaborations";
+  if(w.type_path && (w.type_path.startsWith("Collection") || w.type_path.startsWith("Poetry"))) return "Collections";
   if(w.author_id==="isaac_asimov" && w.series==="Foundation universe"){
     const lane=(w.lane||"").toLowerCase();
     if(lane.includes("robot") || lane.includes("spacer")) return "Robot / Spacer series";
@@ -657,31 +689,77 @@ function seriesLabel(w){
     if(lane.includes("merged")) return "Merged Foundation universe";
     if(lane.includes("foundation")) return "Foundation series";
   }
-  if(w.series) return w.series;
-  if(w.type_path && (w.type_path.includes("Short story") || w.type_path.includes("Novella") || w.type_path.includes("Novelette"))) return "Short fiction";
-  if(w.type_path && w.type_path.startsWith("Media")) return "Adaptations / media";
-  return "Standalone novels";
+  if(w.lane && !broadLanes.has(w.lane.toLowerCase())) return w.lane;
+  if(w.series && !broadLanes.has(w.series.toLowerCase())) return w.series;
+  return "Standalone / other works";
 }
 function laneRank(label){
   const lower=label.toLowerCase();
-  if(lower==="standalone novels") return 0;
-  if(lower==="short story collections") return 10;
-  if(lower.includes("robot") || lower.includes("spacer")) return 20;
-  if(lower.includes("empire")) return 21;
-  if(lower.includes("foundation")) return 22;
-  if(lower==="short fiction") return 30;
-  if(lower.includes("adaptation") || lower.includes("media")) return 90;
+  if(lower==="standalone / other works") return 10;
+  if(lower==="collections") return 20;
+  if(lower==="collaborations") return 90;
   if(lower==="nonfiction") return 100;
-  return 40;
+  if(lower.includes("robot") || lower.includes("spacer")) return 30;
+  if(lower.includes("empire")) return 31;
+  if(lower.includes("foundation")) return 32;
+  if(lower.includes("space odyssey")) return 33;
+  if(lower.includes("rama")) return 34;
+  if(lower.includes("tarzan")) return 35;
+  if(lower.includes("barsoom")) return 36;
+  if(lower.includes("pellucidar")) return 37;
+  return 50;
 }
 function sortedLaneLabels(ws){return [...new Set(ws.map(seriesLabel))].sort((a,b)=>laneRank(a)-laneRank(b)||a.localeCompare(b))}
+
+function computeAuthorDetailLabels(ws, lanes, xFunc, bounds){
+  const placed=[], occupied=[];
+  const offsets=[-18,18,-30,30,-8,8];
+  const labelPad=10;
+  function collides(box){
+    return occupied.some(o=>!(box.x2 < o.x1-8 || box.x1 > o.x2+8 || box.y2 < o.y1-4 || box.y1 > o.y2+4));
+  }
+  function addBox(box){occupied.push(box)}
+  const candidates=ws
+    .filter(w=>w.year)
+    .map(w=>({work:w,lane:seriesLabel(w),rank:Number(w.timeline_level||3),year:y(w.year)}))
+    .filter(d=>lanes.includes(d.lane))
+    .sort((a,b)=>a.rank-b.rank||a.year-b.year||a.work.title.localeCompare(b.work.title));
+  candidates.forEach(d=>{
+    const laneIndex=lanes.indexOf(d.lane);
+    const baseY=bounds.top+laneIndex*bounds.rowH;
+    const xx=xFunc(d.year);
+    const label=truncateLabel(d.work.title,34);
+    const width=approxTextWidth(label,10.5);
+    const sideOrder=xx < (bounds.minX+bounds.maxX)/2 ? ["R","L"] : ["L","R"];
+    let chosen=null;
+    for(const offset of offsets){
+      for(const side of sideOrder){
+        const labelX=side==="R" ? xx+labelPad : xx-labelPad;
+        const x1=side==="R" ? labelX : labelX-width;
+        const x2=side==="R" ? labelX+width : labelX;
+        const y=baseY+4+offset;
+        const box={x1,x2,y1:y-11,y2:y+3};
+        if(x1<bounds.minX || x2>bounds.maxX || y<baseY-bounds.rowH/2+15 || y>baseY+bounds.rowH/2-4) continue;
+        if(!collides(box)){
+          chosen={item:d.work,label,x:xx,labelX,offset,side,lane:d.lane,baseY};
+          addBox(box);
+          break;
+        }
+      }
+      if(chosen) break;
+    }
+    if(chosen) placed.push(chosen);
+  });
+  return placed;
+}
 
 function renderAuthorDetail(targetSelector="#authorDetail"){
   const el=$(targetSelector);
   if(!selectedAuthor){el.className="card detail empty";el.textContent=targetSelector==="#inlineAuthorDetail"?"":"Click an author to view their bibliography timeline.";return}
   const a=A.get(selectedAuthor);
   const ws=data.works.filter(w=>w.author_id===selectedAuthor).sort((p,q)=>(p.year||9999)-(q.year||9999));
-  const lanes=sortedLaneLabels(ws);
+  const workLanes=sortedLaneLabels(ws);
+  const lanes=["Timeline",...workLanes];
   const years=ws.map(w=>w.year).filter(Boolean);
   const minYear=years.length?Math.min(...years):(a.birth||1800);
   const maxYear=years.length?Math.max(...years):(a.death||2020);
@@ -689,17 +767,21 @@ function renderAuthorDetail(targetSelector="#authorDetail"){
   const end=Math.max(a.death||maxYear,maxYear)+5;
   el.className="card detail";
   const miniId = targetSelector==="#inlineAuthorDetail" ? "authorMiniInline" : "authorMiniBottom";
-  el.innerHTML=`<div class="detail-head"><div><h3>${a.name}</h3><div>${a.birth||"Dates unknown"}${a.birth?"–"+(a.death||""):""}</div><div>${link("Wikipedia",a.wiki)} ${a.goodreads?" · "+link("Goodreads",a.goodreads):""}</div></div><div><small>Series / sections</small><br>${lanes.map(l=>`<span class="pill">${l}</span>`).join("")}</div></div><div class="mini" id="${miniId}"></div><div class="tablewrap"><table><thead><tr><th>Title</th><th>Type</th><th>Year</th><th>Collaborator</th><th>Series / section</th><th>List source</th><th>Links</th></tr></thead><tbody>${ws.map(w=>`<tr><td><strong>${w.title}</strong></td><td>${w.type_path}</td><td>${w.year||""}</td><td>${w.coauthors||"—"}</td><td>${seriesLabel(w)}</td><td>${sourceLabel(w.list_source)}</td><td>${[link("Wiki",w.wiki),link("GR",w.goodreads)].filter(Boolean).join(" · ")||"—"}</td></tr>`).join("")}</tbody></table></div>`;
+  el.innerHTML=`<div class="detail-head"><div><h3>${a.name}</h3><div>${a.birth||"Dates unknown"}${a.birth?"–"+(a.death||""):""}</div><div>${link("Wikipedia",a.wiki)} ${a.goodreads?" · "+link("Goodreads",a.goodreads):""}</div></div><div><small>Series / sections</small><br>${workLanes.map(l=>`<span class="pill">${l}</span>`).join("")}</div></div><div class="mini" id="${miniId}"></div><div class="tablewrap"><table><thead><tr><th>Title</th><th>Type</th><th>Year</th><th>Collaborator</th><th>Series / section</th><th>List source</th><th>Links</th></tr></thead><tbody>${ws.map(w=>`<tr><td><strong>${w.title}</strong></td><td>${w.type_path}</td><td>${w.year||""}</td><td>${w.coauthors||"—"}</td><td>${seriesLabel(w)}</td><td>${sourceLabel(w.list_source)}</td><td>${[link("Wiki",w.wiki),link("GR",w.goodreads)].filter(Boolean).join(" · ")||"—"}</td></tr>`).join("")}</tbody></table></div>`;
   renderAuthorMini(a,ws,lanes,start,end,miniId)
 }
 
 function renderAuthorMini(a,ws,lanes,start,end,miniId="authorMiniInline"){
   const el=$("#"+miniId);
-  const left=210,right=50,top=54,rowH=60,w=Math.max(1260,el.clientWidth-40),plot=w-left-right,x=yr=>left+((yr-start)/(end-start))*plot;
+  const left=210,right=50,top=60,rowH=60,w=Math.max(1260,el.clientWidth-40),plot=w-left-right,x=yr=>left+((yr-start)/(end-start))*plot;
   const h=top+lanes.length*rowH+34;
   const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
   svg.setAttribute("width",w); svg.setAttribute("height",h);
-  axis(svg,x,start,end,h);
+  for(let yr=Math.ceil(start/10)*10;yr<=end;yr+=10){
+    const xx=x(yr);
+    svg.insertAdjacentHTML("beforeend",`<line class="grid" x1="${xx}" x2="${xx}" y1="20" y2="${h-20}"/><text class="axis" x="${xx}" y="16" text-anchor="middle">${yr}</text>`);
+  }
+  const labelPlacements=computeAuthorDetailLabels(ws,lanes,x,{minX:left+6,maxX:w-right-6,top,rowH});
 
   lanes.forEach((lane,idx)=>{
     const baseY=top+idx*rowH;
@@ -712,9 +794,50 @@ function renderAuthorMini(a,ws,lanes,start,end,miniId="authorMiniInline"){
     laneText.setAttribute('class','author-label'); laneText.setAttribute('x',8); laneText.setAttribute('y',baseY+5); laneText.textContent=lane;
     svg.appendChild(laneText);
 
+    if(lane==="Timeline"){
+      if(a.birth){
+        const life=document.createElementNS("http://www.w3.org/2000/svg","line");
+        life.setAttribute("class","life detail-life");
+        life.setAttribute("x1",x(a.birth));
+        life.setAttribute("x2",x(a.death||end));
+        life.setAttribute("y1",baseY);
+        life.setAttribute("y2",baseY);
+        life.onmousemove=e=>tip(e,`<strong>${a.name}</strong><br>${a.birth}${a.death?"–"+a.death:"–"}`);
+        life.onmouseleave=untip;
+        svg.appendChild(life);
+      }
+      return;
+    }
+
     const items=ws.filter(w=>seriesLabel(w)===lane && w.year);
-    const placed=computeLabelLayout(items, yr=>x(yr), {minX:left+6,maxX:w-right-6}, {fontSize:11,maxTracks:6,maxChars:36,trackOffsets:[-16,16,-30,30,-44,44,0]});
+    const placed=labelPlacements.filter(p=>p.lane===lane);
     items.forEach(w=>{
+      const timelineY=top;
+      const connector=document.createElementNS("http://www.w3.org/2000/svg","line");
+      connector.setAttribute("class","detail-timeline-connector");
+      connector.setAttribute("x1",x(w.year)); connector.setAttribute("x2",x(w.year));
+      connector.setAttribute("y1",timelineY+5); connector.setAttribute("y2",baseY-7);
+      svg.appendChild(connector);
+    });
+    placed.forEach(p=>{
+      const labelY=baseY+4+p.offset;
+      const anchorX = p.side==='R' ? p.labelX-4 : p.labelX+4;
+      const baselineY=labelY+3;
+      const leader=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+      const tailX=p.side==='R' ? anchorX+34 : anchorX-34;
+      leader.setAttribute('points',`${p.x},${baseY} ${anchorX},${baselineY} ${tailX},${baselineY}`);
+      leader.setAttribute('class','label-leader');
+      svg.appendChild(leader);
+    });
+    items.forEach(w=>{
+      const timelineY=top;
+      const marker=document.createElementNS("http://www.w3.org/2000/svg","circle");
+      marker.setAttribute("class","detail-timeline-dot "+typClass(w.type_path));
+      marker.setAttribute("cx",x(w.year));
+      marker.setAttribute("cy",timelineY);
+      marker.setAttribute("r",3.4);
+      marker.onmousemove=e=>tip(e,`<strong>${w.title}</strong><br>${w.year}<br>${w.type_path}`); marker.onmouseleave=untip;
+      svg.appendChild(marker);
       const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
       c.setAttribute('class','dot '+typClass(w.type_path)); c.setAttribute('cx',x(w.year)); c.setAttribute('cy',baseY); c.setAttribute('r',6);
       c.onmousemove=e=>tip(e,`<strong>${w.title}</strong><br>${w.year}<br>${w.type_path}`); c.onmouseleave=untip;
@@ -722,10 +845,6 @@ function renderAuthorMini(a,ws,lanes,start,end,miniId="authorMiniInline"){
     });
     placed.forEach(p=>{
       const labelY=baseY+4+p.offset;
-      const leader=document.createElementNS("http://www.w3.org/2000/svg","line");
-      const anchorX = p.side==='R' ? p.labelX-4 : p.labelX+4;
-      leader.setAttribute('x1',p.x); leader.setAttribute('x2',anchorX); leader.setAttribute('y1',baseY+(p.offset>0?5:-5)); leader.setAttribute('y2',labelY-4); leader.setAttribute('class','label-leader');
-      svg.appendChild(leader);
       const tx=document.createElementNS("http://www.w3.org/2000/svg","text");
       tx.setAttribute('class','work-title work-title-shadow'); tx.setAttribute('x',p.labelX); tx.setAttribute('y',labelY); tx.setAttribute('text-anchor', p.side==='R' ? 'start' : 'end'); tx.textContent=p.label;
       tx.onmousemove=e=>tip(e,`<strong>${p.item.title}</strong><br>${p.item.year}<br>${p.item.type_path}`); tx.onmouseleave=untip;

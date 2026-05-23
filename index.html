@@ -15,12 +15,12 @@
 <main>
   <section class="controls card">
     <label>Search<input id="search" type="search" placeholder="Author, title, collaborator…"></label>
-    <label>Type<select id="typeFilter"><option value="">All</option></select></label>
-    <label>Timeline detail<select id="levelFilter"><option value="3">All listed works</option><option value="2">Major + important</option><option value="1">Major only</option></select></label>
-    <label>From<input id="startYear" type="number" value="1800"></label>
-    <label>To<input id="endYear" type="number" value="2020"></label>
-    <label>Theme<select id="themeSelect"><option value="archive" selected>Archive</option><option value="pulp">Pulp</option><option value="space">Space chart</option><option value="archivePlus">Archive + accents</option></select></label>
-    <button id="resetBtn">Reset</button>
+    <label class="context-control" data-tabs="lifelines reading">Type<select id="typeFilter"><option value="">All</option></select></label>
+    <label class="context-control" data-tabs="lifelines global reading magazines">Timeline detail<select id="levelFilter"><option value="3">All listed works</option><option value="2">Major + important</option><option value="1">Major only</option></select></label>
+    <label class="context-control" data-tabs="lifelines global reading magazines">From<input id="startYear" type="number" value="1800"></label>
+    <label class="context-control" data-tabs="lifelines global reading magazines">To<input id="endYear" type="number" value="2020"></label>
+    <label class="context-control" data-tabs="lifelines global reading magazines about">Theme<select id="themeSelect"><option value="archive" selected>Archive</option><option value="pulp">Pulp</option><option value="space">Space chart</option><option value="archivePlus">Archive + accents</option></select></label>
+    <button id="resetBtn" class="context-control" data-tabs="lifelines global reading magazines">Reset</button>
   </section>
 
   <nav class="tabs">
@@ -66,7 +66,7 @@
       </div>
       <div class="control-group compact-controls">
         <label>Scale / spacing <input id="globalScale" type="range" min="2" max="16" value="9"></label>
-        <label>Label density <input id="globalLabelDensity" type="range" min="1" max="3" value="2"></label>
+        <label>Event labels <input id="globalLabelDensity" type="range" min="1" max="3" value="2"></label>
         <div class="button-row"><button type="button" id="globalAll">All</button><button type="button" id="globalNone">Clear</button></div>
       </div>
     </section>

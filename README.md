@@ -255,6 +255,164 @@ D3 is useful for timeline rendering, but a native SVG fallback is kept so the Gl
 
 ## Changelog
 
+### v50 Author Detail mark draw order
+
+- Reordered Author Detail mini timeline drawing so connectors and leaders render before work marks.
+- Work marks now sit on top of leader lines, hiding the portion of the line inside each circular mark.
+
+Design decision:
+
+- The leader should visually connect to the mark, but the mark should remain the foreground object.
+
+### v49 Centered Author Detail leader starts
+
+- Adjusted Author Detail label leaders so the angled segment starts from the center of the work mark.
+
+Design decision:
+
+- Center-origin leaders make each label connection read as attached to the mark itself rather than to an arbitrary edge of the circle.
+
+### v48 Visible Author Detail label underline
+
+- Moved the Author Detail label leader baseline segment slightly below the text baseline.
+- Extended the segment further so it remains visible beneath the first few label characters despite text stroke styling.
+
+Design decision:
+
+- The baseline connector needs to remain visible after the label's white text halo is painted.
+
+### v47 Longer Author Detail label leaders
+
+- Extended the horizontal segment of Author Detail label leaders to sit under roughly the first one or two label letters.
+
+Design decision:
+
+- A slightly longer baseline segment makes the leader feel attached to the text rather than merely pointing near it.
+
+### v46 Author Detail baseline leaders
+
+- Changed Author Detail label leaders from simple lines to polylines.
+- Leaders now run from the work mark to the label baseline, then extend a short horizontal baseline segment.
+
+Design decision:
+
+- Baseline leaders make the connection between a dot and its label easier to read without making the labels heavier.
+
+### v45 Author Detail global label packing
+
+- Replaced per-lane Author Detail label placement with a global collision pass across the full mini timeline.
+- Prioritized lower `timeline_level` works before lower-priority works when deciding which labels to keep.
+- Prevented labels from spilling into neighboring lane bands.
+
+Design decision:
+
+- Dense Author Detail views need label placement to understand the whole mini timeline, not just one lane at a time. A clean high-priority label set is more useful than showing every possible title.
+
+### v44 Normalize generic series labels
+
+- Mapped generic `series` values such as `Standalone novels` into `Standalone / other works` for Author Detail grouping.
+
+Design decision:
+
+- Generic lane and series labels need the same normalization path; otherwise a broad `series` value can recreate the same sorting issue after the generic `lane` value is ignored.
+
+### v43 Normalize generic Works lane
+
+- Mapped generic `Works` lanes into `Standalone / other works` for Author Detail grouping.
+
+Design decision:
+
+- `Works` is a generic bucket, not a meaningful series/world lane, so it should follow the standalone/other lane priority.
+
+### v42 Normalize standalone lane labels
+
+- Mapped `Standalone novels` data lanes into `Standalone / other works` for Author Detail grouping.
+
+Design decision:
+
+- Broad standalone labels should not be treated as meaningful series lanes. This keeps Author Detail ordering consistent across authors with slightly different data labels.
+
+### v41 Author Detail nonfiction lane
+
+- Added `Nonfiction` as its own Author Detail lane after `Collaborations`.
+
+Design decision:
+
+- Nonfiction should remain visible as a distinct late lane rather than being folded into standalone/other works or collaborations.
+
+### v40 Author Detail lane priority
+
+- Updated Author Detail vertical lane priority to: Timeline, Standalone / other works, Collections, Series, Collaborations.
+- Collection/poetry works now use a dedicated `Collections` lane.
+- Coauthored works now use a dedicated `Collaborations` lane placed after series lanes.
+
+Design decision:
+
+- Author Detail should first show the chronological spine, then standalone work, collected material, structured series, and finally collaborations as a distinct lower-priority grouping.
+
+### v39 Author Detail timeline connectors
+
+- Renamed the Author Detail `Life` row to `Timeline`.
+- Kept the author lifespan band in the top timeline row.
+- Added small work markers on the top timeline row for every publication.
+- Added faint vertical connectors from each work's series/other-work lane back to its point on the top timeline.
+
+Design decision:
+
+- Series lanes should keep labels and primary marks, while the top timeline provides a unified chronological spine for the author's whole bibliography.
+
+### v38 Simplify Author Detail life row
+
+- Removed birth/death point markers from the Author Detail `Life` row.
+- Kept the lifespan line and tooltip.
+
+Design decision:
+
+- In an author-specific detail panel, birth and death endpoints are self-evident from the life band and header dates. Removing the extra symbols keeps the detail timeline quieter.
+
+### v37 Author Detail timeline cleanup
+
+- Changed Author Detail mini timelines to use decade ticks.
+- Added a `Life` row with author lifespan line and birth/death markers when dates are available.
+- Collapsed broad format-based rows into `Standalone / other works`.
+- Preserved meaningful series/subseries rows such as Foundation, Robot / Spacer, Empire, Space Odyssey, Rama, Tarzan, Barsoom, and Pellucidar.
+- Reduced Author Detail label overlap by dropping labels that cannot be placed cleanly; dots remain available with tooltips.
+
+Design decision:
+
+- Author Detail should distinguish actual narrative/series structures, not every publication format. When labels are too dense, a clean dot with tooltip is preferable to unreadable overlapping text.
+
+### v36 Rename Global label density control
+
+- Renamed the Global Timeline `Label density` control to `Event labels`.
+
+Design decision:
+
+- The control changes how many event text labels appear, so `Event labels` is clearer public UI wording.
+
+### v35 Stable timeline controls across data views
+
+- Kept Timeline detail visible across Author timeline, Global timeline, Reading list, and Publications & editors.
+- Kept From/To, Theme, and Reset visible across data views.
+- About remains minimal and only keeps Theme while theme testing is still active.
+
+Design decision:
+
+- Timeline detail and year range form a stable cross-view time lens. Search and Type remain contextual because they apply only to work/author-oriented views.
+
+### v34 Contextual controls
+
+- Added tab-aware visibility for the shared top controls.
+- Search and Type now show only for Author timeline and Reading list.
+- Timeline detail now shows only for Author timeline and Global timeline.
+- Year range controls show for Author timeline, Global timeline, Reading list, and Publications & editors.
+- Theme remains available on every tab while theme testing continues.
+- Publications & editors now respects the visible year range.
+
+Design decision:
+
+- The project should stay a single tabbed page for now, but controls should behave like local view controls so inactive filters do not visually or behaviorally confuse the user.
+
 ### v33 Hardcoded compact publication spacing
 
 - Removed the temporary `Publication spacing` slider from Global Timeline controls.
