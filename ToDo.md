@@ -141,6 +141,9 @@ Status key:
 | v57 | Strengthen Space Chart starfield | Increased star count, point size, and opacity so the irregular field is visible in normal viewing. |
 | v58 | Densify Space Chart starfield | Added more scattered star points while keeping the fixed irregular background approach. |
 | v59 | Add HR-inspired star colors | Space Chart starfield now uses subtle blue-white, white, yellow, amber, and soft red star colors. |
+| v60 | Rewrite About section into two-part case study | Replaced About with a public-facing making-of narrative and phase-based development history. |
+| v61 | Add About section part navigation | Added jump links to Part 1/2/3 with minor About-nav styling for long-form readability. |
+| v62 | Fix About text encoding artifacts | Repaired mojibake characters (quotes/dashes/ellipsis/apostrophes) in About and related UI text. |
 
 ## New Ideas Parking Lot
 

@@ -1,100 +1,690 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Science Fiction Reading Timeline</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Science Fiction Timeline</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 </head>
+
 <body>
-<header class="hero">
-  <p class="eyebrow">Reading list + historical timeline</p>
-  <h1>Science Fiction Reading Timeline</h1>
-  <p class="intro">A navigable map of science-fiction authors, works, publications, adaptations, and publishing histories across time.</p>
-</header>
-<main>
-  <section class="controls card">
-    <label>Search<input id="search" type="search" placeholder="Author, title, collaborator…"></label>
-    <label class="context-control" data-tabs="lifelines reading">Type<select id="typeFilter"><option value="">All</option></select></label>
-    <label class="context-control" data-tabs="lifelines global reading magazines">Timeline detail<select id="levelFilter"><option value="3">All listed works</option><option value="2">Major + important</option><option value="1">Major only</option></select></label>
-    <label class="context-control" data-tabs="lifelines global reading magazines">From<input id="startYear" type="number" value="1800"></label>
-    <label class="context-control" data-tabs="lifelines global reading magazines">To<input id="endYear" type="number" value="2020"></label>
-    <label class="context-control" data-tabs="lifelines global reading magazines about">Theme<select id="themeSelect"><option value="archive" selected>Archive</option><option value="pulp">Pulp</option><option value="space">Space chart</option><option value="archivePlus">Archive + accents</option><option value="atomicPulp">1950s — Atomic Pulp</option><option value="newWave">1970s — New Wave Cosmos</option><option value="neonOrbit">1980s — Neon Orbit</option></select></label>
-    <button id="resetBtn" class="context-control" data-tabs="lifelines global reading magazines">Reset</button>
-  </section>
+  <header class="hero">
+    <p class="eyebrow">Reading list + historical timeline</p>
+    <h1>Science Fiction Timeline</h1>
+    <p class="intro">A navigable map of science-fiction authors, works, publications, adaptations, and publishing
+      histories across time, from Mary Shelley to the end of the Golden Age of SciFi.</p>
+  </header>
+  <main>
+    <section class="controls card">
+      <label>Search<input id="search" type="search" placeholder="Author, title, collaborator…"></label>
+      <label class="context-control" data-tabs="lifelines reading">Type<select id="typeFilter">
+          <option value="">All</option>
+        </select></label>
+      <label class="context-control" data-tabs="lifelines global reading magazines">Timeline detail<select
+          id="levelFilter">
+          <option value="3">All listed works</option>
+          <option value="2">Major + important</option>
+          <option value="1">Major only</option>
+        </select></label>
+      <label class="context-control" data-tabs="lifelines global reading magazines">From<input id="startYear"
+          type="number" value="1800"></label>
+      <label class="context-control" data-tabs="lifelines global reading magazines">To<input id="endYear" type="number"
+          value="2020"></label>
+      <label class="context-control" data-tabs="lifelines global reading magazines about">Theme<select id="themeSelect">
+          <option value="archive" selected>Archive</option>
+          <option value="pulp">Pulp</option>
+          <option value="space">Space chart</option>
+          <option value="archivePlus">Archive + accents</option>
+          <option value="atomicPulp">1950s — Atomic Pulp</option>
+          <option value="newWave">1970s — New Wave Cosmos</option>
+          <option value="neonOrbit">1980s — Neon Orbit</option>
+        </select></label>
+      <button id="resetBtn" class="context-control" data-tabs="lifelines global reading magazines">Reset</button>
+    </section>
 
-  <nav class="tabs">
-    <button class="tab active" data-tab="lifelines">Author timeline</button>
-    <button class="tab" data-tab="global">Global timeline</button>
-    <button class="tab" data-tab="reading">Reading list</button>
-    <button class="tab" data-tab="magazines">Publications & editors</button>
-    <button class="tab" data-tab="about">About</button>
-  </nav>
+    <nav class="tabs">
+      <button class="tab active" data-tab="lifelines">Author timeline</button>
+      <button class="tab" data-tab="global">Global timeline</button>
+      <button class="tab" data-tab="reading">Reading list</button>
+      <button class="tab" data-tab="magazines">Publications & editors</button>
+      <button class="tab" data-tab="about">About</button>
+    </nav>
 
-  <section id="lifelines" class="panel active">
-    <h2>Author timeline</h2>
-    <p class="hint">Click an author name to open an all-in-list bibliography timeline below the selected author row.</p>
-    <div class="legend card"><span><b class="swatch type-novel"></b> Novel / novel subtype</span><span><b class="swatch type-short"></b> Short fiction / novella</span><span><b class="swatch type-collection"></b> Collection / anthology / poetry</span><span><b class="swatch type-nonfiction"></b> Nonfiction</span><span><b class="swatch type-media"></b> Film / radio / media</span><span><b class="swatch type-other"></b> Other</span><span><b class="swatch type-mag"></b> Magazine context</span><span><b class="swatch type-editor"></b> Editor tenure</span></div><div id="lifelineChart" class="viz card"></div><div id="inlineAuthorDetail" class="inline-detail-slot"></div>
-    <div id="authorDetail" class="card detail empty">Click an author to view their bibliography timeline.</div>
-  </section>
+    <section id="lifelines" class="panel active">
+      <h2>Author timeline</h2>
+      <p class="hint">Click an author name to open an all-in-list bibliography timeline below the selected author row.
+      </p>
+      <div class="legend card"><span><b class="swatch type-novel"></b> Novel / novel subtype</span><span><b
+            class="swatch type-short"></b> Short fiction / novella</span><span><b class="swatch type-collection"></b>
+          Collection / anthology / poetry</span><span><b class="swatch type-nonfiction"></b> Nonfiction</span><span><b
+            class="swatch type-media"></b> Film / radio / media</span><span><b class="swatch type-other"></b>
+          Other</span><span><b class="swatch type-mag"></b> Magazine context</span><span><b
+            class="swatch type-editor"></b> Editor tenure</span></div>
+      <div id="lifelineChart" class="viz card"></div>
+      <div id="inlineAuthorDetail" class="inline-detail-slot"></div>
+      <div id="authorDetail" class="card detail empty">Click an author to view their bibliography timeline.</div>
+    </section>
 
-  <section id="global" class="panel">
-    <div class="section-head split-head">
-      <div>
-        <h2>Global timeline</h2>
-        <p class="hint">A hybrid view: horizontal bands for long-running entities and a vertical event stream for the historical sequence.</p>
+    <section id="global" class="panel">
+      <div class="section-head split-head">
+        <div>
+          <h2>Global timeline</h2>
+          <p class="hint">A hybrid view: horizontal bands for long-running entities and a vertical event stream for the
+            historical sequence.</p>
+        </div>
+        <div id="globalLegend" class="legend card stacked-legend"><span><b class="swatch type-novel"></b>
+            Works</span><span><b class="swatch type-person birth"></b> Author birth</span><span><b
+              class="swatch type-person death"></b> Author death</span><span><b class="swatch type-mag"></b> Publication
+            run</span><span><b class="swatch type-editor"></b> Editor tenure / start-exit</span></div>
       </div>
-      <div id="globalLegend" class="legend card stacked-legend"><span><b class="swatch type-novel"></b> Works</span><span><b class="swatch type-person birth"></b> Author birth</span><span><b class="swatch type-person death"></b> Author death</span><span><b class="swatch type-mag"></b> Publication run</span><span><b class="swatch type-editor"></b> Editor tenure / start-exit</span></div>
-    </div>
 
-    <section class="global-controls card">
-      <div class="control-group">
-        <strong>Works</strong>
-        <label><input type="checkbox" class="global-event-filter" value="works" checked> Works / books</label>
-        <label><input type="checkbox" class="global-event-filter" value="media" checked> Films / radio / media</label>
-      </div>
-      <div class="control-group">
-        <strong>People</strong>
-        <label><input type="checkbox" class="global-event-filter" value="birth" checked> Author births</label>
-        <label><input type="checkbox" class="global-event-filter" value="death" checked> Author deaths</label>
-      </div>
-      <div class="control-group">
-        <strong>Publishing</strong>
-        <label><input type="checkbox" class="global-event-filter" value="magazines" checked> Publication lifetimes</label>
-        <label><input type="checkbox" class="global-event-filter" value="editor-tenures" checked> Editor tenures</label>
-        <label><input type="checkbox" class="global-event-filter" value="editor-events" checked> Editor start / exit events</label>
-      </div>
-      <div class="control-group compact-controls">
-        <label>Scale / spacing <input id="globalScale" type="range" min="2" max="16" value="9"></label>
-        <label>Event labels <input id="globalLabelDensity" type="range" min="1" max="3" value="2"></label>
-        <div class="button-row"><button type="button" id="globalAll">All</button><button type="button" id="globalNone">Clear</button></div>
+      <section class="global-controls card">
+        <div class="control-group">
+          <strong>Works</strong>
+          <label><input type="checkbox" class="global-event-filter" value="works" checked> Works / books</label>
+          <label><input type="checkbox" class="global-event-filter" value="media" checked> Films / radio / media</label>
+        </div>
+        <div class="control-group">
+          <strong>People</strong>
+          <label><input type="checkbox" class="global-event-filter" value="birth" checked> Author births</label>
+          <label><input type="checkbox" class="global-event-filter" value="death" checked> Author deaths</label>
+        </div>
+        <div class="control-group">
+          <strong>Publishing</strong>
+          <label><input type="checkbox" class="global-event-filter" value="magazines" checked> Publication
+            lifetimes</label>
+          <label><input type="checkbox" class="global-event-filter" value="editor-tenures" checked> Editor
+            tenures</label>
+          <label><input type="checkbox" class="global-event-filter" value="editor-events" checked> Editor start / exit
+            events</label>
+        </div>
+        <div class="control-group compact-controls">
+          <label>Scale / spacing <input id="globalScale" type="range" min="2" max="16" value="9"></label>
+          <label>Event labels <input id="globalLabelDensity" type="range" min="1" max="3" value="2"></label>
+          <div class="button-row"><button type="button" id="globalAll">All</button><button type="button"
+              id="globalNone">Clear</button></div>
+        </div>
+      </section>
+
+      <div id="globalTimeline" class="viz card global-viz"></div>
+      <div id="globalEventStream" class="card global-stream"></div>
+    </section>
+
+    <section id="reading" class="panel">
+      <h2>Reading list</h2>
+      <div class="card tablewrap">
+        <table id="worksTable">
+          <thead>
+            <tr>
+              <th>Author</th>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Year</th>
+              <th>Collaborator</th>
+              <th>Series</th>
+              <th>List source</th>
+              <th>Links</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
     </section>
 
-    <div id="globalTimeline" class="viz card global-viz"></div>
-    <div id="globalEventStream" class="card global-stream"></div>
-  </section>
+    <section id="magazines" class="panel">
+      <h2>Publications & editors</h2>
+      <div class="card tablewrap">
+        <table id="magTable">
+          <thead>
+            <tr>
+              <th>Publication / title history</th>
+              <th>Type</th>
+              <th>Years</th>
+              <th>Person</th>
+              <th>Role</th>
+              <th>Tenure</th>
+              <th>Link</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
 
-  <section id="reading" class="panel">
-    <h2>Reading list</h2>
-    <div class="card tablewrap"><table id="worksTable"><thead><tr><th>Author</th><th>Title</th><th>Type</th><th>Year</th><th>Collaborator</th><th>Series</th><th>List source</th><th>Links</th></tr></thead><tbody></tbody></table></div>
-  </section>
+    <section id="about" class="panel">
+      <h2>About this project</h2>
 
-  <section id="magazines" class="panel">
-    <h2>Publications & editors</h2>
-    <div class="card tablewrap"><table id="magTable"><thead><tr><th>Publication / title history</th><th>Type</th><th>Years</th><th>Person</th><th>Role</th><th>Tenure</th><th>Link</th></tr></thead><tbody></tbody></table></div>
-  </section>
+      <div class="prose card">
+        <nav class="about-nav" aria-label="About section navigation">
+          <a href="#about-part-1">Part 1: Why</a>
+          <span class="about-nav-sep" aria-hidden="true">|</span>
+          <a href="#about-part-2">Part 2: How</a>
+          <span class="about-nav-sep" aria-hidden="true">|</span>
+          <a href="#about-part-3">Part 3: Development notes</a>
+        </nav>
 
-  <section id="about" class="panel">
-    <h2>About the data</h2>
-    <div class="card prose">
-      <p>This page treats <strong>type</strong> as a publication/object format, not a genre label. The reading list uses a slash-separated tree such as <code>Novel</code>, <code>Novel/Series</code>, <code>Novel/Fix-up</code>, <code>Collection/Anthology</code>, <code>Short story</code>, <code>Nonfiction/Popular science</code>, and <code>Media/Film</code>.</p>
-      <p>Author detail panels show all works currently included for that author. For authors with especially rich internal structures, such as Isaac Asimov and Arthur C. Clarke, the detail view uses multiple lanes for major sequences.</p>
-      <p>Dates and links are a working dataset and should be reviewed before formal publication.</p>
-    </div>
-  </section>
-</main>
-<div id="tooltip"></div>
-<script src="data.js"></script>
-<script src="script.js"></script>
-</body></html>
+        <h3 id="about-part-1">Part 1 — The story of making this : Why</h3>
+
+        <p>
+          This page began as a reading list after this human attended a rather excellent set of sessions on
+          science fiction by <strong><a href="https://www.instagram.com/kurushdalal/" target="_blank"
+              rel="noopener noreferrer" style="text-decoration: underline;">Kurush Dalal</a></strong>
+          and <strong><a href="https://www.instagram.com/gyaanfactorysfw/" target="_blank" rel="noopener noreferrer"
+              style="text-decoration: underline;">The Gyan Factory</a></strong>,
+          and so my absolute thanks to Rhea Dalal and Radhika Radia as well. And to all the participants who
+          enriched the conversation further in so many ways.
+        </p>
+
+        <p>
+          As we progressed, my reading list, like so much of the rest of the Universe, expanded. The Hubble constant 
+          has nothing on Kurush Sir where expanding peoples' universes is concerned. 
+          But once the reading list was compiled, I realised it was vast and unwieldy, and my inherent desire 
+          to organize and map things took over. What began as "let's arrange them all on a timeline and see" 
+          has now become the beast you see in these pages.
+        </p>
+
+        <p>
+          The core reading list was compiled from books and authors mentioned in the session on SciFi's Golden Age,
+          and my knowledge of SciFi pulp magazines was also vastly enhanced by listening to Kurush sir talk.
+          While I had read a few of these and read about a few more in Asimov's and Clarke's autobiographical vignettes
+          that they attach to a lot of their short story collections, I had no comprehension of the vast role they
+          actually played. I decided they could not be omitted, even though that data was so much pain to organize.
+          I had to add my favourites as well, so you will see a a lot more
+          works of authors like Arthur C Clarke and Issac Asimov than the rest, with some more to come
+          (looking at Ursula Le Guin, Roger Zelazny and Margaret Atwood here, among others).
+        </p>
+
+        <p>
+          At some point I may attempt to add complete bibliographies for most of the Authors (with Asimov's prolific and vast body of work the likely exception, or a candidate for a separate page entirely).
+        </p>
+
+        </p>
+        I absolutely and thoroughly used AI tools for this, because there was no way to do this in the dozen or so
+        hours that I have spent across the week otherwise. The data collection and collation alone would have taken a couple of weeks, and I would have gnawed my fingers off almost anywhere across the multiverse before writing 
+        as much HTML as has actually come about.
+        <p>
+        </p>
+        And all this beside my day job.
+        <p>
+        </p>
+        And so while all of the <strong>Why</strong> above has been written by me, mostly human, I will let the tools
+        tell you the details of the <strong>How</strong> I went about this, as distilled from my conversation log with
+        both of them, below.
+        <p>
+          <hr>
+
+        <h3 id="about-part-2">Part 2 — The story of making this : How</h3>
+
+        <p>
+          The initial impulse was not to make a polished website. It was to make sense of a large
+          body of material. A plain reading list is useful, but it hides relationships: who was writing
+          before whom, which books appeared close together, which magazines shaped which eras, which
+          editors were active during which periods, and how literary, publishing, and media history
+          overlapped. The project began with that frustration: the list had information, but not yet
+          structure.
+        </p>
+
+        <p>
+          The first major decision was to treat the reading list as data. The human direction was:
+          collect the authors, works, dates, series, publishers, magazines, editors, and related events;
+          then keep pushing the structure until it could support meaningful timelines rather than just
+          tables. ChatGPT was used as a research, structuring, and coding partner: gathering and
+          normalizing author and work records, proposing data fields, identifying missing dates, helping
+          classify work types, and converting the material into an editable web dataset.
+        </p>
+
+        <p>
+          A lot of early effort went into deciding what the data actually meant. A book, a short story,
+          a film, a radio adaptation, a magazine, an imprint, an editor tenure, and an author lifespan
+          are all "events" in some sense, but they are not the same kind of thing. One important design
+          decision was therefore to separate <strong>work format</strong> from <strong>publishing context</strong>.
+          A short story does not become a magazine just because it first appeared in one. A magazine is
+          part of the publishing ecosystem. A book-publishing imprint like Del Rey Books is not a magazine,
+          but it still belongs in publishing history. These distinctions shaped the data model.
+        </p>
+
+        <p>
+          The work-type system gradually became a tree rather than a flat set of tags. Instead of vague
+          labels, the project uses type paths such as <code>Novel</code>, <code>Novel/Series</code>,
+          <code>Novel/Fix-up</code>, <code>Short story</code>, <code>Collection</code>,
+          <code>Nonfiction</code>, <code>Media/Film</code>, and <code>Media/Radio</code>. This was a
+          design decision as much as a data decision: the visualization needed the difference between
+          form, series, and context to remain legible.
+        </p>
+
+        <p>
+          Once the data had enough structure, the page began evolving as a visualization. The first
+          major view was the <strong>Author Timeline</strong>. This view answers a basic but powerful
+          question: what does science fiction look like if arranged by author generation? Authors are
+          placed vertically, time runs horizontally, and works appear as marks along each author's row.
+          The page opens here because this view gives the reader a broad map before asking them to dive
+          into detail.
+        </p>
+
+        <p>
+          The author order also became a design problem. Sorting purely by publication date would make
+          the page a chronology of books, not a map of authors. Sorting only by birth date would push
+          authors with missing biographical data into misleading positions. The chosen compromise was
+          generation-first: known authors are ordered by birth year, while authors with missing dates are
+          inserted according to their first included publication year. This preserves the feel of literary
+          generations while keeping incomplete records from falling out of the historical sequence.
+        </p>
+
+        <p>
+          The <strong>Author Detail</strong> panel then emerged as a second layer. The overview timeline
+          needed to stay readable, so the author-specific view became the place for richer local structure:
+          one author's lifespan, works, series, subseries, collaborations, and publication clusters. Over
+          time, this view moved away from separating works merely by format. The more useful distinction
+          was whether works belonged to meaningful internal structures: Foundation, Robot / Spacer, Empire,
+          Rama, Space Odyssey, Tarzan, Barsoom, Pellucidar, and so on. This is a dataviz choice: rows should
+          represent meaningful narrative or bibliographic structures, not arbitrary file-like categories.
+        </p>
+
+        <p>
+          The next major shift was from author-centered history to field-wide history. The
+          <strong>Global Timeline</strong> was developed because author timelines alone could not show the
+          ecosystem of science fiction: magazine launches, title changes, editor tenures, publication
+          mergers, media events, births, deaths, and landmark works. This required a different visualization
+          grammar. Long-running entities such as magazines and editor tenures became bands. Books and events
+          became points. The same data also appears as a readable chronological <strong>TimeStream</strong>,
+          because dense visual timelines are powerful for pattern recognition but not always ideal for
+          reading every event.
+        </p>
+
+        <p>
+          Much of the project became a sequence of design decisions about density. How many labels can a
+          timeline carry before it stops being useful? Should every dot be labelled, or only major works?
+          Should labels be hidden, staggered, connected with leader lines, or moved to tooltips? When should
+          the chart expand vertically rather than compress information? The guiding principle became:
+          show structure first, label selectively, and keep full details available through hover, tables,
+          or the TimeStream.
+        </p>
+
+        <p>
+          Several sections were treated as "stable enough" and then reopened later when new needs emerged.
+          The Author Timeline was initially the main focus, then temporarily stabilized while the Global
+          Timeline was rebuilt. Later, once the Global Timeline had matured, the Author Detail view was
+          revisited for decade ticks, a lifespan row, series grouping, connector lines, and better label
+          packing. The publishing-data model was also reopened when magazines became too narrow a category
+          and the project needed to include imprints, title histories, and publication relationships.
+        </p>
+
+        <p>
+          This back-and-forth was not accidental. It is part of the process. A visualization project often
+          begins with one "obvious" structure, then reveals that the data has several competing structures.
+          In this case, the reading list wanted to be at least three things at once: a bibliography, a
+          literary-generation map, and a publishing-history map. The final page therefore became a set of
+          linked views rather than a single definitive chart.
+        </p>
+
+        <p>
+          The visual design also developed through critique rather than a fixed brand direction. Early
+          versions leaned toward an archive-like warmth: readable, literary, and quiet. Later experiments
+          introduced pulp, space-chart, and period-inspired science-fiction palettes from the 1950s, 1970s,
+          and 1980s. The goal was not simply to decorate the page, but to test how atmosphere changes the
+          reading of data. A sci-fi timeline should have some genre flavour, but not at the cost of clarity.
+        </p>
+
+        <p>
+          AI tools played a large role, but not as autonomous authors of the project. The human role was
+          to frame the problem, judge what mattered, reject misleading structures, identify visual clutter,
+          ask for alternative models, and decide what each section was supposed to communicate. ChatGPT was
+          used heavily during the exploratory and architectural stages: proposing structures, generating
+          code, rewriting data, producing changelogs, comparing options, and helping turn vague visual
+          discomfort into implementable changes.
+        </p>
+
+        <p>
+          As the project became more iterative and code-heavy, the workflow shifted toward Codex inside the
+          development environment. That move changed the process. Instead of downloading new versions and
+          testing them as separate files, the project could now be edited directly inside the working folder,
+          previewed through Live Server, committed, and refined as an actual codebase. ChatGPT remained useful
+          for higher-level decisions, writing, data reasoning, and design critique; Codex became better suited
+          to in-place implementation and code maintenance.
+        </p>
+
+        <p>
+          AI tools played a large role, but not as autonomous authors of the project. The human role was
+          that of editor-architect: setting the north star, defining distinctions, testing visual outcomes,
+          rejecting weak fits, and choosing the final tradeoffs. The project was directed toward becoming
+          a public-facing exploratory timeline, not an internal table dump. That meant repeatedly asking:
+          what should this view help someone understand, what distinctions should remain visible, and what
+          should be hidden, simplified, or moved elsewhere?
+        </p>
+
+        <p>
+          A major part of the human work was protecting conceptual clarity. Work type, publishing context,
+          biography, series structure, and media adaptation had to remain separate enough for the visualization
+          to make sense. This is why the project moved from “reading list” to “data model” before it could
+          become a good visualization. The data structure was not a neutral technical step; it was a design
+          decision that enabled later clarity.
+        </p>
+
+        <p>
+          The human direction shaped the major interpretive choices: the Author Timeline was made the default
+          to privilege generation-level understanding before detail; missing author dates were handled with a
+          practical strategy that preserved historical sense; Author Detail was steered toward meaningful
+          bibliographic structures such as series, subseries, and fictional universes rather than arbitrary
+          format lanes; and the Global Timeline was pushed beyond a list of events into an ecosystem map of
+          publications, editors, tenures, title histories, mergers, works, and media events.
+        </p>
+
+        <p>
+          One particularly useful form of collaboration was the use of temporary controls as design instruments.
+          Rather than repeatedly asking the AI to make a spacing value “a little smaller” or “a little larger,”
+          the page was given sliders and toggles for things like publication spacing, label density, event
+          visibility, year range, and timeline scale. This allowed the human designer to test variations directly
+          in the browser, judge the result visually, and then decide which values should become permanent and
+          which controls should be removed. In practice, this turned the webpage itself into a tuning interface:
+          the AI implemented adjustable parameters, but the judgment of rhythm, density, readability, and visual
+          balance remained human.
+        </p>
+
+        <p>
+          The collaboration also required disciplined boundaries. Riskier interaction ideas were kept separate
+          from the stable core. Editing was kept scoped and non-destructive. Fallback behavior was required when
+          D3 or external dependencies might fail. README, ToDo, and changelog updates became part of the process,
+          so design rationale would not disappear after each iteration. These were product-quality decisions,
+          not merely technical housekeeping.
+        </p>
+
+        <p>
+          ChatGPT and Codex played different roles in this workflow. ChatGPT was strongest for research support,
+          data reasoning, design critique, structuring options, writing, changelog synthesis, and helping translate
+          vague discomfort into explicit design decisions. As the project became more code-heavy, Codex became the
+          better tool for in-place implementation inside the working development folder. This shifted the process
+          from ad hoc generated artifacts to a maintained local codebase using VSCode, Live Server, and versioned
+          edits.
+        </p>
+
+        <p>
+          In that sense, this page is also a record of a hybrid practice. It was not made by handing an AI a prompt
+          and accepting the result. It was made through repeated human direction: collect this data, separate these
+          concepts, do not conflate those categories, make this view the default, remove this visual noise, add this
+          fallback, rename this section, treat this as publishing history rather than magazine history, preserve
+          readability, keep the page static, and make it deployable. The AI tools accelerated research, structuring,
+          implementation, and iteration, but the shape of the project came from a continuous sequence of human
+          editorial, pedagogical, and design decisions.
+        </p>
+
+        <p>
+          The result is still a work in progress. It is a reading map, a timeline, a publishing-history
+          diagram, and a case study in AI-assisted data visualization. It is also a useful reminder that
+          visualization is rarely just about drawing data. It is about deciding what distinctions matter,
+          what relationships deserve to be visible, what can be hidden until needed, and what kind of story
+          the structure allows a reader to discover.
+        </p>
+
+        <p>
+          The project's authorship is therefore not simply “human idea, AI execution.” It is closer to
+          human-led editorial architecture with AI-assisted research, code generation, refactoring, and
+          rapid prototyping.
+        </p>
+
+
+        <hr>
+
+        <h3 id="about-part-3">Part 3 — Development notes and changelog</h3>
+
+        <p>
+          The project has developed in phases rather than as a straight line. Sections were built, stabilized,
+          reopened, reworked, and sometimes reframed when the data or design intent changed. This is a cleaned-up
+          public summary of that process; the full working record remains in the project README and ToDo files.
+        </p>
+
+        <h4>Phase 1 — Turning a reading list into a static page</h4>
+
+        <p>
+          The earliest versions established the basic static-site structure: a single-page HTML/CSS/JavaScript
+          project with tabs for author timelines, a global timeline, a reading list, magazines/editors, and an
+          about section. The first challenge was not visual polish but getting the material into a form that
+          could be sorted, filtered, and rendered. The data moved toward an embedded <code>data.js</code> file
+          so the page could remain simple to preview and deploy.
+        </p>
+
+        <p>
+          At this stage, the project was still close to the original idea: "put the reading list on a timeline."
+          But even this immediately raised questions. Should the timeline be organized by author birth, work
+          publication, genre, or series? Should magazines be treated like works? Should adaptations sit beside
+          books? These questions pushed the project from list-making into data modeling.
+        </p>
+
+        <h4>Phase 2 — Establishing the Author Timeline as the main map</h4>
+
+        <p>
+          The Author Timeline became the first mature view. It arranged authors vertically and works horizontally
+          across time. This was chosen as the default because it gives a reader an immediate overview of science
+          fiction as a field shaped by overlapping author generations. The section went through several refinements:
+          renaming, legends, type colours, label spacing, selected-author feedback, and better handling of missing
+          author dates.
+        </p>
+
+        <p>
+          This phase also established an important design principle: the overview should not try to say everything.
+          It should show enough structure to invite exploration. Dense detail belongs in author-specific panels,
+          tables, tooltips, or the global event stream.
+        </p>
+
+        <h4>Phase 3 — Building Author Detail, then reopening it later</h4>
+
+        <p>
+          Author Detail began as a way to see one author's works in a focused timeline. Early versions split rows
+          by broad categories such as standalone novels, collections, and other formats. Later, this was reconsidered.
+          Those divisions were not always meaningful. A more useful structure was to keep a top timeline row and then
+          split rows only where the author's bibliography had meaningful internal structure: series, subseries,
+          fictional universes, collaborations, or major groupings.
+        </p>
+
+        <p>
+          This section was effectively "frozen" once it worked well enough, while development attention moved to the
+          Global Timeline. It was later reopened for deeper improvements: decade ticks, a lifespan/timeline row,
+          connectors from works to the top timeline, cleaner lane priorities, nonfiction handling, label packing, and
+          baseline leader lines. This is a good example of the project's iterative rhythm: a section can be stable for
+          a while, then become newly problematic once the rest of the system becomes more sophisticated.
+        </p>
+
+        <h4>Phase 4 — Cleaning the data model</h4>
+
+        <p>
+          A major phase of work focused on data structure. The project moved from a simple list of titles toward a
+          more explicit model of authors, works, publications, editors, title histories, and relationships. The
+          <code>type_path</code> field became a controlled way to describe the format of a work. Source labels were
+          cleaned into public-facing values: <strong>Reading list</strong> and <strong>Additional Favourites</strong>.
+        </p>
+
+        <p>
+          The publishing model also changed. What began as "magazines" expanded into <strong>publications</strong>,
+          because the data needed to include not only magazines but also imprints such as Del Rey Books. This led to
+          title histories, publication IDs, editor tenure references, and relationships such as mergers or absorptions.
+          This phase was less visually dramatic, but it was essential: better visualizations needed cleaner underlying
+          distinctions.
+        </p>
+
+        <h4>Phase 5 — Rebuilding the Global Timeline</h4>
+
+        <p>
+          The Global Timeline became its own major visualization problem. It had to show point events and long-running
+          spans at the same time: books, films, births, deaths, magazine lifetimes, editor tenures, title changes, and
+          publication relationships. The solution evolved into a hybrid view: a horizontal timeline for visual pattern
+          recognition, paired with a vertical TimeStream for readable chronology.
+        </p>
+
+        <p>
+          This phase involved many layout decisions. Magazine and editor bands needed more breathing room. Editors
+          needed to sit under their publications rather than in separate generic lanes. Publication names needed guide
+          lines. Title changes needed labels, but not duplicates. Merger labels had to come from publication
+          relationships,
+          not title history. The year axis moved upward so it framed the visualization instead of crowding the event
+          baseline. The TimeStream was renamed and allowed to expand down the page instead of becoming a scrollable
+          sub-panel.
+        </p>
+
+        <p>
+          This was the phase where the page most clearly shifted from "timeline of books" to "timeline of a literary
+          and publishing ecosystem."
+        </p>
+
+        <h4>Phase 6 — Label density, collision handling, and visual legibility</h4>
+
+        <p>
+          Once the timelines became denser, label management became one of the central design problems. Several
+          strategies were tested: greedy collision avoidance, staggered tracks, leader lines, label baselines, global
+          packing, dropping unplaceable labels, and relying on tooltips where necessary. The guiding decision was that
+          an unlabeled dot with a tooltip is often better than an unreadable cloud of overlapping labels.
+        </p>
+
+        <p>
+          This phase affected both major timelines and author detail timelines. It also shaped the UI controls. The
+          project added controls for timeline detail, event labels, year range, scale, spacing, and filters. Some
+          controls
+          were temporary tuning tools, later hardcoded once a satisfactory visual value was found.
+        </p>
+
+        <p>
+          A useful process pattern emerged here: some controls were not intended as final public interface
+          features, but as temporary design probes. Sliders for spacing, scale, and density made it possible
+          to explore a range of layouts quickly, choose a working value by visual judgment, and then hardcode
+          or simplify the control later. This became an important part of the human-AI workflow: AI generated
+          the adjustable system, while the human evaluated the visual consequences.
+        </p>
+
+        <h4>Phase 7 — Contextual controls and interface stabilization</h4>
+
+        <p>
+          As more views were added, the shared control bar became confusing. Not every control applied to every tab.
+          Later versions made controls contextual: search and type filters appear where they are useful, year range
+          applies across data views, and theme controls remain available for visual testing. This helped the page feel
+          less like a debugging interface and more like a public-facing exploratory tool.
+        </p>
+
+        <p>
+          The project also stabilized around a static architecture: no build system, no framework, plain HTML/CSS/JS,
+          embedded data, D3 where useful, and SVG fallback renderers where robustness matters. This was a deliberate
+          maintainability decision, not just a technical shortcut.
+        </p>
+
+        <h4>Phase 8 — Visual themes and atmosphere</h4>
+
+        <p>
+          With the structure working, visual themes became a distinct line of exploration. The page tested archive,
+          pulp, space-chart, and archive-plus-accent treatments, then added period-inspired sci-fi palettes based on
+          the 1950s, 1970s, and 1980s. These themes are not just skins. They test different readings of the same data:
+          literary archive, pulp history, cosmic chart, and neon speculative future.
+        </p>
+
+        <p>
+          The Space Chart theme also went through several refinements, replacing repeating dot grids with an irregular
+          starfield and then tuning density, visibility, and subtle colour variation. The broader design direction
+          remains
+          open, but the likely final tone is readable, literary, and atmospheric rather than overly decorative.
+        </p>
+
+        <h4>Phase 9 — Moving from generated versions to a maintained codebase</h4>
+
+        <p>
+          Early development happened as a sequence of generated versions. That was fast for prototyping but awkward for
+          testing. As the project matured, the workflow shifted toward a maintained local codebase using VSCode, Live
+          Server, GitHub Pages, and Codex. This changed the project from a chain of downloadable prototypes into an
+          editable, inspectable, versioned web project.
+        </p>
+
+        <p>
+          This shift also clarified the roles of the tools. ChatGPT was strongest for design reasoning, restructuring
+          data, explaining options, writing case-study text, and maintaining the broader conceptual thread. Codex became
+          more useful for direct code edits, local testing, and integrating changes into the working project folder.
+        </p>
+
+        <p>
+          AI tools played a large role, but not as autonomous authors of the project. The human role was
+          that of editor-architect: setting the north star, defining distinctions, testing visual outcomes,
+          rejecting weak fits, and choosing the final tradeoffs. The project was directed toward becoming
+          a public-facing exploratory timeline, not an internal table dump. That meant repeatedly asking:
+          what should this view help someone understand, what distinctions should remain visible, and what
+          should be hidden, simplified, or moved elsewhere?
+        </p>
+
+        <p>
+          A major part of the human work was protecting conceptual clarity. Work type, publishing context,
+          biography, series structure, and media adaptation had to remain separate enough for the visualization
+          to make sense. This is why the project moved from “reading list” to “data model” before it could
+          become a good visualization. The data structure was not a neutral technical step; it was a design
+          decision that enabled later clarity.
+        </p>
+
+        <p>
+          The human direction shaped the major interpretive choices: the Author Timeline was made the default
+          to privilege generation-level understanding before detail; missing author dates were handled with a
+          practical strategy that preserved historical sense; Author Detail was steered toward meaningful
+          bibliographic structures such as series, subseries, and fictional universes rather than arbitrary
+          format lanes; and the Global Timeline was pushed beyond a list of events into an ecosystem map of
+          publications, editors, tenures, title histories, mergers, works, and media events.
+        </p>
+
+        <p>
+          One particularly useful form of collaboration was the use of temporary controls as design instruments.
+          Rather than repeatedly asking the AI to make a spacing value “a little smaller” or “a little larger,”
+          the page was given sliders and toggles for things like publication spacing, label density, event
+          visibility, year range, and timeline scale. This allowed the human designer to test variations directly
+          in the browser, judge the result visually, and then decide which values should become permanent and
+          which controls should be removed. In practice, this turned the webpage itself into a tuning interface:
+          the AI implemented adjustable parameters, but the judgment of rhythm, density, readability, and visual
+          balance remained human.
+        </p>
+
+        <p>
+          The collaboration also required disciplined boundaries. Riskier interaction ideas were kept separate
+          from the stable core. Editing was kept scoped and non-destructive. Fallback behavior was required when
+          D3 or external dependencies might fail. README, ToDo, and changelog updates became part of the process,
+          so design rationale would not disappear after each iteration. These were product-quality decisions,
+          not merely technical housekeeping.
+        </p>
+
+        <p>
+          ChatGPT and Codex played different roles in this workflow. ChatGPT was strongest for research support,
+          data reasoning, design critique, structuring options, writing, changelog synthesis, and helping translate
+          vague discomfort into explicit design decisions. As the project became more code-heavy, Codex became the
+          better tool for in-place implementation inside the working development folder. This shifted the process
+          from ad hoc generated artifacts to a maintained local codebase using VSCode, Live Server, and versioned
+          edits.
+        </p>
+
+        <p>
+          In that sense, this page is also a record of a hybrid practice. It was not made by handing an AI a prompt
+          and accepting the result. It was made through repeated human direction: collect this data, separate these
+          concepts, do not conflate those categories, make this view the default, remove this visual noise, add this
+          fallback, rename this section, treat this as publishing history rather than magazine history, preserve
+          readability, keep the page static, and make it deployable. The AI tools accelerated research, structuring,
+          implementation, and iteration, but the shape of the project came from a continuous sequence of human
+          editorial, pedagogical, and design decisions.
+        </p>
+
+        <h4>Current status</h4>
+
+        <p>
+          The page is now a working interactive prototype with a structured data model, author timelines, author detail
+          views, a global publishing/event timeline, a TimeStream, publication/editor modeling, contextual controls,
+          theme options, D3 rendering, and fallback behavior. It is still not "finished." It needs data review, link and
+          date checking, mobile testing, final visual direction, and continued polishing of label density and
+          public-facing
+          language.
+        </p>
+
+        <p>
+          As a case study, the project sits at the intersection of reading-list organization, data modeling, literary
+          history, interface design, and AI-assisted prototyping. Its central question has remained the same from the
+          beginning: how can a large reading list become a map that helps people see patterns, histories, and
+          relationships
+          they would miss in a flat list?
+        </p>
+
+      </div>
+    </section>
+  </main>
+  <div id="tooltip"></div>
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

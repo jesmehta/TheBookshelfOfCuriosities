@@ -258,6 +258,35 @@ D3 is useful for timeline rendering, but a native SVG fallback is kept so the Gl
 
 ## Changelog
 
+### v62 Fix About text encoding artifacts
+
+- Corrected mojibake/encoding artifacts in About and control text (quotes, apostrophes, ellipsis, and em dashes).
+- Fixed broken sequences such as `â€œ â€ â€™ â€¦ â€”` across the page content.
+
+Design decision:
+
+- Keep public-facing narrative text typographically clean and readable, since encoding noise breaks credibility and scanability in long-form sections.
+
+### v61 About section in-page navigation
+
+- Added a lightweight navigation strip at the top of the About section.
+- Added jump links to Part 1, Part 2, and Part 3 headings.
+- Added minor About-nav styling for spacing and readability.
+
+Design decision:
+
+- The About section has grown into long-form content, so readers need quick in-page movement across major parts without changing tabs or adding new pages.
+
+### v60 About section case-study rewrite
+
+- Replaced the About panel with an expanded two-part narrative.
+- Part 1 now presents a public-facing making-of and dataviz case-study story.
+- Part 2 now summarizes development history as phase-based notes instead of a raw version log.
+
+Design decision:
+
+- The About section should communicate human-led decision-making and project intent in a format suitable for teaching, PR, and case-study reuse, while keeping technical implementation details in README and ToDo.
+
 ### v59 HR-inspired Space Chart star colors
 
 - Added more fixed irregular star points to the Space Chart background.
