@@ -66,7 +66,9 @@ Status key:
 | Status | Task | Notes |
 | --- | --- | --- |
 | Not started | Evaluate current four themes | Archive, Pulp, Space chart, Archive + accents. |
-| Not started | Rework theme system | Revisit theme names, palette logic, contrast, texture, and final public visual direction. |
+| In progress | Rework theme system | v55 adds three period sci-fi themes; final public visual direction still needs choosing. |
+| Done | Add period sci-fi themes | v55 adds 1950s Atomic Pulp, 1970s New Wave Cosmos, and 1980s Neon Orbit. |
+| Done | Replace Space Chart repeating grids | v56 uses a fixed irregular starfield instead of overlapping 60px/90px dot grids; v57 makes it more visible; v58 adds density; v59 adds HR-inspired star colors. |
 | Not started | Refine likely final direction | Preferred direction is archive with subtle pulp accents. |
 | Not started | Check background texture subtlety | CSS-only textures should stay low contrast and non-distracting. |
 | Not started | Review mobile layout | Check controls, tables, timeline labels, and event stream on narrow screens. |
@@ -134,6 +136,11 @@ Status key:
 | v52 | Add D3 Author Timeline renderer | Main Author Timeline now uses D3 when available and keeps native SVG fallback. |
 | v53 | Polish main Author Timeline guides | Added author-name guide lines and shortened main timeline label baselines. |
 | v54 | Match Author Timeline guide styling | Author-name guides now use the same stroke/dash/opacity settings as publication guides. |
+| v55 | Add period sci-fi themes | Added 1950s Atomic Pulp, 1970s New Wave Cosmos, and 1980s Neon Orbit theme options. |
+| v56 | Replace Space Chart dot grids | Space Chart now uses a fixed irregular starfield to avoid subtle repeating lattice patterns. |
+| v57 | Strengthen Space Chart starfield | Increased star count, point size, and opacity so the irregular field is visible in normal viewing. |
+| v58 | Densify Space Chart starfield | Added more scattered star points while keeping the fixed irregular background approach. |
+| v59 | Add HR-inspired star colors | Space Chart starfield now uses subtle blue-white, white, yellow, amber, and soft red star colors. |
 
 ## New Ideas Parking Lot
 

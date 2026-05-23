@@ -213,6 +213,9 @@ Current theme options:
 - Pulp
 - Space chart
 - Archive + accents
+- 1950s - Atomic Pulp
+- 1970s - New Wave Cosmos
+- 1980s - Neon Orbit
 
 Preferred likely direction:
 
@@ -254,6 +257,52 @@ Themes should add atmosphere without overpowering text or labels. Timeline reada
 D3 is useful for timeline rendering, but a native SVG fallback is kept so the Global Timeline does not go blank when the CDN fails, is blocked, or has caching issues.
 
 ## Changelog
+
+### v59 HR-inspired Space Chart star colors
+
+- Added more fixed irregular star points to the Space Chart background.
+- Introduced subtle star color variation inspired by the Hertzsprung-Russell diagram: mostly white and blue-white stars, with a smaller number of pale yellow, amber, and soft red points.
+
+Design decision:
+
+- The color variation should suggest astronomical star temperatures without becoming decorative noise. Blue-white and white remain dominant so the background still reads as a subdued chart texture.
+
+### v58 Denser Space Chart starfield
+
+- Added more fixed irregular star points to the Space Chart background.
+
+Design decision:
+
+- A denser starfield makes the texture read more clearly while preserving the non-repeating scatter introduced in v56.
+
+### v57 Strengthen Space Chart starfield
+
+- Increased the visibility of the fixed irregular Space Chart starfield.
+- Added more scattered points with slightly stronger opacity and radius variation.
+
+Design decision:
+
+- The first irregular starfield was too sparse/faint in normal viewing. This pass keeps the non-repeating approach but makes the points visible enough to read as intentional texture.
+
+### v56 Space Chart irregular starfield
+
+- Replaced the Space Chart theme's two overlapping dot grids with a fixed irregular starfield.
+- Kept the soft blue and purple background glows.
+
+Design decision:
+
+- The previous 60px and 90px dot grids created a subtle larger repeating pattern. A static irregular starfield keeps the sci-fi chart atmosphere without the distracting lattice effect.
+
+### v55 Period sci-fi visual themes
+
+- Added three switchable visual themes: `1950s - Atomic Pulp`, `1970s - New Wave Cosmos`, and `1980s - Neon Orbit`.
+- Extended the theme switcher without changing the default `Archive` theme.
+- Moved more chart, guide, tooltip, event stream, form, and panel colors onto theme variables so the new palettes apply consistently across views.
+- Kept background textures CSS-only and low contrast.
+
+Design decision:
+
+- The new themes are exploratory visual directions rather than a final rebrand. They keep the existing layout and data visualization structure intact while testing period-specific sci-fi palettes with readable text, subdued gridlines, and clearly differentiated event colors.
 
 ### v54 Darker Author Timeline name guides
 

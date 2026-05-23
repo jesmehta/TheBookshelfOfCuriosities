@@ -49,7 +49,7 @@ function sourceLabel(v){
   return v||"Reading list";
 }
 function setTheme(theme){
-  document.body.classList.remove("theme-archive","theme-pulp","theme-space","theme-archivePlus");
+  document.body.classList.remove("theme-archive","theme-pulp","theme-space","theme-archivePlus","theme-atomicPulp","theme-newWave","theme-neonOrbit");
   document.body.classList.add("theme-"+(theme||"archive"));
 }
 function selectedGlobalTypes(){
