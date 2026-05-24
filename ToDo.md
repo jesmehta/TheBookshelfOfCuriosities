@@ -146,6 +146,12 @@ Status key:
 | v62 | Fix About text encoding artifacts | Repaired mojibake characters (quotes/dashes/ellipsis/apostrophes) in About and related UI text. |
 | v63 | Reconcile ToDo statuses with project reality | Marked v14 stability and GitHub Pages live status as done; kept README update discipline as ongoing; left only Global Timeline experiments open. |
 | v64 | Reorder themes and set new defaults | Theme selector now follows 50s/70s/80s/Space/Pulp/Archive, default theme is 1970s, and Global Timeline defaults use min scale with max event labels. |
+| v65 | Reconcile timeline legends and compact global controls | Author legend now matches Global stacked style; Global legend moved beside compacted filters/sliders in one top control row. |
+| v66 | Restore horizontal legends and add Author scale slider | Reverted both timeline legends to horizontal style and added Author Timeline scale/spacing control with reset support. |
+| v67 | Split controls by function and relabel timeline detail | Top controls now group Content vs Visual, Global visual sliders moved up, and Timeline detail labels now read Core/Notable/All listed works. |
+| v68 | Add dual-mode year controls and remove duplicate global visual sliders | From/To now allow typing + sliding with synced values and valid range constraints; Global visual slider duplicates removed from panel controls. |
+| v69 | Expand shared scale range and remove Timeline detail control | Timeline detail hidden for now; Author and Global scales now use 0.2–32 range, with Author defaulting to minimum and Global keeping its existing default. |
+| v70 | Refine control compactness and year interaction behavior | Timeline scale labels renamed, max scale reduced to 8, bucket labels hidden, year fields resized/inline with sliders, and wheel-step + sync behavior fixed for year controls. |
 
 ## New Ideas Parking Lot
 

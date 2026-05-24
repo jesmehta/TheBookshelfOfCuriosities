@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
@@ -17,28 +17,32 @@
   </header>
   <main>
     <section class="controls card">
-      <label>Search<input id="search" type="search" placeholder="Author, title, collaboratorâ€¦"></label>
-      <label class="context-control" data-tabs="lifelines reading">Type<select id="typeFilter">
-          <option value="">All</option>
-        </select></label>
-      <label class="context-control" data-tabs="lifelines global reading magazines">Timeline detail<select
-          id="levelFilter">
-          <option value="3">All listed works</option>
-          <option value="2">Major + important</option>
-          <option value="1">Major only</option>
-        </select></label>
-      <label class="context-control" data-tabs="lifelines global reading magazines">From<input id="startYear"
-          type="number" value="1800"></label>
-      <label class="context-control" data-tabs="lifelines global reading magazines">To<input id="endYear" type="number"
-          value="2020"></label>
-      <label class="context-control" data-tabs="lifelines global reading magazines about">Theme<select id="themeSelect">
-          <option value="atomicPulp">1950s - Atomic Pulp</option>
-          <option value="newWave" selected>1970s - New Wave Cosmos</option>
-          <option value="neonOrbit">1980s - Neon Orbit</option>
-          <option value="space">Space chart</option>
-          <option value="pulp">Pulp</option>
-          <option value="archive">Archive</option>
-        </select></label>
+      <div class="controls-bucket">
+        <label>Search<input id="search" type="search" placeholder="Author, title, collaborator..."></label>
+        <label class="context-control" data-tabs="lifelines reading">Type of Work<select id="typeFilter">
+            <option value="">All</option>
+          </select></label>
+        <label class="context-control year-dual" data-tabs="lifelines global reading magazines"><span>From</span><div class="year-dual-row"><input id="startYear"
+            type="number" min="1750" max="2050" step="1" value="1800"><input id="startYearRange" type="range" min="1750" max="2050" step="1" value="1800"></div></label>
+        <label class="context-control year-dual" data-tabs="lifelines global reading magazines"><span>To</span><div class="year-dual-row"><input id="endYear" type="number"
+            min="1750" max="2050" step="1" value="2020"><input id="endYearRange" type="range" min="1750" max="2050" step="1" value="2020"></div></label>
+      </div>
+      <div class="controls-bucket">
+        <label class="context-control" data-tabs="lifelines">Timeline scale<input id="lifelineScale" type="range" min="0.2"
+            max="8" step="0.1" value="0.2"></label>
+        <label class="context-control" data-tabs="global">Timeline scale<input id="globalScale" type="range" min="0.2"
+            max="8" step="0.1" value="2"></label>
+        <label class="context-control" data-tabs="global">Event labels<input id="globalLabelDensity" type="range" min="1"
+            max="3" value="3"></label>
+        <label class="context-control" data-tabs="lifelines global reading magazines about">Theme<select id="themeSelect">
+            <option value="atomicPulp">1950s - Atomic Pulp</option>
+            <option value="newWave" selected>1970s - New Wave Cosmos</option>
+            <option value="neonOrbit">1980s - Neon Orbit</option>
+            <option value="space">Space chart</option>
+            <option value="pulp">Pulp</option>
+            <option value="archive">Archive</option>
+          </select></label>
+      </div>
       <button id="resetBtn" class="context-control" data-tabs="lifelines global reading magazines">Reset</button>
     </section>
 
@@ -58,25 +62,20 @@
             class="swatch type-short"></b> Short fiction / novella</span><span><b class="swatch type-collection"></b>
           Collection / anthology / poetry</span><span><b class="swatch type-nonfiction"></b> Nonfiction</span><span><b
             class="swatch type-media"></b> Film / radio / media</span><span><b class="swatch type-other"></b>
-          Other</span><span><b class="swatch type-mag"></b> Magazine context</span><span><b
-            class="swatch type-editor"></b> Editor tenure</span></div>
+          Other</span></div>
       <div id="lifelineChart" class="viz card"></div>
       <div id="inlineAuthorDetail" class="inline-detail-slot"></div>
       <div id="authorDetail" class="card detail empty">Click an author to view their bibliography timeline.</div>
     </section>
 
     <section id="global" class="panel">
-      <div class="section-head split-head">
-        <div>
-          <h2>Global timeline</h2>
-          <p class="hint">A hybrid view: horizontal bands for long-running entities and a vertical event stream for the
-            historical sequence.</p>
-        </div>
-        <div id="globalLegend" class="legend card stacked-legend"><span><b class="swatch type-novel"></b>
-            Works</span><span><b class="swatch type-person birth"></b> Author birth</span><span><b
-              class="swatch type-person death"></b> Author death</span><span><b class="swatch type-mag"></b> Publication
-            run</span><span><b class="swatch type-editor"></b> Editor tenure / start-exit</span></div>
-      </div>
+      <h2>Global timeline</h2>
+      <p class="hint">A hybrid view: horizontal bands for long-running entities and a vertical event stream for the
+        historical sequence.</p>
+      <div id="globalLegend" class="legend card"><span><b class="swatch type-novel"></b>
+          Works</span><span><b class="swatch type-person birth"></b> Author birth</span><span><b
+            class="swatch type-person death"></b> Author death</span><span><b class="swatch type-mag"></b> Publication
+          run</span><span><b class="swatch type-editor"></b> Editor tenure / start-exit</span></div>
 
       <section class="global-controls card">
         <div class="control-group">
@@ -99,8 +98,6 @@
             events</label>
         </div>
         <div class="control-group compact-controls">
-          <label>Scale / spacing <input id="globalScale" type="range" min="2" max="16" value="2"></label>
-          <label>Event labels <input id="globalLabelDensity" type="range" min="1" max="3" value="3"></label>
           <div class="button-row"><button type="button" id="globalAll">All</button><button type="button"
               id="globalNone">Clear</button></div>
         </div>
@@ -163,7 +160,7 @@
           <a href="#about-part-3">Part 3: Development notes</a>
         </nav>
 
-        <h3 id="about-part-1">Part 1 â€” The story of making this : Why</h3>
+        <h3 id="about-part-1">Part 1 - The story of making this : Why</h3>
 
         <p>
           This page began as a reading list after this human attended a rather excellent set of sessions on
@@ -213,7 +210,7 @@
         <p>
           <hr>
 
-        <h3 id="about-part-2">Part 2 â€” The story of making this : How</h3>
+        <h3 id="about-part-2">Part 2 - The story of making this : How</h3>
 
         <p>
           The initial impulse was not to make a polished website. It was to make sense of a large
@@ -355,7 +352,7 @@
         <p>
           A major part of the human work was protecting conceptual clarity. Work type, publishing context,
           biography, series structure, and media adaptation had to remain separate enough for the visualization
-          to make sense. This is why the project moved from â€œreading listâ€ to â€œdata modelâ€ before it could
+          to make sense. This is why the project moved from "reading list" to "data model" before it could
           become a good visualization. The data structure was not a neutral technical step; it was a design
           decision that enabled later clarity.
         </p>
@@ -371,8 +368,7 @@
 
         <p>
           One particularly useful form of collaboration was the use of temporary controls as design instruments.
-          Rather than repeatedly asking the AI to make a spacing value â€œa little smallerâ€ or â€œa little larger,â€
-          the page was given sliders and toggles for things like publication spacing, label density, event
+          Rather than repeatedly asking the AI to make a spacing value "a little smaller" or "a little larger," the page was given sliders and toggles for things like publication spacing, label density, event
           visibility, year range, and timeline scale. This allowed the human designer to test variations directly
           in the browser, judge the result visually, and then decide which values should become permanent and
           which controls should be removed. In practice, this turned the webpage itself into a tuning interface:
@@ -416,7 +412,7 @@
         </p>
 
         <p>
-          The project's authorship is therefore not simply â€œhuman idea, AI execution.â€ It is closer to
+          The project's authorship is therefore not simply "human idea, AI execution." It is closer to
           human-led editorial architecture with AI-assisted research, code generation, refactoring, and
           rapid prototyping.
         </p>
@@ -424,7 +420,7 @@
 
         <hr>
 
-        <h3 id="about-part-3">Part 3 â€” Development notes and changelog</h3>
+        <h3 id="about-part-3">Part 3 - Development notes and changelog</h3>
 
         <p>
           The project has developed in phases rather than as a straight line. Sections were built, stabilized,
@@ -432,7 +428,7 @@
           public summary of that process; the full working record remains in the project README and ToDo files.
         </p>
 
-        <h4>Phase 1 â€” Turning a reading list into a static page</h4>
+        <h4>Phase 1 - Turning a reading list into a static page</h4>
 
         <p>
           The earliest versions established the basic static-site structure: a single-page HTML/CSS/JavaScript
@@ -449,7 +445,7 @@
           books? These questions pushed the project from list-making into data modeling.
         </p>
 
-        <h4>Phase 2 â€” Establishing the Author Timeline as the main map</h4>
+        <h4>Phase 2 - Establishing the Author Timeline as the main map</h4>
 
         <p>
           The Author Timeline became the first mature view. It arranged authors vertically and works horizontally
@@ -465,7 +461,7 @@
           tables, tooltips, or the global event stream.
         </p>
 
-        <h4>Phase 3 â€” Building Author Detail, then reopening it later</h4>
+        <h4>Phase 3 - Building Author Detail, then reopening it later</h4>
 
         <p>
           Author Detail began as a way to see one author's works in a focused timeline. Early versions split rows
@@ -483,7 +479,7 @@
           a while, then become newly problematic once the rest of the system becomes more sophisticated.
         </p>
 
-        <h4>Phase 4 â€” Cleaning the data model</h4>
+        <h4>Phase 4 - Cleaning the data model</h4>
 
         <p>
           A major phase of work focused on data structure. The project moved from a simple list of titles toward a
@@ -500,7 +496,7 @@
           distinctions.
         </p>
 
-        <h4>Phase 5 â€” Rebuilding the Global Timeline</h4>
+        <h4>Phase 5 - Rebuilding the Global Timeline</h4>
 
         <p>
           The Global Timeline became its own major visualization problem. It had to show point events and long-running
@@ -524,7 +520,7 @@
           and publishing ecosystem."
         </p>
 
-        <h4>Phase 6 â€” Label density, collision handling, and visual legibility</h4>
+        <h4>Phase 6 - Label density, collision handling, and visual legibility</h4>
 
         <p>
           Once the timelines became denser, label management became one of the central design problems. Several
@@ -548,7 +544,7 @@
           the adjustable system, while the human evaluated the visual consequences.
         </p>
 
-        <h4>Phase 7 â€” Contextual controls and interface stabilization</h4>
+        <h4>Phase 7 - Contextual controls and interface stabilization</h4>
 
         <p>
           As more views were added, the shared control bar became confusing. Not every control applied to every tab.
@@ -563,7 +559,7 @@
           maintainability decision, not just a technical shortcut.
         </p>
 
-        <h4>Phase 8 â€” Visual themes and atmosphere</h4>
+        <h4>Phase 8 - Visual themes and atmosphere</h4>
 
         <p>
           With the structure working, visual themes became a distinct line of exploration. The page tested archive,
@@ -579,7 +575,7 @@
           open, but the likely final tone is readable, literary, and atmospheric rather than overly decorative.
         </p>
 
-        <h4>Phase 9 â€” Moving from generated versions to a maintained codebase</h4>
+        <h4>Phase 9 - Moving from generated versions to a maintained codebase</h4>
 
         <p>
           Early development happened as a sequence of generated versions. That was fast for prototyping but awkward for
@@ -606,7 +602,7 @@
         <p>
           A major part of the human work was protecting conceptual clarity. Work type, publishing context,
           biography, series structure, and media adaptation had to remain separate enough for the visualization
-          to make sense. This is why the project moved from â€œreading listâ€ to â€œdata modelâ€ before it could
+          to make sense. This is why the project moved from "reading list" to "data model" before it could
           become a good visualization. The data structure was not a neutral technical step; it was a design
           decision that enabled later clarity.
         </p>
@@ -622,8 +618,7 @@
 
         <p>
           One particularly useful form of collaboration was the use of temporary controls as design instruments.
-          Rather than repeatedly asking the AI to make a spacing value â€œa little smallerâ€ or â€œa little larger,â€
-          the page was given sliders and toggles for things like publication spacing, label density, event
+          Rather than repeatedly asking the AI to make a spacing value "a little smaller" or "a little larger," the page was given sliders and toggles for things like publication spacing, label density, event
           visibility, year range, and timeline scale. This allowed the human designer to test variations directly
           in the browser, judge the result visually, and then decide which values should become permanent and
           which controls should be removed. In practice, this turned the webpage itself into a tuning interface:
@@ -686,3 +681,5 @@
 </body>
 
 </html>
+
+

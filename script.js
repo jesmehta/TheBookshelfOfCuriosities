@@ -16,6 +16,9 @@ function typClass(t){
   return "type-other";
 }
 function link(txt,url){return url?`<a href="${url}" target="_blank" rel="noreferrer">${txt}</a>`:""}
+function formatTypeLabel(typePath){
+  return (typePath||"").split("/").map(s=>s.trim()).filter(Boolean).join(" → ");
+}
 function activeTab(){return document.querySelector(".tab.active")?.dataset.tab || "lifelines"}
 function controlApplies(id,tab=activeTab()){
   const el=$("#"+id);
@@ -25,12 +28,13 @@ function controlApplies(id,tab=activeTab()){
 }
 function filters(){
   const tab=activeTab();
+  const levelControl=$("#levelFilter");
   return{
     q:controlApplies("search",tab)?$("#search").value.toLowerCase().trim():"",
     type:controlApplies("typeFilter",tab)?$("#typeFilter").value:"",
-    level:controlApplies("levelFilter",tab)?parseInt($("#levelFilter").value,10):3,
+    level:controlApplies("levelFilter",tab)&&levelControl?parseInt(levelControl.value,10):3,
     start:controlApplies("startYear",tab)?parseInt($("#startYear").value,10):1800,
-    end:controlApplies("endYear",tab)?parseInt($("#endYear").value,10):2020
+    end:controlApplies("endYear",tab)?parseInt($("#endYear").value,10):2050
   }
 }
 function filteredWorks(forTimeline=false){
@@ -52,6 +56,53 @@ function setTheme(theme){
   if(theme==="archivePlus") theme="archive";
   document.body.classList.remove("theme-archive","theme-pulp","theme-space","theme-archivePlus","theme-atomicPulp","theme-newWave","theme-neonOrbit");
   document.body.classList.add("theme-"+(theme||"newWave"));
+}
+function syncYearControls(changed, finalize=false){
+  const sNum=$("#startYear"), eNum=$("#endYear"), sRange=$("#startYearRange"), eRange=$("#endYearRange");
+  if(!sNum || !eNum || !sRange || !eRange) return;
+  const min=parseInt(sRange.min||"1750",10);
+  const max=parseInt(sRange.max||"2050",10);
+  const sNumVal=parseInt(sNum.value,10), eNumVal=parseInt(eNum.value,10);
+  const sRangeVal=parseInt(sRange.value,10), eRangeVal=parseInt(eRange.value,10);
+  let s=Number.isFinite(sNumVal)?sNumVal:sRangeVal;
+  let e=Number.isFinite(eNumVal)?eNumVal:eRangeVal;
+  if(changed==="startYearRange" && Number.isFinite(sRangeVal)) s=sRangeVal;
+  if(changed==="endYearRange" && Number.isFinite(eRangeVal)) e=eRangeVal;
+  if(changed==="startYear" && Number.isFinite(sNumVal)) s=sNumVal;
+  if(changed==="endYear" && Number.isFinite(eNumVal)) e=eNumVal;
+  const fromTextEdit=(changed==="startYear"||changed==="endYear");
+  if(fromTextEdit){
+    if((changed==="startYear" && !Number.isFinite(s)) || (changed==="endYear" && !Number.isFinite(e))) return;
+    if(!finalize){
+      if(Number.isFinite(s)) sRange.value=Math.max(min,Math.min(max,s));
+      if(Number.isFinite(e)) eRange.value=Math.max(min,Math.min(max,e));
+      return;
+    }
+  }
+  if(!Number.isFinite(s)) s=parseInt(sRange.value,10);
+  if(!Number.isFinite(e)) e=parseInt(eRange.value,10);
+  if(!Number.isFinite(s)) s=min;
+  if(!Number.isFinite(e)) e=max;
+  if(changed==="startYear" || changed==="startYearRange"){
+    if(s>e) e=s;
+  }else if(changed==="endYear" || changed==="endYearRange"){
+    if(e<s) s=e;
+  }
+  s=Math.max(min,Math.min(max,s));
+  e=Math.max(min,Math.min(max,e));
+  sNum.value=s; eNum.value=e; sRange.value=s; eRange.value=e;
+}
+function stepYearControl(id,delta){
+  const el=$("#"+id);
+  if(!el) return;
+  const min=id.includes("Range")?parseInt(el.min||"1750",10):1750;
+  const max=id.includes("Range")?parseInt(el.max||"2050",10):2050;
+  let v=parseInt(el.value,10);
+  if(!Number.isFinite(v)) v=(id.startsWith("start")?min:max);
+  v=Math.max(min,Math.min(max,v+delta));
+  el.value=v;
+  syncYearControls(id,true);
+  render();
 }
 function selectedGlobalTypes(){
   const boxes=[...document.querySelectorAll(".global-event-filter")];
@@ -141,9 +192,18 @@ function updateContextualControls(tab=activeTab()){
 
 function setup(){
   document.body.classList.add("theme-newWave");
-  [...new Set(data.works.map(w=>w.type_path).filter(Boolean))].sort().forEach(t=>{$("#typeFilter").insertAdjacentHTML("beforeend",`<option>${t}</option>`)});
+  [...new Set(data.works.map(w=>w.type_path).filter(Boolean))].sort().forEach(t=>{$("#typeFilter").insertAdjacentHTML("beforeend",`<option value="${t}">${formatTypeLabel(t)}</option>`)});
   document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab,.panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("#"+b.dataset.tab).classList.add("active");updateContextualControls(b.dataset.tab);render()});
-  ["search","typeFilter","levelFilter","authorSort","startYear","endYear"].forEach(id=>$("#"+id)?.addEventListener("input",render));
+  ["search","typeFilter","authorSort"].forEach(id=>$("#"+id)?.addEventListener("input",render));
+  ["startYearRange","endYearRange"].forEach(id=>$("#"+id)?.addEventListener("input",()=>{syncYearControls(id,true);render()}));
+  ["startYear","endYear"].forEach(id=>$("#"+id)?.addEventListener("input",()=>{syncYearControls(id,false);render()}));
+  ["startYear","endYear","startYearRange","endYearRange"].forEach(id=>$("#"+id)?.addEventListener("change",()=>{syncYearControls(id,true);render()}));
+  ["startYear","endYear","startYearRange","endYearRange"].forEach(id=>$("#"+id)?.addEventListener("wheel",e=>{
+    if(document.activeElement!==e.currentTarget) return;
+    e.preventDefault();
+    stepYearControl(id, e.deltaY>0 ? 5 : -5);
+  },{passive:false}));
+  $("#lifelineScale")?.addEventListener("input",renderLifelines);
   $("#showMagazineContext")?.addEventListener("change",render);
   $("#themeSelect")?.addEventListener("change",e=>{setTheme(e.target.value); render()});
   document.querySelectorAll(".global-event-filter").forEach(cb=>cb.addEventListener("change",renderGlobal));
@@ -151,12 +211,13 @@ function setup(){
   $("#globalLabelDensity")?.addEventListener("input",renderGlobal);
   $("#globalAll")?.addEventListener("click",()=>{document.querySelectorAll(".global-event-filter").forEach(cb=>cb.checked=true);renderGlobal()});
   $("#globalNone")?.addEventListener("click",()=>{document.querySelectorAll(".global-event-filter").forEach(cb=>cb.checked=false);renderGlobal()});
-  $("#resetBtn").onclick=()=>{$("#search").value="";$("#typeFilter").value="";$("#levelFilter").value="3";if($("#authorSort")) $("#authorSort").value="birth";$("#startYear").value=1800;$("#endYear").value=2020;if($("#themeSelect")){$("#themeSelect").value="newWave";setTheme("newWave")}if($("#globalScale")) $("#globalScale").value="2";if($("#globalLabelDensity")) $("#globalLabelDensity").value="3";render()};
+  $("#resetBtn").onclick=()=>{$("#search").value="";$("#typeFilter").value="";if($("#authorSort")) $("#authorSort").value="birth";$("#startYear").value=1800;$("#endYear").value=2020;if($("#startYearRange")) $("#startYearRange").value="1800";if($("#endYearRange")) $("#endYearRange").value="2020";syncYearControls(undefined,true);if($("#lifelineScale")) $("#lifelineScale").value="0.2";if($("#themeSelect")){$("#themeSelect").value="newWave";setTheme("newWave")}if($("#globalScale")) $("#globalScale").value="2";if($("#globalLabelDensity")) $("#globalLabelDensity").value="3";render()};
   // Explicit default: open the Author timeline first.
   document.querySelectorAll(".tab,.panel").forEach(x=>x.classList.remove("active"));
   document.querySelector('[data-tab="lifelines"]')?.classList.add("active");
   $("#lifelines")?.classList.add("active");
   updateContextualControls("lifelines");
+  syncYearControls(undefined,true);
   render()
 }
 function tip(e,html){const t=$("#tooltip");t.innerHTML=html;t.style.left=e.clientX+"px";t.style.top=e.clientY+"px";t.style.opacity=1}
@@ -285,7 +346,9 @@ function renderLifelines(){
 function renderLifelinesD3(){
   const el=$("#lifelineChart");
   el.innerHTML="";
-  const f=filters(), left=240, right=60, top=52, rowH=44, contextRowH=30, w=Math.max(1180,el.clientWidth-40), plot=w-left-right;
+  const f=filters(), left=240, right=60, top=52, rowH=44, contextRowH=30;
+  const lifelineScale=Number($("#lifelineScale")?.value||0.2), lifelinePxPerYear=lifelineScale*7;
+  const w=Math.max(1180,(f.end-f.start)*lifelinePxPerYear+left+right), plot=w-left-right;
   const x=d3.scaleLinear().domain([f.start,f.end]).range([left,w-right]);
   const fw=filteredWorks(true);
   let authors=data.authors.filter(a=>fw.some(w=>w.author_id===a.id));
@@ -389,7 +452,9 @@ function renderLifelinesD3(){
 function renderLifelinesNative(){
   const el=$("#lifelineChart");
   el.innerHTML="";
-  const f=filters(), left=240, right=60, top=52, rowH=44, contextRowH=30, w=Math.max(1180,el.clientWidth-40), plot=w-left-right, x=yr=>left+((yr-f.start)/(f.end-f.start))*plot;
+  const f=filters(), left=240, right=60, top=52, rowH=44, contextRowH=30;
+  const lifelineScale=Number($("#lifelineScale")?.value||0.2), lifelinePxPerYear=lifelineScale*7;
+  const w=Math.max(1180,(f.end-f.start)*lifelinePxPerYear+left+right), plot=w-left-right, x=yr=>left+((yr-f.start)/(f.end-f.start))*plot;
   const fw=filteredWorks(true);
   let authors=data.authors.filter(a=>fw.some(w=>w.author_id===a.id));
   authors=sortAuthorsForTimeline(authors, fw);

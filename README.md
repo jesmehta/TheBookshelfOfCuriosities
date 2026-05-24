@@ -258,6 +258,76 @@ D3 is useful for timeline rendering, but a native SVG fallback is kept so the Gl
 
 ## Changelog
 
+### v70 Compact controls and robust dual-mode year interaction
+
+- Reduced shared timeline scale max from `32` to `8` while keeping minimum at `0.2`.
+- Kept defaults as: Author `0.2`, Global `2`.
+- Renamed `Scale / spacing` labels to `Timeline scale`.
+- Removed visible `Content` / `Visual` bucket headings while keeping grouped structure.
+- Tightened control spacing so the top control area uses less vertical space.
+- Fixed year controls so typing and slider movement both work and stay synchronized.
+- Added wheel-step behavior (focused control only): scroll adjusts year by `5`.
+- Kept `From <= To` constraint while allowing normal text entry flow.
+
+Design decision:
+
+- Preserve a clean, compact control bar with clear semantics and low visual overhead, while restoring smooth interaction for both precision entry and quick scrubbing.
+
+### v69 Scale-range expansion and Timeline detail removal
+
+- Removed `Timeline detail` from top controls for now.
+- Expanded shared timeline scale ranges to `0.2` through `32` for both Author and Global views.
+- Set Author Timeline default scale to minimum (`0.2`).
+- Kept Global Timeline default scale at current value (`2`).
+- Updated reset behavior to restore those defaults.
+
+Design decision:
+
+- Keep one broad shared scale range for consistent visual tuning, while defaulting Author to a very compact view and preserving the existing Global default.
+
+### v68 Dual year input (type + slide) and global control cleanup
+
+- `From` and `To` now support both number entry and range slider interaction.
+- Number fields and sliders are synchronized in both directions.
+- Year bounds are constrained to keep `From <= To`.
+- Global panel no longer duplicates visual sliders after moving them to the top `Visual` bucket.
+
+Design decision:
+
+- Year selection should support both precise typing and fast scrubbing, while visual controls stay centralized in one place to avoid duplication.
+
+### v67 Content/visual controls split and timeline-detail relabel
+
+- Renamed Timeline detail options from `Major` / `Important` to `Core` / `Notable`.
+- Split top controls into two grouped buckets: `Content` and `Visual`.
+- Moved Global visual sliders (`Scale / spacing`, `Event labels`) into the top `Visual` group.
+- Kept Global panel filter groups focused on event-type filtering and quick `All/Clear`.
+
+Design decision:
+
+- Separate semantic/content filters from visual tuning controls so intent is clearer: content controls change what data is included, visual controls change how it is displayed.
+
+### v66 Legend style rollback and Author Timeline scale control
+
+- Restored both timeline legends to the older horizontal `legend card` style.
+- Added an Author Timeline `Scale / spacing` slider in shared controls.
+- Wired the Author scale slider to both D3 and native Author Timeline renderers.
+- Updated reset behavior to restore the Author scale default.
+
+Design decision:
+
+- Keep visual legend style consistent with the prior preferred horizontal format, while giving Author Timeline its own spacing control for independent readability tuning.
+
+### v65 Timeline legend/layout reconciliation
+
+- Changed the Author Timeline legend to the same stacked panel style used by the Global Timeline legend.
+- Compacted Global Timeline filter/slider controls to reduce vertical footprint.
+- Moved the Global legend into the same control band so filters/sliders and legend share one compact top row.
+
+Design decision:
+
+- Keep legend language visually consistent across timeline views, and reclaim chart space by reducing vertical chrome in the Global panel.
+
 ### v64 Theme selector reorder and default resets
 
 - Removed `Archive + accents` from the theme selector and kept a single `Archive` option.
