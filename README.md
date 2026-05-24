@@ -24,7 +24,6 @@ For now, all editing work should stay inside this folder. Avoid changes outside 
 ## Current Baseline
 
 Current stable baseline: **v73**.
-Historical ChatGPT-to-Codex handover baseline: **v14**.
 
 The page is a single-page static site with five main tabs:
 
@@ -842,6 +841,9 @@ Design decision:
 Design decision:
 
 - Keep README as the canonical lightweight project memory, and keep `ToDo.md` as the evolving execution queue. This separates long-term project reasoning from practical task status.
+
+### ChatGPT to Codex handover
+v15 onwards was largely worked out in Codex, while upto v14 was worked out in ChatGPT. Some later aspects were also reasoned in ChatGPT but executed in Codex.
 
 ### v14
 
