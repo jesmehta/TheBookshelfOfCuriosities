@@ -23,8 +23,8 @@ For now, all editing work should stay inside this folder. Avoid changes outside 
 
 ## Current Baseline
 
-Current handover baseline: **v14**.
-Current working baseline: **v73**.
+Current stable baseline: **v73**.
+Historical ChatGPT-to-Codex handover baseline: **v14**.
 
 The page is a single-page static site with five main tabs:
 
