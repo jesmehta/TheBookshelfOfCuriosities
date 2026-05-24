@@ -24,6 +24,7 @@ For now, all editing work should stay inside this folder. Avoid changes outside 
 ## Current Baseline
 
 Current handover baseline: **v14**.
+Current working baseline: **v73**.
 
 The page is a single-page static site with five main tabs:
 
@@ -180,11 +181,11 @@ Work forms should usually be distinguished by color/type, not by creating extra 
 The Global Timeline is a hybrid view:
 
 - A horizontal SVG timeline for point events and long-running magazine/editor bands.
-- A vertical Event Stream below it for the full chronological list.
+- A vertical TimeStream below it for the full chronological list.
 
-The Event Stream should expand down the page. Avoid scroll-inside-scroll behavior.
+The TimeStream should expand down the page. Avoid scroll-inside-scroll behavior.
 
-Global Timeline filters should affect both the horizontal timeline and the Event Stream:
+Global Timeline filters should affect both the horizontal timeline and the TimeStream:
 
 - Works / books
 - Films / radio / media
@@ -205,24 +206,35 @@ Visual rules:
 - Editor tenures use thinner horizontal bands.
 - Editor tenures should align with magazine timelines where possible.
 
+### Controls
+
+- Shared top controls include `Search`, `Type of Work`, `From`, `To`, `Timeline scale` (Author and Global), `Event labels` (Global), `Theme`, and `Reset`.
+- `From`/`To` support both direct text entry and slider drag, and remain synchronized.
+- Year bounds are currently `1750` through `2050`.
+- Mouse wheel on a focused year input/slider steps by `5` years.
+- Timeline detail is currently removed from the active control set.
+- Type labels in the UI show hierarchy with arrows (for example `Novel → Series → Trilogy`) while preserving slash-based internal values.
+
 ### Theme System
 
 Current theme options:
 
-- Archive
-- Pulp
-- Space chart
-- Archive + accents
 - 1950s - Atomic Pulp
 - 1970s - New Wave Cosmos
 - 1980s - Neon Orbit
+- Space chart
+- Pulp
+- Archive
 
-Preferred likely direction:
+Current defaults:
 
-- Archive + subtle pulp accents.
-- Readable, literary, and slightly textured.
-- Visually rich but not distracting.
-- Avoid overly kitschy or overly dark treatment unless the design direction is intentionally changed.
+- Theme default: `1970s - New Wave Cosmos`.
+- Global Timeline defaults: minimum `Timeline scale` and maximum `Event labels`.
+
+Current typography lock:
+
+- Headings/major titles: `Righteous`
+- Body and UI text: `Nunito Sans`
 
 Background texture should remain CSS-only, subtle, and low contrast.
 
@@ -246,7 +258,7 @@ Author ordering is primarily based on author birth year, with missing-date autho
 
 ### Global Timeline as Hybrid Visualization
 
-The horizontal timeline gives an immediate historical shape, while the Event Stream gives a readable chronological list. The two views should stay synchronized through shared filters.
+The horizontal timeline gives an immediate historical shape, while the TimeStream gives a readable chronological list. The two views should stay synchronized through shared filters.
 
 ### Low-Distraction Visual Richness
 
@@ -257,6 +269,38 @@ Themes should add atmosphere without overpowering text or labels. Timeline reada
 D3 is useful for timeline rendering, but a native SVG fallback is kept so the Global Timeline does not go blank when the CDN fails, is blocked, or has caching issues.
 
 ## Changelog
+
+### v73 Finalize Pulp Soft typography
+
+- Removed the temporary local `Font pair` testing dropdown after selection.
+- Locked typography to Pulp Soft:
+  - `Righteous` for headings/major titles.
+  - `Nunito Sans` for body/UI text.
+
+Design decision:
+
+- Keep the selected pair fixed after evaluation to reduce UI clutter and maintain visual consistency.
+
+### v72 Type filter wording and hierarchy display
+
+- Renamed the filter label from `Type` to `Type of Work`.
+- Changed displayed hierarchy formatting from slash-separated paths to arrow-separated labels in the Type dropdown.
+- Kept underlying filter values unchanged for compatibility with existing data and logic.
+
+Design decision:
+
+- Use visual hierarchy (`→`) to clarify subtype nesting for readers, while preserving stable internal `type_path` values.
+
+### v71 Year-control UX fix and About text cleanup
+
+- Fixed `From`/`To` dual-mode controls so slider dragging and text entry both work reliably and stay synchronized.
+- Standardized year bounds to `1750-2050` for both number fields and sliders.
+- Removed non-author publishing items from the Author Timeline legend.
+- Repaired corrupted/mojibake About text across headings and body.
+
+Design decision:
+
+- Controls should support both precision entry and fast scrubbing without conflict, and long-form public text must remain clean and readable.
 
 ### v70 Compact controls and robust dual-mode year interaction
 
