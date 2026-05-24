@@ -71,6 +71,7 @@ Status key:
 | Done | Replace Space Chart repeating grids | v56 uses a fixed irregular starfield instead of overlapping 60px/90px dot grids; v57 makes it more visible; v58 adds density; v59 adds HR-inspired star colors. |
 | Done | Refine likely final direction | Theme direction is acceptable for current phase; can be revisited later if needed. |
 | Done | Check background texture subtlety | Texture treatment currently accepted as subtle and non-distracting. |
+| Done | Finalize current working font pair | Temporary font-pair testing control removed after selection; current locked pair is Pulp Soft (Righteous for headings, Nunito Sans for body/UI). |
 | Not started | Review mobile layout | Check controls, tables, timeline labels, and event stream on narrow screens. |
 | Not started | Review table readability | Reading List and Publications & editors should remain useful, not just raw data dumps. |
 
@@ -152,6 +153,9 @@ Status key:
 | v68 | Add dual-mode year controls and remove duplicate global visual sliders | From/To now allow typing + sliding with synced values and valid range constraints; Global visual slider duplicates removed from panel controls. |
 | v69 | Expand shared scale range and remove Timeline detail control | Timeline detail hidden for now; Author and Global scales now use 0.2–32 range, with Author defaulting to minimum and Global keeping its existing default. |
 | v70 | Refine control compactness and year interaction behavior | Timeline scale labels renamed, max scale reduced to 8, bucket labels hidden, year fields resized/inline with sliders, and wheel-step + sync behavior fixed for year controls. |
+| v71 | Fix year controls and clean About text corruption | Fixed slider drag/input sync, standardized year bounds to 1750-2050, removed non-author items from Author legend, and repaired About heading/body text corruption. |
+| v72 | Improve work-type filter wording | Type hierarchy labels now display with arrows, and the control label is renamed to `Type of Work` while preserving underlying filter values. |
+| v73 | Test and lock final font pair | Added temporary local font-pair testing control, then removed it and locked current typography to Pulp Soft (Righteous + Nunito Sans). |
 
 ## New Ideas Parking Lot
 
