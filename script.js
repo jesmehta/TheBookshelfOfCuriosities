@@ -49,8 +49,9 @@ function sourceLabel(v){
   return v||"Reading list";
 }
 function setTheme(theme){
+  if(theme==="archivePlus") theme="archive";
   document.body.classList.remove("theme-archive","theme-pulp","theme-space","theme-archivePlus","theme-atomicPulp","theme-newWave","theme-neonOrbit");
-  document.body.classList.add("theme-"+(theme||"archive"));
+  document.body.classList.add("theme-"+(theme||"newWave"));
 }
 function selectedGlobalTypes(){
   const boxes=[...document.querySelectorAll(".global-event-filter")];
@@ -139,7 +140,7 @@ function updateContextualControls(tab=activeTab()){
 }
 
 function setup(){
-  document.body.classList.add("theme-archive");
+  document.body.classList.add("theme-newWave");
   [...new Set(data.works.map(w=>w.type_path).filter(Boolean))].sort().forEach(t=>{$("#typeFilter").insertAdjacentHTML("beforeend",`<option>${t}</option>`)});
   document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab,.panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("#"+b.dataset.tab).classList.add("active");updateContextualControls(b.dataset.tab);render()});
   ["search","typeFilter","levelFilter","authorSort","startYear","endYear"].forEach(id=>$("#"+id)?.addEventListener("input",render));
@@ -150,7 +151,7 @@ function setup(){
   $("#globalLabelDensity")?.addEventListener("input",renderGlobal);
   $("#globalAll")?.addEventListener("click",()=>{document.querySelectorAll(".global-event-filter").forEach(cb=>cb.checked=true);renderGlobal()});
   $("#globalNone")?.addEventListener("click",()=>{document.querySelectorAll(".global-event-filter").forEach(cb=>cb.checked=false);renderGlobal()});
-  $("#resetBtn").onclick=()=>{$("#search").value="";$("#typeFilter").value="";$("#levelFilter").value="3";if($("#authorSort")) $("#authorSort").value="birth";$("#startYear").value=1800;$("#endYear").value=2020;if($("#themeSelect")){$("#themeSelect").value="archive";setTheme("archive")}render()};
+  $("#resetBtn").onclick=()=>{$("#search").value="";$("#typeFilter").value="";$("#levelFilter").value="3";if($("#authorSort")) $("#authorSort").value="birth";$("#startYear").value=1800;$("#endYear").value=2020;if($("#themeSelect")){$("#themeSelect").value="newWave";setTheme("newWave")}if($("#globalScale")) $("#globalScale").value="2";if($("#globalLabelDensity")) $("#globalLabelDensity").value="3";render()};
   // Explicit default: open the Author timeline first.
   document.querySelectorAll(".tab,.panel").forEach(x=>x.classList.remove("active"));
   document.querySelector('[data-tab="lifelines"]')?.classList.add("active");
@@ -492,8 +493,8 @@ function renderGlobal(){
   el.innerHTML="";
   stream.innerHTML="";
   const f=filters();
-  const scale=Number($("#globalScale")?.value||9);
-  const density=Number($("#globalLabelDensity")?.value||2);
+  const scale=Number($("#globalScale")?.value||2);
+  const density=Number($("#globalLabelDensity")?.value||3);
   const {events,spans}=buildGlobalEvents();
   const pxPerYear=scale*7;
   const margin={top:112,right:70,bottom:150,left:150};

@@ -129,9 +129,9 @@ body::before{
   opacity:.75;
 }
 body.theme-archive{
-  --bg:#f5efe5;--panel:#fffaf1;--panel-alt:#eadfcf;--paper:#fffaf1;--ink:#211d18;--muted:#736a5f;--line:#d8c9b3;--accent:#56432e;--accent-2:#b45f06;--accent-3:#a88953;--accent-4:#7a55d1;--soft:#eadfcf;
+  --bg:#f5efe5;--panel:#fffaf1;--panel-alt:#eadfcf;--paper:#fffaf1;--ink:#211d18;--muted:#736a5f;--line:#d8c9b3;--accent:#6b2b20;--accent-2:#007f8f;--accent-3:#a88953;--accent-4:#6b46c1;--soft:#eadfcf;
   --field:#fffdf8;--text-halo:#fffdf8;--grid-line:rgba(115,106,95,.25);--leader-line:rgba(86,67,46,.45);--row-hover:rgba(234,223,207,.35);
-  --life:#a88953;--novel:#1466cc;--short:#d13aa4;--coll:#2d9b57;--nonfic:#d47a00;--media:#e34b3f;--other:#58606e;--mag:#18828f;--editor:#7a55d1;--birth:#6b8e23;--death:#3f3f46;
+  --life:#a88953;--novel:#0f5ea8;--short:#b72884;--coll:#27814d;--nonfic:#c86b00;--media:#c53030;--other:#58606e;--mag:#007f8f;--editor:#6b46c1;--birth:#6b8e23;--death:#3f3f46;
 }
 body.theme-pulp{
   --bg:#f3d98b;--panel:#fff0b8;--panel-alt:#f6c14e;--paper:#fff0b8;--ink:#20120d;--muted:#6d4a28;--line:#d09741;--accent:#b12622;--accent-2:#008c9e;--accent-3:#f6c14e;--accent-4:#6236a8;--soft:#f6c14e;

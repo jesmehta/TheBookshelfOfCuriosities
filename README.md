@@ -258,6 +258,18 @@ D3 is useful for timeline rendering, but a native SVG fallback is kept so the Gl
 
 ## Changelog
 
+### v64 Theme selector reorder and default resets
+
+- Removed `Archive + accents` from the theme selector and kept a single `Archive` option.
+- Reordered theme selector options to: 1950s, 1970s, 1980s, Space chart, Pulp, Archive.
+- Set default theme to `1970s - New Wave Cosmos`.
+- Set Global Timeline defaults to minimum `Scale / spacing` and maximum `Event labels`.
+- Updated reset behavior to restore the same defaults.
+
+Design decision:
+
+- Promote the period themes in the primary selector order, keep one canonical archive choice, and start users in the preferred 1970s visual mode with compact global spacing and full label visibility.
+
 ### v62 Fix About text encoding artifacts
 
 - Corrected mojibake/encoding artifacts in About and control text (quotes, apostrophes, ellipsis, and em dashes).

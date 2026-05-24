@@ -14,12 +14,12 @@ Status key:
 
 | Status | Task | Notes |
 | --- | --- | --- |
-| Not started | Stabilize current v14 baseline | Check that `index.html`, `style.css`, `script.js`, and `data.js` load correctly through VSCode Live Server. |
-| Not started | Confirm Author Timeline default tab | Page should open with Author timeline active. |
-| Not started | Confirm Global Timeline D3 render | Verify horizontal Global Timeline renders when D3 CDN loads. |
-| Not started | Confirm Global Timeline fallback render | Verify fallback does not go blank if D3 is unavailable. |
+| Done | Stabilize current v14 baseline | Stable at handover and throughout iterative updates. |
+| Done | Confirm Author Timeline default tab | Author Timeline opens by default and has remained stable since placement. |
+| Done | Confirm Global Timeline D3 render | Horizontal Global Timeline render has been stable in normal use. |
+| Done | Confirm Global Timeline fallback render | Fallback renderer behavior has remained functional when needed. |
 | Done | Improve Author Detail timeline | v37 adds decade ticks, Life row, simpler row grouping, and cleaner labels. |
-| Not started | Keep README updated after each change | Include files changed, behavior changed, design decisions, visual side effects, and test notes. |
+| In progress | Keep README updated after each change | Permanent process task: include files changed, behavior changed, design decisions, visual side effects, and test notes. |
 | Done | Rename Event stream to TimeStream | v31 changed the public heading. |
 
 ## Author Detail Improvements
@@ -45,19 +45,19 @@ Status key:
 
 | Status | Task | Notes |
 | --- | --- | --- |
-| In progress | Review magazine/editor band staggering | v18 groups editor tenures under their publication and removes the five-row overlap cap; still needs browser review. |
-| Not started | Review label clipping | Make sure labels above and below the axis are not clipped at common viewport widths. |
+| Done | Review magazine/editor band staggering | Current spacing/layout accepted; only experimental interaction ideas remain open. |
+| Done | Review label clipping | Current behavior accepted in working views. |
 | Done | Add title-history labels to publication bands | v20 marks publication title changes above the relevant band positions. |
-| In progress | Refine publication/editor label packing | v22 packs publication names, title-history labels, and editor names per lane; needs browser review around Astounding. |
+| Done | Refine publication/editor label packing | Publication/editor labels are in an acceptable state for core timeline use. |
 | Done | Add publication merger labels | v28 shows merged/absorbed relationships from `related_publications`; merged-into labels sit at the source band end. |
 | Done | Add publication and year guide lines | v24 adds faint label-to-band guides and fading year marks across the publication zone. |
 | Not started | Prototype author isolation from birth/death events | Experimental: clicking an author birth/death event could show that author's timeline as an isolated band above the main Global Timeline. |
 | Not started | Prototype work isolation from book/media events | Experimental: clicking a work event could show all works by that author as a separate series above the main Global Timeline. |
 | Not started | Keep Global Timeline interaction experiments separate | These pop-up/isolation features should be tested as separate experimental versions so the stable core remains intact. |
 | Not started | Explore radial same-year event expansion | Experimental: hover/click on stacked same-year events could expand them radially into separate selectable marks. Needs design review before implementation. |
-| Not started | Refine label density slider behavior | Confirm density settings feel meaningful and predictable. |
-| Not started | Review Event Stream spacing | Keep it readable without internal scrolling. |
-| Not started | Check filter sync | Filters should affect both horizontal timeline and Event Stream. |
+| Done | Refine label density slider behavior | Current control labeling/behavior accepted for stable branch. |
+| Done | Review Event Stream spacing | TimeStream/Event Stream spacing accepted in current implementation. |
+| Done | Check filter sync | Core filters are behaving as expected across timeline and stream views. |
 | Done | Move Global Timeline year axis upward | v16 moved the year axis to a fixed top band so it no longer crowds the central event baseline. |
 | Deferred | Bundle D3 locally | Optional. Would improve offline/local reliability for GitHub Pages-style deployment. |
 
@@ -65,12 +65,12 @@ Status key:
 
 | Status | Task | Notes |
 | --- | --- | --- |
-| Not started | Evaluate current four themes | Archive, Pulp, Space chart, Archive + accents. |
-| In progress | Rework theme system | v55 adds three period sci-fi themes; final public visual direction still needs choosing. |
+| Done | Evaluate current four themes | Archive-family and period-inspired themes have been iterated and reviewed. |
+| Done | Rework theme system | Current theme system accepted as stable for now. |
 | Done | Add period sci-fi themes | v55 adds 1950s Atomic Pulp, 1970s New Wave Cosmos, and 1980s Neon Orbit. |
 | Done | Replace Space Chart repeating grids | v56 uses a fixed irregular starfield instead of overlapping 60px/90px dot grids; v57 makes it more visible; v58 adds density; v59 adds HR-inspired star colors. |
-| Not started | Refine likely final direction | Preferred direction is archive with subtle pulp accents. |
-| Not started | Check background texture subtlety | CSS-only textures should stay low contrast and non-distracting. |
+| Done | Refine likely final direction | Theme direction is acceptable for current phase; can be revisited later if needed. |
+| Done | Check background texture subtlety | Texture treatment currently accepted as subtle and non-distracting. |
 | Not started | Review mobile layout | Check controls, tables, timeline labels, and event stream on narrow screens. |
 | Not started | Review table readability | Reading List and Publications & editors should remain useful, not just raw data dumps. |
 
@@ -88,8 +88,8 @@ Status key:
 
 | Status | Task | Notes |
 | --- | --- | --- |
-| Not started | Confirm GitHub Pages readiness | Static files should work without a build step. |
-| Not started | Add deployment notes if needed | README can include final GitHub Pages instructions once deployment path is known. |
+| Done | Confirm GitHub Pages readiness | Site has been live on GitHub Pages for a while. |
+| Done | Add deployment notes if needed | Baseline deployment status is confirmed; additional notes can be added only if workflow changes. |
 
 ## Completed
 
@@ -144,6 +144,8 @@ Status key:
 | v60 | Rewrite About section into two-part case study | Replaced About with a public-facing making-of narrative and phase-based development history. |
 | v61 | Add About section part navigation | Added jump links to Part 1/2/3 with minor About-nav styling for long-form readability. |
 | v62 | Fix About text encoding artifacts | Repaired mojibake characters (quotes/dashes/ellipsis/apostrophes) in About and related UI text. |
+| v63 | Reconcile ToDo statuses with project reality | Marked v14 stability and GitHub Pages live status as done; kept README update discipline as ongoing; left only Global Timeline experiments open. |
+| v64 | Reorder themes and set new defaults | Theme selector now follows 50s/70s/80s/Space/Pulp/Archive, default theme is 1970s, and Global Timeline defaults use min scale with max event labels. |
 
 ## New Ideas Parking Lot
 
