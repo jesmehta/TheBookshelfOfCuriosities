@@ -1,0 +1,58 @@
+site_name: The Bookshelf of Curiosities
+site_url: https://bookshelf.cabinetofcuriosities.in/
+site_description: A Collection of Jesal's eclectic book interests
+site_author: Jesal Mehta
+copyright: Copyright &copy; 2026 Jesal Mehta. Creative Commons Attribution-NonCommercial.
+nav:
+  - Home: index.md
+  - Interactive Projects:
+      - The Golden Age of SciFi: https://bookshelf.cabinetofcuriosities.in/scifi/
+      - Isaac Asimov and the Foundation Series: https://bookshelf.cabinetofcuriosities.in/asimov/
+  - Works in Progress:
+      - Mapping the Hamzanama: "#"
+  
+extra:
+  # Set your own social media below (or remove)
+  social:
+    # For other social icons at https://squidfunk.github.io/mkdocs-material/setup/adding-social-links/
+    - icon: fontawesome/brands/instagram
+      link: https://instagram.com/cabofcuriosity
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/jesal-mehta-8762404a/
+
+theme:
+  name: material
+  palette:
+    # try other colors https://squidfunk.github.io/mkdocs-material/getting-started/#primary-colors
+    primary: custom
+    accent: indigo
+  font:
+    # See available fonts at https://fonts.google.com/
+    text: Ubuntu
+    code: Ubuntu Mono
+  icon:
+    logo: material/tortoise
+  favicon: images/favicon.svg
+  features:
+    # - navigation.tabs
+    # - navigation.instant
+    - navigation.expand
+    # - navigation.sections
+
+markdown_extensions:
+  - extra
+  - smarty
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - markdown_captions
+  - attr_list
+
+plugins:
+  - mkdocs-video
+
+extra_css:
+  - stylesheets/bookshelf.css
+
