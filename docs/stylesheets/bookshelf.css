@@ -1,6 +1,6 @@
 /*
-  The Bookshelf of Curiosities — Landing Page V1.1
-  Look: quiet gallery wall + literary archive
+  The Bookshelf of Curiosities — Landing Page V2
+  Look: a quiet museum gallery room, not a parchment/library pastiche.
   See README.md in this docs/ folder for design rationale and changelog.
 */
 
@@ -37,17 +37,24 @@ body:has(.bookshelf-landing) .md-header {
 }
 
 .bookshelf-landing {
-  --wall: #f3efe7;
-  --wall-warm: #e9e0d2;
-  --ink: #181410;
-  --muted-ink: #6b6356;
-  --frame: #2d2924;
-  --frame-soft: #58493a;
-  --mat: #efe6d2;
-  --accent: #7a3b2c;
-  --paper: #fbf7ed;
-  --line: rgba(38, 32, 25, 0.16);
-  --shadow: rgba(24, 19, 14, 0.28);
+  /* Gallery wall: cool bone/greige, not parchment. Warmth comes from
+     light, not from sepia. */
+  --wall: #f1efe9;
+  --wall-warm: #e6e2d6;
+  --ink: #18181a;
+  --muted-ink: #6c6b66;
+  --frame: #1f1f22;
+  --mat: #f6f3eb;
+  /* Verdigris/patina accent — a museum-bronze-plaque green, the one
+     "slightly odd" color note. Deliberately not brown/oxblood. */
+  --accent: #3f6b5e;
+  --line: rgba(24, 24, 26, 0.12);
+  --shadow: rgba(20, 20, 22, 0.22);
+
+  /* Default frame proportions; overridden per frameMood below so frames
+     read as different pieces of framing, not just different colors. */
+  --frame-pad: clamp(0.4rem, 1vw, 0.55rem);
+  --mat-width: 0.85rem;
 
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
 
@@ -55,31 +62,35 @@ body:has(.bookshelf-landing) .md-header {
   margin: -1.2rem -0.8rem 0;
   padding: clamp(2rem, 5vw, 4rem) 1.25rem 5rem;
   color: var(--ink);
-  background:
-    linear-gradient(180deg, var(--wall), var(--wall-warm));
+  background: linear-gradient(180deg, var(--wall), var(--wall-warm));
   position: relative;
+  overflow: hidden;
 }
 
+/* A faint top-down wash, like the room is lit rather than papered. */
 .bookshelf-landing::before {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.5;
   background:
-    radial-gradient(circle at 20% 10%, rgba(255,255,255,0.9), transparent 28rem),
-    radial-gradient(circle at 80% 90%, rgba(70,55,35,0.1), transparent 30rem);
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,255,255,0.7), transparent 70%);
 }
 
-/* Faint paper-grain texture for the wall, layered above the light gradient */
+/*
+  A mild plaster/canvas crosshatch — visible up close, quiet from a
+  distance. Deliberately not the old SVG-noise grain (read as dusty
+  paper); a regular weave reads as a painted wall, not parchment.
+*/
 .bookshelf-landing::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.5;
   mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-image:
+    repeating-linear-gradient(45deg, rgba(24, 24, 26, 0.05) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(-45deg, rgba(24, 24, 26, 0.035) 0 1px, transparent 1px 3px);
 }
 
 .bookshelf-title-band {
@@ -128,19 +139,12 @@ body:has(.bookshelf-landing) .md-header {
   font-weight: 580;
 }
 
-.bookshelf-intro {
-  max-width: 660px;
-  margin: 1.4rem auto 0;
-  font-size: clamp(0.95rem, 1.5vw, 1.08rem);
-  line-height: 1.65;
-  color: var(--muted-ink);
-}
-
 .bookshelf-gallery {
   max-width: 1120px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, minmax(220px, 1fr));
+  align-items: center;
   gap: clamp(2rem, 5vw, 4rem);
   position: relative;
   z-index: 1;
@@ -182,54 +186,84 @@ body:has(.bookshelf-landing) .md-header {
 
 .bookshelf-card-inner {
   margin: 0;
+  position: relative;
+}
+
+/* A small gallery spotlight pooling above each piece — the "alive
+   underneath" hint, kept static and quiet for V1. The day/night switch
+   in V1.5 will animate this instead of inventing a new layer. */
+.bookshelf-card-inner::before {
+  content: "";
+  position: absolute;
+  top: -1.6rem;
+  left: 50%;
+  width: calc(65% * var(--frame-scale, 1));
+  height: 2.6rem;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(255, 252, 240, 0.65), transparent 72%);
+  filter: blur(1px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .bookshelf-frame {
-  padding: clamp(0.65rem, 1.5vw, 0.95rem);
-  background: linear-gradient(165deg, var(--frame-soft) 0%, var(--frame) 45%, #15120f 100%);
-  border-radius: 2px;
+  width: calc(100% * var(--frame-scale, 1));
+  margin-inline: auto;
+  padding: var(--frame-pad);
+  background: var(--frame);
+  border-radius: 1px;
   box-shadow:
-    0 22px 48px var(--shadow),
-    0 4px 10px rgba(24, 19, 14, 0.22),
-    inset 0 0 0 1px rgba(255,255,255,0.08);
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 16px 32px var(--shadow),
+    0 2px 6px rgba(20, 20, 22, 0.18);
   position: relative;
-  transition: box-shadow 220ms ease;
+  z-index: 1;
+  transition: box-shadow 220ms ease, transform 220ms ease;
 }
 
 .bookshelf-card:hover .bookshelf-frame,
 .bookshelf-card:focus-visible .bookshelf-frame {
   box-shadow:
-    0 28px 56px var(--shadow),
-    0 6px 14px rgba(24, 19, 14, 0.26),
-    inset 0 0 0 1px rgba(255,255,255,0.1);
-}
-
-.bookshelf-frame::before {
-  content: "";
-  position: absolute;
-  inset: 0.38rem;
-  border: 1px solid rgba(255,255,255,0.12);
-  pointer-events: none;
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 20px 40px var(--shadow),
+    0 3px 8px rgba(20, 20, 22, 0.2);
 }
 
 .bookshelf-image-wrap {
-  aspect-ratio: 4 / 5;
-  background: #181512;
+  /* Square fallback if JS doesn't run; bookshelf-gallery.js sets a
+     per-card inline aspect-ratio (see randomFrameRatio()). */
+  aspect-ratio: 1;
+  background: #1b1b1d;
   overflow: hidden;
-  border: 0.5rem solid var(--mat);
-  outline: 1px solid rgba(24, 19, 14, 0.25);
+  border: var(--mat-width) solid var(--mat);
+  outline: 1px solid rgba(20, 20, 22, 0.16);
   outline-offset: -0.1rem;
-  box-shadow:
-    inset 0 0 0 1px rgba(0,0,0,0.18);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
 }
 
-.bookshelf-thumbnail {
+/*
+  Specificity note: Material's base styles set
+  `.md-typeset img { height: auto; max-width: 100% }`, which outranks a
+  plain `.bookshelf-thumbnail` rule (class+type beats class alone) and
+  wins regardless of source order. That let each <img> size itself to its
+  own intrinsic (square) shape instead of stretching/cropping to fill
+  `.bookshelf-image-wrap`'s enforced aspect-ratio box — visible as a dark
+  gap (the wrap's own background) wherever a frame's aspect ratio wasn't
+  square. Matching `.md-typeset` ancestry here gives this rule equal class
+  count plus the same type selector, so it reliably wins instead.
+*/
+.md-typeset .bookshelf-thumbnail {
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
+  /* Source thumbnails are square with margin around the subject; this
+     crops to whatever random frame aspect ratio lands on this card while
+     keeping the subject centered, instead of relying on the browser's
+     unstated default. */
+  object-position: center center;
   transform: scale(1);
-  filter: saturate(0.92) contrast(0.96);
+  filter: saturate(0.97) contrast(0.98);
   transition:
     transform 320ms ease,
     filter 320ms ease;
@@ -243,12 +277,22 @@ body:has(.bookshelf-landing) .md-header {
 
 .bookshelf-label {
   width: calc(100% - 1.5rem);
-  margin: 1rem auto 0;
-  padding: 0.85rem 0.2rem 0;
+  margin: 1.1rem auto 0;
+  padding: 0.9rem 0.2rem 0;
   background: transparent;
   border: 0;
+  border-top: 1px solid var(--line);
   box-shadow: none;
   text-align: center;
+}
+
+.bookshelf-tag {
+  margin: 0 0 0.4rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.85;
 }
 
 .bookshelf-label h2 {
@@ -286,26 +330,86 @@ body:has(.bookshelf-landing) .md-header {
   font-style: italic;
 }
 
-/* Frame moods: subtle, not theatrical */
+/*
+  Frame moods: each exhibit gets a distinct hue AND a distinct framing
+  style (thickness, mat width, shadow depth, the odd structural detail) —
+  so a map room reads as a different piece of framing from a cosmic
+  archive, not just a different color of the same box.
+*/
 
+/* pulp-cosmic: thin minimal gallery frame, modest mat */
 .frame-pulp-cosmic .bookshelf-frame {
-  --frame: #24202c;
+  --frame: #1f2433;
+  --frame-pad: clamp(0.22rem, 0.55vw, 0.32rem);
+  --mat-width: 0.55rem;
 }
 
+/* cosmic-archive: heavier display-case frame, deeper shadow, wide mat */
 .frame-cosmic-archive .bookshelf-frame {
-  --frame: #1f2933;
+  --frame: #1a2628;
+  --frame-pad: clamp(0.6rem, 1.5vw, 0.85rem);
+  --mat-width: 1.05rem;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 26px 52px var(--shadow),
+    0 6px 14px rgba(20, 20, 22, 0.26);
 }
 
+.bookshelf-card.frame-cosmic-archive:hover .bookshelf-frame,
+.bookshelf-card.frame-cosmic-archive:focus-visible .bookshelf-frame {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 32px 60px var(--shadow),
+    0 8px 18px rgba(20, 20, 22, 0.3);
+}
+
+/* illuminated-manuscript: a second inset line, like a double mat */
 .frame-illuminated-manuscript .bookshelf-frame {
-  --frame: #372823;
+  --frame: #2a2230;
+  --frame-pad: clamp(0.45rem, 1.1vw, 0.65rem);
+  --mat-width: 0.7rem;
 }
 
+.frame-illuminated-manuscript .bookshelf-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0.3rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  pointer-events: none;
+}
+
+/* map-room: bled to the edge, almost no mat, faint corner registration ticks */
 .frame-map-room .bookshelf-frame {
-  --frame: #303126;
+  --frame: #1d2620;
+  --frame-pad: clamp(0.2rem, 0.45vw, 0.28rem);
+  --mat-width: 0.3rem;
 }
 
+.frame-map-room .bookshelf-frame::before,
+.frame-map-room .bookshelf-frame::after {
+  content: "";
+  position: absolute;
+  width: 0.5rem;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+.frame-map-room .bookshelf-frame::before {
+  top: 0.4rem;
+  left: 0.4rem;
+}
+
+.frame-map-room .bookshelf-frame::after {
+  bottom: 0.4rem;
+  right: 0.4rem;
+}
+
+/* paperback: thin frame line, generous mat, art floats in white space */
 .frame-paperback .bookshelf-frame {
-  --frame: #3a2d24;
+  --frame: #232220;
+  --frame-pad: clamp(0.18rem, 0.4vw, 0.24rem);
+  --mat-width: 1.3rem;
 }
 
 /* Responsive */

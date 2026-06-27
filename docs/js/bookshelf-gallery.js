@@ -1,8 +1,8 @@
-function createContentChips(types) {
-  if (!Array.isArray(types)) return "";
+function createTagChips(tags) {
+  if (!Array.isArray(tags)) return "";
 
-  return types
-    .map(type => `<span class="bookshelf-chip">${type}</span>`)
+  return tags
+    .map(tag => `<span class="bookshelf-chip">${tag}</span>`)
     .join("");
 }
 
@@ -17,11 +17,53 @@ function createThumbnail(project) {
   `;
 }
 
+function primaryTag(tags) {
+  if (!Array.isArray(tags) || !tags.length) return "";
+  return tags[0].replace(/-/g, " ");
+}
+
+/*
+  Frame shape: start from a square (1) and add/subtract one delta in a
+  single step. Landscape (positive delta) is favoured over portrait
+  (negative delta) so the wall reads mostly wide frames with the
+  occasional tall one, like a hand-hung gallery rather than a uniform grid.
+*/
+function randomFrameRatio() {
+  const isLandscape = Math.random() < 0.7;
+  const delta = isLandscape
+    ? 0.18 + Math.random() * 0.32 // 1.18 – 1.50
+    : -(0.05 + Math.random() * 0.2); // 0.75 – 0.95
+  return (1 + delta).toFixed(2);
+}
+
+/*
+  Frame size within its grid cell, by AREA not width: weight 10 is the
+  biggest visual area (fills the cell at aspect 1), weight 1 is about a
+  quarter of that area but stays clearly visible. Mapping weight to width
+  alone makes portrait frames look bigger than landscape ones at the same
+  weight, since area = width^2 / aspect — a portrait (aspect < 1) gets
+  taller for the same width. Solving width = areaScale * sqrt(aspect)
+  keeps width^2/aspect == areaScale^2 for any aspect, so equal weight
+  really does mean equal area. Exposed as a CSS custom property so both
+  the frame width and its spotlight glow (bookshelf.css,
+  .bookshelf-card-inner::before) scale together.
+*/
+function frameWidthFraction(weight, aspect) {
+  const w = Math.min(10, Math.max(1, Number(weight) || 1));
+  const minAreaScale = 0.5;
+  const maxAreaScale = 1;
+  const areaScale = minAreaScale + ((w - 1) / 9) * (maxAreaScale - minAreaScale);
+  const width = areaScale * Math.sqrt(aspect);
+  return Math.min(1, Math.max(0.32, width)).toFixed(2);
+}
+
 function createGalleryCard(project) {
   const isInactive = !project.link || project.link === "#";
   const linkTarget = isInactive ? "#" : project.link;
   const inactiveClass = isInactive ? "is-inactive" : "";
   const frameClass = project.frameMood ? `frame-${project.frameMood}` : "frame-default";
+  const aspect = Number(randomFrameRatio());
+  const frameScale = frameWidthFraction(project.weight, aspect);
 
   return `
     <a
@@ -29,22 +71,23 @@ function createGalleryCard(project) {
       href="${linkTarget}"
       ${isInactive ? 'aria-disabled="true" tabindex="-1"' : ""}
     >
-      <article class="bookshelf-card-inner">
+      <article class="bookshelf-card-inner" style="--frame-scale: ${frameScale}">
         <div class="bookshelf-frame">
-          <div class="bookshelf-image-wrap">
+          <div class="bookshelf-image-wrap" style="aspect-ratio: ${aspect}">
             ${createThumbnail(project)}
           </div>
         </div>
 
         <div class="bookshelf-label">
+          <p class="bookshelf-tag">${primaryTag(project.tag)}</p>
           <h2>${project.title}</h2>
           <p>${project.subtitle}</p>
 
           <div class="bookshelf-chips">
-            ${createContentChips(project.contentType)}
+            ${createTagChips(project.tag)}
           </div>
 
-          ${isInactive ? '<span class="bookshelf-status">Not live yet</span>' : ""}
+          ${isInactive ? '<span class="bookshelf-status">Not yet on view</span>' : ""}
         </div>
       </article>
     </a>
