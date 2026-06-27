@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asimov’s History of the Future</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650;750&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">The Bookshelf of Curiosities</p>
+      <h1>Asimov’s History of the Future</h1>
+    </div>
+    <div class="header-actions">
+      <button id="playRoute" type="button">Play route</button>
+      <button id="resetZoom" type="button">Reset map zoom</button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Page sections">
+    <button class="tab active" data-tab="map">Galaxy + timeline</button>
+    <button class="tab" data-tab="xy">Publication × universe time</button>
+    <button class="tab" data-tab="bibliography">Asimov bibliography</button>
+    <button class="tab" data-tab="stories">Short stories + essays</button>
+  </nav>
+
+  <main>
+    <section id="tab-map" class="tab-panel active">
+      <div class="map-layout">
+        <section class="panel map-panel">
+          <div class="map-stage">
+            <div class="map-title-overlay"><h2>Foundation galaxy</h2></div>
+            <div class="legend map-legend-overlay" id="mapLegend"></div>
+            <svg id="galaxy" viewBox="0 0 1200 760" role="img" aria-label="Zoomable interpretive spiral galaxy map of Asimov's Foundation universe"></svg>
+          </div>
+        </section>
+
+        <aside class="side-stack">
+          <section class="panel world-panel">
+            <p class="eyebrow small">Selected world</p>
+            <h2 id="worldTitle">—</h2>
+            <p id="worldMeta" class="world-meta"></p>
+            <div id="worldBookList" class="world-book-list"></div>
+          </section>
+
+          <section class="panel book-panel">
+            <p class="eyebrow small">Selected work</p>
+            <h2 id="bookTitle"></h2>
+            <div id="bookMeta" class="meta-grid"></div>
+            <p id="bookNotes" class="book-notes"></p>
+            <div class="nav-grid">
+              <div><span>Series previous</span><button id="seriesPrev"></button></div>
+              <div><span>Series next</span><button id="seriesNext"></button></div>
+              <div><span>Universe previous</span><button id="chronoPrev"></button></div>
+              <div><span>Universe next</span><button id="chronoNext"></button></div>
+            </div>
+            <div id="locationNotes" class="location-notes"></div>
+          </section>
+        </aside>
+      </div>
+
+      <section class="panel timeline-panel hero-timeline timeline-below">
+        <div class="panel-head compact">
+          <div>
+            <h2>In-universe timeline</h2>
+          </div>
+          <button id="toggleTimelineScale" type="button">Use unbroken scale</button>
+        </div>
+        <svg id="timeline" viewBox="0 0 1180 330" role="img" aria-label="Timeline of Foundation universe books by in-universe date"></svg>
+      </section>
+    </section>
+
+    <section id="tab-xy" class="tab-panel">
+      <section class="panel xy-panel">
+        <div class="panel-head compact">
+          <div>
+            <h2>Publication time × in-universe time</h2>
+          </div>
+          <div class="xy-controls"><button id="swapXY" type="button">Swap axes</button><div class="legend xy-legend" id="xyLegend"></div></div>
+        </div>
+        <svg id="xyPlot" viewBox="0 0 1180 440" role="img" aria-label="Scatter plot of publication year against in-universe date"></svg>
+      </section>
+    </section>
+
+    <section id="tab-bibliography" class="tab-panel">
+      <section class="panel bibliography-panel">
+        <div class="panel-head compact">
+          <div>
+            <h2>Asimov beyond Foundation</h2>
+          </div>
+        </div>
+        <div class="filters bib-controls">
+          <input id="bibSearch" type="search" placeholder="Search title, domain, series, notes…" />
+          <select id="bibDomainFilter" aria-label="Filter by domain"></select>
+          <select id="bibTypeFilter" aria-label="Filter by type"></select>
+          <select id="bibSeriesFilter" aria-label="Filter by series"></select>
+          <select id="bibFictionFilter" aria-label="Filter by fiction or nonfiction"></select>
+        </div>
+        <svg id="bibTimeline" viewBox="0 0 1180 820" role="img" aria-label="Timeline of selected Asimov bibliography entries"></svg>
+        <div class="table-wrap"><table id="bibTable" class="bib-table"></table></div>
+      </section>
+    </section>
+
+    <section id="tab-stories" class="tab-panel">
+      <section class="panel source-panel">
+        <h2>Short stories, essays, and data notes</h2>
+        <p>V1 treats short stories and essays as curated, not complete. Individual magazine columns, every foreword, and every minor anthology appearance are deliberately deferred.</p>
+        <div class="note-grid">
+          <article>
+            <h3>Short fiction V1</h3>
+            <p>Use major Robot, Foundation-linked, and famous standalone science-fiction stories first. Track first publication and first collection where practical.</p>
+          </article>
+          <article>
+            <h3>Essays V1</h3>
+            <p>Track essay collections and subject clusters first. Individual essay-level indexing can become a later data project.</p>
+          </article>
+          <article>
+            <h3>Sources to use</h3>
+            <p>Start with Asimov Online, Foundation universe chronology references, ISFDB-style publication checks, and Wikipedia only as a broad orientation layer.</p>
+          </article>
+          <article>
+            <h3>Map note</h3>
+            <p>The galaxy is interpretive: Earth/Sol is placed in a spiral arm, Trantor near the galactic core, Terminus at the edge, and routes represent reading through events rather than canonically exact astrophysics.</p>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="tooltip" class="tooltip" role="status" aria-live="polite"></div>
+
+  <footer>
+    <p>Prototype V12. Uses D3 from CDN. Data is intentionally V1/publishable, not complete-database-grade. Source notes include Asimov Online: http://www.asimovonline.com/</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
