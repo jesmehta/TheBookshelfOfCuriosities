@@ -17,9 +17,18 @@ function createThumbnail(project) {
   `;
 }
 
-function primaryTag(tags) {
-  if (!Array.isArray(tags) || !tags.length) return "";
-  return tags[0].replace(/-/g, " ");
+/*
+  Typographic fallback: a project with no `thumbnail` gets a large
+  stroked initial instead of an <img>, reusing the same
+  .bookshelf-image-wrap box (random aspect ratio + weight-based area
+  scaling apply identically either way, since that box doesn't care what's
+  inside it). Lets a project go on the wall before real art exists.
+*/
+function createThumbnailContent(project) {
+  if (project.thumbnail) return createThumbnail(project);
+
+  const initial = (project.label || project.title || "?").trim().charAt(0).toUpperCase();
+  return `<span class="bookshelf-ghost-initial" aria-hidden="true">${initial}</span>`;
 }
 
 /*
@@ -74,17 +83,17 @@ function createGalleryCard(project) {
       <article class="bookshelf-card-inner" style="--frame-scale: ${frameScale}">
         <div class="bookshelf-frame">
           <div class="bookshelf-image-wrap" style="aspect-ratio: ${aspect}">
-            ${createThumbnail(project)}
+            ${createThumbnailContent(project)}
           </div>
         </div>
 
         <div class="bookshelf-label">
-          <p class="bookshelf-tag">${primaryTag(project.tag)}</p>
+          <p class="bookshelf-tag">${project.label || ""}</p>
           <h2>${project.title}</h2>
           <p>${project.subtitle}</p>
 
           <div class="bookshelf-chips">
-            ${createTagChips(project.tag)}
+            ${createTagChips(project.tags)}
           </div>
 
           ${isInactive ? '<span class="bookshelf-status">Not yet on view</span>' : ""}

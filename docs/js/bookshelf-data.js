@@ -8,19 +8,23 @@ const bookshelfProjects = [
     alt: "Science fiction themed thumbnail for The Golden Age of SciFi",
     order: 1,
     weight: 10,
-    tag: ["timeline", "dataviz", "archive"],
+    label: "Timeline · Archive",
+    tags: ["timeline", "dataviz", "archive"],
     frameMood: "pulp-cosmic"
   },
   {
     id: "asimov",
     title: "Isaac Asimov and the Foundation Series",
     subtitle: "A galaxy map, in-universe chronology, and bibliography timeline.",
-    link: "https://bookshelf.cabinetofcuriosities.in/asimov/",
+    // Not yet live at the expected URL — set inactive until the asimov
+    // project actually exists and is deployed (see docs/README.md V3 notes).
+    link: "#",
     thumbnail: "images/asimov.jpg",
     alt: "Cosmic archive themed thumbnail for Isaac Asimov and Foundation",
     order: 2,
     weight: 8,
-    tag: ["map", "timeline", "bibliography", "dataviz"],
+    label: "Cosmic Bibliography",
+    tags: ["map", "timeline", "bibliography", "dataviz"],
     frameMood: "cosmic-archive"
   },
   {
@@ -32,70 +36,49 @@ const bookshelfProjects = [
     alt: "Illustrated manuscript themed thumbnail for Mapping the Hamzanama",
     order: 3,
     weight: 6,
-    tag: ["map", "literary-geography", "wip"],
+    label: "Literary Geography",
+    tags: ["map", "literary-geography", "wip"],
     frameMood: "illuminated-manuscript"
   },
 
-  // --- Dummy entries below: visual load-testing only, not real exhibits.
-  // Remove once enough real projects exist to judge the wall by themselves.
+  // --- Dummy entries below: kept deliberately (trimmed from 5 to 3), now
+  // doing double duty as a live demo of the typographic-fallback card
+  // (no `thumbnail` field) alongside the photographic ones, instead of
+  // being generic load-testing filler. See docs/README.md V3 notes.
   {
     id: "dummy-cartography",
     title: "Cartography of Nowhere",
-    subtitle: "Placeholder exhibit for testing a low-weight, small frame.",
+    subtitle: "Placeholder exhibit — typographic card, low weight.",
     link: "#",
-    thumbnail: "images/scifi.jpg",
-    alt: "Placeholder thumbnail",
+    alt: "Placeholder exhibit",
     order: 4,
     weight: 1,
-    tag: ["map"],
+    label: "Map · Conjecture",
+    tags: ["map"],
     frameMood: "map-room"
   },
   {
     id: "dummy-bibliographic-drift",
     title: "Bibliographic Drift",
-    subtitle: "Placeholder exhibit for testing a high-weight, large frame.",
+    subtitle: "Placeholder exhibit — typographic card, high weight.",
     link: "#",
-    thumbnail: "images/asimov.jpg",
-    alt: "Placeholder thumbnail",
+    alt: "Placeholder exhibit",
     order: 5,
     weight: 10,
-    tag: ["bibliography", "archive"],
+    label: "Archive · Bibliography",
+    tags: ["bibliography", "archive"],
     frameMood: "paperback"
   },
   {
     id: "dummy-marginalia",
     title: "Marginalia and Ghosts",
-    subtitle: "Placeholder exhibit for testing a mid-weight portrait frame.",
+    subtitle: "Placeholder exhibit — typographic card, mid weight.",
     link: "#",
-    thumbnail: "images/hamzanama.jpg",
-    alt: "Placeholder thumbnail",
+    alt: "Placeholder exhibit",
     order: 6,
     weight: 4,
-    tag: ["essay"],
+    label: "Essay · Marginalia",
+    tags: ["essay"],
     frameMood: "cosmic-archive"
-  },
-  {
-    id: "dummy-lost-libraries",
-    title: "Index of Lost Libraries",
-    subtitle: "Placeholder exhibit for testing a mid-high-weight landscape frame.",
-    link: "#",
-    thumbnail: "images/scifi.jpg",
-    alt: "Placeholder thumbnail",
-    order: 7,
-    weight: 8,
-    tag: ["archive", "dataviz"],
-    frameMood: "pulp-cosmic"
-  },
-  {
-    id: "dummy-night-margins",
-    title: "The Night Margins",
-    subtitle: "Placeholder exhibit for testing a small landscape frame.",
-    link: "#",
-    thumbnail: "images/asimov.jpg",
-    alt: "Placeholder thumbnail",
-    order: 8,
-    weight: 2,
-    tag: ["wip"],
-    frameMood: "illuminated-manuscript"
   }
 ];

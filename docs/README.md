@@ -30,24 +30,41 @@ While unfinished, an exhibit sits inert with a curatorial status line
 ("Not yet on view" — `hamzanama`) instead of a normal link. No portal
 pages, no iframes — the gallery is purely a front door.
 
-Mood target (as of V2): *quiet museum gallery + literary archive +
-slightly strange cabinet of maps and timelines.* Explicitly **not**: a
-magical-library/old-parchment UI, heavy gold ornamentation, excessive
-brown gradients, or theme-park antiquarianism. Considered, not gimmicky.
+Mood target (as of V3): *dark literary gallery/cabinet* — rich, atmospheric,
+typographic, editorial. A pivot from V2's light museum-wall mood, borrowing
+a dark palette, split-title typography, a ghost-letter motif, a quiet
+quote line, and an orbital cursor from a separate standalone HTML
+reference (`BookshelfLanding/bookshelf-of-curiosities.html`, style
+reference only, never part of this site). Explicitly **not** borrowed
+from that reference: its marquee/ticker, multi-section "future content"
+homepage structure, many dormant cards, p5.js particles, or heavy
+animation anywhere. Considered, not gimmicky — still one quiet exhibit
+gallery, not a crowded homepage.
+
+V1/V2's anti-antiquarian guardrails still apply to the *frame* treatment
+specifically: no heavy gold ornamentation, no excessive brown gradients,
+no theme-park antiquarianism in how exhibits are framed — V3's dark
+background is a deliberate mood choice, not a reversion to those V1
+patterns (see "Frames" below for how this distinction is held).
 
 ## Architectural decisions carried over (unchanged by this pass)
 
-- `frameMood` stays a visual-only data field per project (`bookshelf-data.js`).
-- `tag` (renamed from `contentType` in V2.7) stays in the data for future
-  filtering; the full chip row (`.bookshelf-chips`) is still hidden, but
-  as of V2.2 the first entry is surfaced as a single quiet tag above the
-  title (`.bookshelf-tag`) — see
-  "Museum-label treatment" below.
+- `frameMood` stays a visual-only data field per project (`bookshelf-data.js`),
+  now recolored for the dark palette but with the same 5 names and the
+  same per-mood *structural* treatment (frame thickness, mat width,
+  corner ticks, double inset) — see V3 changelog.
+- `tags` (plural, renamed from singular `tag` in V3; `tag` itself was
+  renamed from `contentType` in V2.7) stays in the data for future
+  filtering; the full chip row (`.bookshelf-chips`) is still hidden. As of
+  V3, the visible line above the title (`.bookshelf-tag`) is a separate,
+  hand-written `label` string field instead of being derived from the
+  first array entry — see "Data model" in the V3 changelog below.
 - The landing page hides MkDocs' side nav and TOC via front-matter
   (`hide: [toc, navigation]`); all other Markdown pages keep the normal
   Material theme layout.
 - No portal/wrapper pages for SciFi or Asimov; gallery cards link directly
-  to the live static sites.
+  to the live static sites (when live — see asimov's status in the V3
+  changelog).
 
 ## Styling pass — V1.1 (this round)
 
@@ -187,6 +204,171 @@ rearrange-by-genre/map/timeline/author. The spotlight glow is the one
 piece of "alive underneath" texture introduced early, deliberately kept
 static so it reads as a discovery later rather than the main UI now.
 
+## Styling pass — V3: dark literary gallery/cabinet
+
+**Goal:** pivot from V2's light museum-gallery mood to a darker, more
+atmospheric "literary gallery/cabinet" feel — rich, typographic,
+editorial — while keeping the page a single, restrained exhibit gallery
+rather than growing into a busy multi-section homepage. Specific elements
+were borrowed from a separate standalone HTML mockup
+(`BookshelfLanding/bookshelf-of-curiosities.html`, style reference only,
+never edited, not part of this site): its dark palette family, split-title
+typography, ghost-letter motif, a quiet quote/type-break line, and an
+orbital custom cursor. Explicitly *not* borrowed: its marquee/ticker,
+multi-section structure, many dormant cards, p5.js particles, or heavy
+animation, and its `cursor: none` was reworked for usability (see Cursor
+below) rather than copied as-is.
+
+### Palette
+
+New dark token set on `.bookshelf-landing`: `--ink` (`#0e0c09`) and
+`--deep` (`#161209`) for the background gradient, `--char` (`#1f1810`,
+ghost-letter stroke/hairlines), `--bronze` (`#8a6030`), `--gold`
+(`#b8842a`), `--amber` (`#d4a040`), `--sand` (`#c8a870`), `--vellum`
+(`#e0c898`), `--ivory` (`#f5edd8`, primary text), and `--muted-ink`
+(`#9c8f78`, secondary text — kept the same variable *name* as V2's
+light-mode muted-ink token so existing rules referencing it didn't need
+touching, just redefined the value). `--accent` (verdigris) moved
+from `#3f6b5e` to a brightened `#4a7d6c` so it still reads against
+near-black instead of bone — kept as the one strange, deliberately
+not-gold accent note (kicker rule, tag label, hover title color), per the
+explicit instruction not to let the palette collapse into all-gold/brown.
+
+**Naming gotcha avoided:** V2's `--ink` was a *text*-color token (dark
+text on a light wall). V3 repurposes `--ink` as a *background* token
+(near-black) — every old rule that did `color: var(--ink)` had to be
+hunted down and switched to `color: var(--ivory)` instead, not just have
+the variable's value flipped, or text would have rendered near-black on
+near-black and vanished. Also caught in the same pass: the focus-visible
+outline (`rgba(31,29,26,0.65)`, near-black) and the is-inactive hover-reset
+color, both invisible against a dark background in the old light-mode
+values — outline moved to `var(--amber)`, hover-reset to `var(--ivory)`.
+
+### Typography — 3 families, not 4
+
+Kept `--font-display: "Fraunces"` for card titles and two of the four
+hero-title spans. Added `--font-serif-display: "Libre Baskerville"` for
+the one huge hero word ("Bookshelf") and the typographic ghost-letter
+fallback (see Data model below) — its bold-italic is more condensed/forceful
+than Fraunces at hero size. Added `--font-mono-label: "Syne Mono"` for the
+kicker, the new `label` tag line, and the "of" hero span — an "editorial
+mono-caps" voice distinct from both serifs. Did **not** import Instrument
+Serif or Syne sans from the reference (it uses all four) — Fraunces
+italic already covers that role; a 3-family stack was judged the
+maintainable middle ground between the reference's 4 and V2's 1.
+
+### Frames — reskinned in place, not restructured
+
+The frame/mat/spotlight DOM (`.bookshelf-card` > `.bookshelf-card-inner` >
+`.bookshelf-frame` > `.bookshelf-image-wrap` > `.bookshelf-thumbnail`) is
+untouched structurally — this site has real photographic thumbnails, so
+the reference's imageless ghost-letter-card pattern doesn't apply here,
+only its *color* language does. Recolored: mat from cream to warm umber
+(`--mat: #473423`), deliberately a visible lightness step *above* the
+frame tones (not near-black like the frame) so the mat still reads as a
+distinct ring rather than blending into it; spotlight glow recolored from
+warm-white to amber-tinted, still static; all 5 `frameMood` names kept
+unchanged (they describe structural treatment — thickness, mat width,
+corner ticks, double inset — not color, so they still apply in a dark
+palette) with only their `--frame` hex and accent-line colors shifted
+into a dark warm-neutral family (illuminated-manuscript's double-inset
+line now gold, map-room's corner ticks now amber). Inactive-exhibit
+opacity reduced from `0.62` to `0.5` since dark-on-dark dims less
+visibly than light-on-light did.
+
+**Selector audit applied:** re-verified the `cosmic-archive` hover/focus
+pair stayed a compound selector (`.bookshelf-card.frame-cosmic-archive:hover`,
+fixed in V2.7) through the recolor edit, and used the same compound
+pattern for every newly-touched rule, since `frame-${mood}` and
+`bookshelf-card` are classes on the same `<a>` element, not nested.
+
+### Hero — split title, ghost letter, type-break
+
+`.bookshelf-title-band` replaced with `.bookshelf-hero`, containing: a
+large stroked-only ghost letter (`.bookshelf-ghost`, "B", Libre
+Baskerville bold italic, `color: transparent` + `-webkit-text-stroke`,
+slow 18s drift animation, disabled under `prefers-reduced-motion`); the
+existing kicker line; a split title (`.bht-the` / `.bht-bookshelf` /
+`.bht-of` / `.bht-curiosities`, each a different font/size/color, mirroring
+the reference's word-by-word typographic treatment). A new
+`.bookshelf-typebreak` sits below the hero with one placeholder quote
+line ("Every shelf is a map of attention.", marked with an HTML comment
+for easy replacement) — deliberately text-only, no giant background
+stroked word behind it like the reference's quote break, since stacking a
+second typographic spectacle on top of the hero's ghost letter risked the
+"busy" feeling explicitly ruled out for this pass.
+
+### Cursor — reworked for usability, not copied as-is
+
+New `js/bookshelf-cursor.js`, plus `#bookshelf-cur-dot`/`#bookshelf-cur-ring`
+markup in `index.md`. Differs from the reference in the ways the brief
+specifically asked for:
+
+- The **dot has zero smoothing** — set directly to `e.clientX/clientY`
+  every `mousemove`, so it is always exactly at the OS pointer position.
+  Only the **ring** eases (`rx += (mx - rx) * 0.15` per
+  `requestAnimationFrame`) for the orbital trail. The reference's cursor
+  has no precise element at all, just two lagging pieces.
+- Native cursor is **never set to `none` unconditionally**. The CSS rule
+  hiding it is scoped to `body.bookshelf-cur-active .bookshelf-landing *`,
+  and that class is only added by JS after a real `mousemove` confirms the
+  dot is tracking. No mouse activity (or a guard tripping) means the
+  native pointer is simply never hidden.
+- Bails out entirely — no custom cursor, no hidden native cursor — under
+  `prefers-reduced-motion: reduce` or `pointer: coarse` (touch), checked
+  via `matchMedia` before attaching any listeners. A `change` listener on
+  the reduced-motion query also deactivates mid-session if the user
+  toggles the OS setting after load.
+- Cursor elements are `aria-hidden="true"`, `pointer-events: none`, and
+  the script never calls `.focus()` or intercepts clicks/keys — keyboard
+  navigation and `.bookshelf-card`'s existing `:focus-visible` outline are
+  completely unaffected, since keyboard-only users never trigger
+  `mousemove` and so never activate the custom cursor at all.
+
+### Data model
+
+- `tag` (array) renamed to `tags` (array, same role/values, still feeds
+  the hidden `.bookshelf-chips` row) — was singular while holding multiple
+  values, which read oddly now that a separate single-value field exists.
+- New `label` string field per project (e.g. "Timeline · Archive"), shown
+  directly in `.bookshelf-tag` — a direct, hand-written museum-label
+  phrase instead of deriving display text from `tags[0]`. `primaryTag()`
+  deleted from `bookshelf-gallery.js`.
+- **Typographic fallback for missing art:** `createThumbnailContent()` in
+  `bookshelf-gallery.js` renders a large stroked initial
+  (`.bookshelf-ghost-initial`, same visual language as the hero ghost)
+  instead of an `<img>` when a project has no `thumbnail` field. This
+  reuses `.bookshelf-image-wrap`'s existing random-aspect-ratio and
+  weight-based area-scaling logic unchanged, since that box doesn't care
+  what's inside it — no toggle UI, no dual-render state, ~20 lines total.
+  (`.bookshelf-ghost-initial`'s `cqmin` font-sizing needed
+  `container-type: size` added to `.bookshelf-image-wrap`, since
+  container-query units don't resolve without a declared container.)
+- **Dummy entries (`bookshelf-data.js`) trimmed from 5 to 3, kept rather
+  than removed.** They now do double duty as a live demo of the
+  typographic-fallback card (each omits `thumbnail`) sitting next to the
+  photographic real exhibits — a direct visual comparison without
+  building a toggle. This was a reversal mid-planning: the V3 plan
+  originally called for removing all 5 outright to avoid a "busy fake
+  future-content" feeling, but keeping a few with an actual job (the
+  fallback demo) was judged better than either extreme.
+- **Asimov set to inactive.** Verified directly (`curl`-equivalent fetch)
+  that `https://bookshelf.cabinetofcuriosities.in/asimov/` is a live 404
+  in production right now — there's no `asimov/` folder anywhere in this
+  repo, unrelated to and not fixed by the deploy-pipeline work (see root
+  `README.md`). `link` changed to `"#"` so it renders with the same
+  inactive treatment as hamzanama ("Not yet on view") instead of linking
+  to a dead page. Restore the real link once `asimov/` is actually built
+  and deployed.
+
+### Explicitly out of scope for V3
+
+Still not pursued: an actual day/night light *switch* (only the static
+amber spotlight exists), a cat crossing the floor, dust motes, a
+"surprise me" button, content-type filters, rearrange-by-genre/map/
+timeline/author, the reference's marquee/ticker, and its multi-section
+"future content" homepage structure.
+
 ## Header bar — hidden on landing page only
 
 The `hide: [navigation, toc]` front-matter on `index.md` removes the side
@@ -204,6 +386,101 @@ header simply still shows, which is a safe fallback.
 
 ## Changelog
 
+- **V3** — Pivoted from V2's light museum-gallery mood to a dark literary
+  gallery/cabinet: new dark palette (ink/deep/bronze/gold/amber/vellum/ivory
+  + a brightened verdigris accent), a 3-font stack (Fraunces, Libre
+  Baskerville, Syne Mono), a recolored frame/mat/spotlight treatment, a
+  new split-title hero with a drifting ghost-letter motif and a placeholder
+  quote line, a custom orbital cursor (precise dot + lagging ring,
+  `prefers-reduced-motion`/touch guards, never breaks focus/keyboard
+  access), a `tag`→`tags`+`label` data-model split, a typographic
+  thumbnail fallback for projects without art, dummy entries trimmed from
+  5 to 3 (kept, repurposed as the fallback demo), and asimov set to
+  inactive (confirmed 404 in production, unrelated to the deploy-pipeline
+  fix). Full rationale in "Styling pass — V3" above. Files touched:
+  `docs/index.md`, `docs/stylesheets/bookshelf.css`,
+  `docs/js/bookshelf-data.js`, `docs/js/bookshelf-gallery.js`, new
+  `docs/js/bookshelf-cursor.js`.
+- **V3.2** — Second round of feedback, given against direct screenshots of
+  the source reference mockup (clarified mid-review: those screenshots
+  are of `BookshelfLanding/bookshelf-of-curiosities.html` itself, not our
+  site — its kicker copy and Clarke/Christie/Asimov cards don't exist in
+  our `bookshelf-data.js`, useful as exact visual ground truth regardless):
+  - **Header bar still showing under `mkdocs serve`**, even after V3.1's
+    fallback. Confirmed via `git status` that nothing had been committed
+    yet, but the user confirmed they were testing via `mkdocs serve`
+    against the working directory, which does pick up uncommitted edits —
+    so the V3.1 fix genuinely wasn't working, not a stale-deploy issue.
+    Rather than keep guessing at why an inline `<script>` might fail,
+    moved the `body.bookshelf-landing-page` class-setting out of
+    `index.md`'s inline script entirely and into `js/bookshelf-cursor.js`
+    (set unconditionally, before its reduced-motion/touch bail-out) —
+    guaranteed to run as plain external JS, never touched by
+    Python-Markdown's HTML-block handling the way inline markdown content
+    theoretically could be. Also added `!important` to the `display: none`
+    rule as a second hedge, in case Material's own bundled JS sets an
+    inline style on the header (inline styles otherwise beat any
+    stylesheet selector regardless of specificity).
+  - **Spotlight glow "too tacky."** V3.1's hover treatment — a
+    `brightness(1.5)` filter plus a full-perimeter amber `box-shadow` glow
+    around the rectangular frame — read as a neon-sign halo, not "warm
+    light catching a piece." Removed the perimeter glow entirely (both the
+    generic hover rule and the `cosmic-archive`-specific override) and
+    replaced the brightness filter with a smaller, contained effect: the
+    spotlight ellipse itself widens and lifts slightly on hover
+    (`scale(1.1) translateY(-2px)`) rather than blooming brighter. Base
+    opacity also lowered (0.35 → 0.2) so the always-on glow is quieter.
+  - **Typography/asymmetry fidelity**, checked directly against the
+    reference screenshots: imported **Instrument Serif** after all
+    (reversing the "3 families, not 4" call from V3 — the reference's
+    "Curiosities"/"The" use a distinctly flowing decorative italic that
+    Fraunces doesn't replicate closely enough once compared side-by-side;
+    cost is one more font family in an existing `@import`, not new JS
+    complexity) for `.bht-the` and `.bht-curiosities`. Added the
+    reference's quiet "✦ ✦ ✦" divider ornament below the hero title
+    (`.bookshelf-hero-divider`), previously dropped. Card-level ghost
+    initials (Section "Data model" above) had their stroke thinned from
+    1px to 0.5px and recolored from `--bronze` to a new, darker `--brown`
+    token (`#2e2014`, matching the reference's own muted stroke color) —
+    the original was too bold/present for what's meant to be a faint
+    background detail.
+  - Files touched: `docs/index.md`, `docs/stylesheets/bookshelf.css`,
+    `docs/js/bookshelf-cursor.js`.
+- **V3.1** — Four fixes from first-look feedback on V3:
+  - **Header bar still showing.** Root cause: the `:has()` selector
+    hiding `.md-header` likely isn't supported in the browser being
+    tested. Added a JS-set `body.bookshelf-landing-page` class (an inline
+    `<script>` at the top of `index.md`'s landing section) as a fallback
+    selector alongside `:has()`, since a plain class selector has no
+    browser-support gap.
+  - **Lost asymmetry.** The hero title and the card-level ghost-letter
+    fallback were both centered; the source reference is deliberately
+    asymmetric (left-aligned hero text with the ghost letter peeking off
+    one corner, card ghosts bleeding off a corner rather than sitting as
+    a centered watermark). `.bookshelf-hero` switched to `text-align:
+    left` (kicker rule and `.bht-line2` un-centered to match), and
+    `.bookshelf-ghost-initial` repositioned from dead-center flex to
+    `position: absolute; bottom:-8%; right:-4%`, cropped by the wrap's
+    existing `overflow: hidden` — same "stamped, bleeding off the edge"
+    effect as the source's `.card-ghost`.
+  - **Hatch texture broke the velvety background.** Removed
+    `.bookshelf-landing::after` (the V2-inherited crosshatch) entirely —
+    it fought the smooth dark gradient the dark pivot was going for; no
+    replacement texture added.
+  - **Hover effects too weak / backwards.** Three sub-fixes: (1) the
+    spotlight glow was static regardless of hover state — added a
+    `brightness(1.5)` filter bump on hover/focus; (2) the frame's hover
+    shadow was deepening in plain black, which barely reads against an
+    already near-black wall — added an amber glow layer
+    (`0 0 36px rgba(212,160,64,0.22)`) to both the base hover rule and
+    the `cosmic-archive`-specific hover override (which fully replaces
+    `box-shadow`, so needed the same layer added separately); (3) the
+    title's hover color was `var(--accent)` (verdigris `#4a7d6c`), which
+    is perceptibly *darker* than the default `var(--ivory)` —
+    backwards for a "this one is selected" cue. Changed to `var(--amber)`
+    plus a soft `text-shadow` glow, so hovering reads as brighter, not
+    dimmer. Files touched: `docs/index.md`,
+    `docs/stylesheets/bookshelf.css`.
 - **V2.9** — Fixed the real cause of the "dark bar" / off-center cropping
   reported after the V2.8 thumbnail swap: it wasn't the images (confirmed
   both `scifi.jpg` and `asimov.jpg` are exactly 480×480 via

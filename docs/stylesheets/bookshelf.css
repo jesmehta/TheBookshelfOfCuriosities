@@ -1,10 +1,11 @@
 /*
-  The Bookshelf of Curiosities — Landing Page V2
-  Look: a quiet museum gallery room, not a parchment/library pastiche.
-  See README.md in this docs/ folder for design rationale and changelog.
+  The Bookshelf of Curiosities — Landing Page V3
+  Look: a dark literary gallery/cabinet — rich, atmospheric, editorial.
+  Pivoted from the V2 light "museum gallery wall" mood. See README.md in
+  this docs/ folder for design rationale and changelog.
 */
 
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400..600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400..600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Syne+Mono&display=swap");
 
 [data-md-color-primary="custom"] {
   --md-primary-fg-color: #27221d;
@@ -30,26 +31,44 @@
   .md-header lives outside the page content (sibling of .md-container),
   so it can't be hidden via the `hide:` front-matter list like nav/toc.
   :has() scopes this to pages that render .bookshelf-landing, leaving the
-  header intact on every other page.
+  header intact on every other page. A JS-set body class
+  (.bookshelf-landing-page, set unconditionally at the top of
+  js/bookshelf-cursor.js — deliberately NOT an inline <script> in
+  index.md, to rule out any chance of markdown's HTML-block handling
+  touching it) is paired with it as a fallback for browsers without
+  :has() support. `!important` guards against any inline style Material's
+  own bundled JS might set on the header (e.g. for scroll-hide behavior),
+  since an inline style would otherwise beat a plain class selector.
 */
-body:has(.bookshelf-landing) .md-header {
-  display: none;
+body:has(.bookshelf-landing) .md-header,
+body.bookshelf-landing-page .md-header {
+  display: none !important;
 }
 
 .bookshelf-landing {
-  /* Gallery wall: cool bone/greige, not parchment. Warmth comes from
-     light, not from sepia. */
-  --wall: #f1efe9;
-  --wall-warm: #e6e2d6;
-  --ink: #18181a;
-  --muted-ink: #6c6b66;
-  --frame: #1f1f22;
-  --mat: #f6f3eb;
-  /* Verdigris/patina accent — a museum-bronze-plaque green, the one
-     "slightly odd" color note. Deliberately not brown/oxblood. */
-  --accent: #3f6b5e;
-  --line: rgba(24, 24, 26, 0.12);
-  --shadow: rgba(20, 20, 22, 0.22);
+  /* Dark literary gallery: near-black ink background, warm
+     bronze/gold/amber highlights, verdigris as the one odd accent note.
+     --ink is a BACKGROUND token here (V2's --ink was a text-color token
+     on a light background — inverted on purpose, do not reuse it for
+     text; primary text is --ivory). */
+  --ink: #0e0c09;
+  --deep: #161209;
+  --char: #1f1810;
+  --brown: #2e2014;
+  --bronze: #8a6030;
+  --gold: #b8842a;
+  --amber: #d4a040;
+  --sand: #c8a870;
+  --vellum: #e0c898;
+  --ivory: #f5edd8;
+  --muted-ink: #9c8f78;
+  /* Verdigris accent — the one strange, not-gold note. Brightened
+     slightly from V2's #3f6b5e so it still reads against near-black. */
+  --accent: #4a7d6c;
+  --frame: #1f1810;
+  --mat: #473423;
+  --line: rgba(237, 224, 196, 0.12);
+  --shadow: rgba(0, 0, 0, 0.55);
 
   /* Default frame proportions; overridden per frameMood below so frames
      read as different pieces of framing, not just different colors. */
@@ -57,56 +76,127 @@ body:has(.bookshelf-landing) .md-header {
   --mat-width: 0.85rem;
 
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-serif-display: "Libre Baskerville", Georgia, serif;
+  --font-script: "Instrument Serif", Georgia, serif;
+  --font-mono-label: "Syne Mono", "Ubuntu Mono", monospace;
 
   min-height: 100vh;
   margin: -1.2rem -0.8rem 0;
   padding: clamp(2rem, 5vw, 4rem) 1.25rem 5rem;
-  color: var(--ink);
-  background: linear-gradient(180deg, var(--wall), var(--wall-warm));
+  color: var(--ivory);
+  background: linear-gradient(180deg, var(--ink), var(--deep));
   position: relative;
   overflow: hidden;
 }
 
-/* A faint top-down wash, like the room is lit rather than papered. */
+/* A faint warm light source from above, like one lamp lighting the room,
+   rather than an evenly lit wall. */
 .bookshelf-landing::before {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,255,255,0.7), transparent 70%);
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(212, 160, 64, 0.1), transparent 70%);
 }
 
-/*
-  A mild plaster/canvas crosshatch — visible up close, quiet from a
-  distance. Deliberately not the old SVG-noise grain (read as dusty
-  paper); a regular weave reads as a painted wall, not parchment.
-*/
-.bookshelf-landing::after {
-  content: "";
-  position: absolute;
-  inset: 0;
+/* ──────────────────────────────────────────
+   Custom cursor — see js/bookshelf-cursor.js
+   Native cursor is only hidden once the script confirms it can track
+   precisely (not touch, not reduced-motion); never set unconditionally.
+───────────────────────────────────────── */
+
+#bookshelf-cur-dot {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  transform: translate(-50%, -50%);
   pointer-events: none;
-  mix-blend-mode: multiply;
-  background-image:
-    repeating-linear-gradient(45deg, rgba(24, 24, 26, 0.05) 0 1px, transparent 1px 3px),
-    repeating-linear-gradient(-45deg, rgba(24, 24, 26, 0.035) 0 1px, transparent 1px 3px);
+  z-index: 9999;
+  mix-blend-mode: screen;
+  display: none;
 }
 
-.bookshelf-title-band {
+#bookshelf-cur-ring {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.45;
+  transition: width 0.25s, height 0.25s, opacity 0.25s, border-color 0.25s;
+  display: none;
+}
+
+body.bookshelf-cur-expand #bookshelf-cur-ring {
+  width: 50px;
+  height: 50px;
+  opacity: 0.75;
+  border-color: var(--amber);
+}
+
+body.bookshelf-cur-active .bookshelf-landing,
+body.bookshelf-cur-active .bookshelf-landing * {
+  cursor: none;
+}
+
+/* ──────────────────────────────────────────
+   Hero — split title, ghost letter, type-break
+───────────────────────────────────────── */
+
+.bookshelf-hero {
   max-width: 980px;
   margin: 0 auto clamp(2.5rem, 6vw, 5rem);
   padding: 0;
-  text-align: center;
+  /* Asymmetric, poster-like, not a centered hero: title hugs the left
+     edge of this (page-centered) box, ghost letter looms top-right. */
+  text-align: left;
   position: relative;
+  overflow: hidden;
   z-index: 1;
-  background: transparent;
-  border: 0;
-  box-shadow: none;
+}
+
+.bookshelf-ghost {
+  position: absolute;
+  top: -8%;
+  right: -4%;
+  font-family: var(--font-serif-display);
+  font-size: clamp(220px, 32vw, 420px);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 0.5px var(--char);
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  animation: bookshelfGhostDrift 18s ease-in-out infinite alternate;
+}
+
+@keyframes bookshelfGhostDrift {
+  from {
+    transform: translateY(0) rotate(-1deg);
+  }
+  to {
+    transform: translateY(20px) rotate(0.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bookshelf-ghost {
+    animation: none;
+  }
 }
 
 .bookshelf-kicker {
   position: relative;
+  z-index: 1;
   margin: 0 0 1.3rem;
   padding-bottom: 0.9rem;
   font-size: 0.72rem;
@@ -119,25 +209,103 @@ body:has(.bookshelf-landing) .md-header {
   content: "";
   position: absolute;
   bottom: 0;
-  left: 50%;
+  left: 0;
   width: 2.6rem;
   height: 1px;
-  transform: translateX(-50%);
   background: var(--accent);
-  opacity: 0.55;
+  opacity: 0.7;
 }
 
-.bookshelf-title-band h1 {
-  max-width: 920px;
-  margin: 0 auto;
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-size: clamp(3rem, 8vw, 7rem);
+.bookshelf-hero-title {
+  position: relative;
+  z-index: 1;
+}
+
+.bht-the {
+  display: block;
+  font-family: var(--font-script);
+  font-style: italic;
+  font-size: clamp(0.9rem, 1.6vw, 1.3rem);
+  letter-spacing: 0.1em;
+  color: var(--bronze);
+  margin-bottom: 0.4rem;
+}
+
+.bht-bookshelf {
+  display: block;
+  font-family: var(--font-serif-display);
+  font-weight: 700;
+  font-style: italic;
+  font-size: clamp(3.5rem, 11vw, 9rem);
   line-height: 0.95;
   letter-spacing: -0.02em;
-  color: var(--ink);
-  font-weight: 580;
+  color: var(--ivory);
 }
+
+.bht-line2 {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 0.6em;
+  margin-top: 0.2em;
+}
+
+.bht-of {
+  font-family: var(--font-mono-label);
+  font-size: clamp(0.6rem, 1vw, 0.8rem);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.bht-curiosities {
+  font-family: var(--font-script);
+  font-style: italic;
+  font-size: clamp(2.2rem, 6.5vw, 5rem);
+  letter-spacing: -0.01em;
+  color: var(--sand);
+}
+
+.bookshelf-hero-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  max-width: 14rem;
+  margin-top: 1.6rem;
+}
+
+.bookshelf-hero-divider-line {
+  flex: 1;
+  height: 0.5px;
+  background: var(--brown);
+}
+
+.bookshelf-hero-divider-orn {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+}
+
+.bookshelf-typebreak {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: clamp(2rem, 5vw, 4rem) auto 0;
+  text-align: center;
+}
+
+.bookshelf-typebreak-q {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  line-height: 1.5;
+  color: var(--vellum);
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────
+   Gallery grid + cards
+───────────────────────────────────────── */
 
 .bookshelf-gallery {
   max-width: 1120px;
@@ -166,13 +334,13 @@ body:has(.bookshelf-landing) .md-header {
 }
 
 .bookshelf-card:focus-visible {
-  outline: 2px solid rgba(31, 29, 26, 0.65);
+  outline: 2px solid var(--amber);
   outline-offset: 10px;
 }
 
 .bookshelf-card.is-inactive {
   cursor: default;
-  opacity: 0.62;
+  opacity: 0.5;
 }
 
 .bookshelf-card.is-inactive:hover {
@@ -181,7 +349,7 @@ body:has(.bookshelf-landing) .md-header {
 
 .bookshelf-card.is-inactive:hover .bookshelf-label h2,
 .bookshelf-card.is-inactive:focus-visible .bookshelf-label h2 {
-  color: var(--ink);
+  color: var(--ivory);
 }
 
 .bookshelf-card-inner {
@@ -189,21 +357,32 @@ body:has(.bookshelf-landing) .md-header {
   position: relative;
 }
 
-/* A small gallery spotlight pooling above each piece — the "alive
-   underneath" hint, kept static and quiet for V1. The day/night switch
-   in V1.5 will animate this instead of inventing a new layer. */
+/* A small gallery spotlight pooling above each piece — amber-tinted, like
+   warm light hitting a piece in a dark room. Quiet by default (low
+   opacity, soft falloff — a v3.1 attempt with brightness(1.5) + a
+   full-perimeter glow around the frame read as a neon-sign halo around a
+   rectangle, not "lit up," so this version stays a contained ellipse and
+   only grows gently). */
 .bookshelf-card-inner::before {
   content: "";
   position: absolute;
-  top: -1.6rem;
+  top: -1.4rem;
   left: 50%;
-  width: calc(65% * var(--frame-scale, 1));
-  height: 2.6rem;
+  width: calc(60% * var(--frame-scale, 1));
+  height: 2.2rem;
   transform: translateX(-50%);
-  background: radial-gradient(ellipse at center, rgba(255, 252, 240, 0.65), transparent 72%);
-  filter: blur(1px);
+  background: radial-gradient(ellipse at center, rgba(212, 160, 64, 0.2), transparent 75%);
+  filter: blur(2px);
   pointer-events: none;
   z-index: 0;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+/* On hover/focus, the spotlight pool widens and rises slightly — a small,
+   contained cue rather than a glow/halo around the whole frame. */
+.bookshelf-card:hover .bookshelf-card-inner::before,
+.bookshelf-card:focus-visible .bookshelf-card-inner::before {
+  transform: translateX(-50%) translateY(-2px) scale(1.1);
 }
 
 .bookshelf-frame {
@@ -215,30 +394,63 @@ body:has(.bookshelf-landing) .md-header {
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.08) inset,
     0 16px 32px var(--shadow),
-    0 2px 6px rgba(20, 20, 22, 0.18);
+    0 2px 6px rgba(0, 0, 0, 0.4);
   position: relative;
   z-index: 1;
   transition: box-shadow 220ms ease, transform 220ms ease;
 }
 
+/* Hover/focus: a deeper (not amber-glowing) shadow plus the lift — a
+   full-perimeter amber glow around the rectangular frame was tried in
+   v3.1 and read as a neon-sign halo, not "catching light," so the warm
+   cue on hover lives in the spotlight pool and the title color instead. */
 .bookshelf-card:hover .bookshelf-frame,
 .bookshelf-card:focus-visible .bookshelf-frame {
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.1) inset,
-    0 20px 40px var(--shadow),
-    0 3px 8px rgba(20, 20, 22, 0.2);
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 24px 48px var(--shadow),
+    0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .bookshelf-image-wrap {
   /* Square fallback if JS doesn't run; bookshelf-gallery.js sets a
      per-card inline aspect-ratio (see randomFrameRatio()). */
   aspect-ratio: 1;
-  background: #1b1b1d;
+  background: var(--ink);
   overflow: hidden;
+  position: relative;
   border: var(--mat-width) solid var(--mat);
-  outline: 1px solid rgba(20, 20, 22, 0.16);
+  outline: 1px solid rgba(237, 224, 196, 0.18);
   outline-offset: -0.1rem;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+  /* Lets .bookshelf-ghost-initial's `cqmin` font-size resolve against
+     this box's own size, since it varies per card (random aspect ratio +
+     weight-based scaling). */
+  container-type: size;
+}
+
+/* Typographic fallback for projects without a thumbnail (see
+   createThumbnailContent() in bookshelf-gallery.js) — same stroked-letter
+   language as the hero ghost. Bleeds off the bottom-right corner (cropped
+   by the wrap's own overflow:hidden) rather than sitting dead-center, to
+   match the source's intentionally off-center, "stamped" card-ghost
+   placement instead of reading as a centered watermark. Stroke is
+   deliberately thin (0.5px) and dark (--brown, not --bronze) to match how
+   faint the source's card-ghost actually is — a 1px bronze stroke read as
+   too bold/present for a background detail. */
+.bookshelf-ghost-initial {
+  position: absolute;
+  bottom: -8%;
+  right: -4%;
+  line-height: 1;
+  font-family: var(--font-serif-display);
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(2.5rem, 45cqmin, 9rem);
+  color: transparent;
+  -webkit-text-stroke: 0.5px var(--brown);
+  pointer-events: none;
+  user-select: none;
 }
 
 /*
@@ -288,11 +500,12 @@ body:has(.bookshelf-landing) .md-header {
 
 .bookshelf-tag {
   margin: 0 0 0.4rem;
-  font-size: 0.66rem;
-  letter-spacing: 0.16em;
+  font-family: var(--font-mono-label);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .bookshelf-label h2 {
@@ -300,14 +513,22 @@ body:has(.bookshelf-landing) .md-header {
   font-family: var(--font-display);
   font-size: clamp(1.05rem, 1.7vw, 1.3rem);
   line-height: 1.22;
-  color: var(--ink);
+  color: var(--ivory);
   font-weight: 560;
-  transition: color 220ms ease;
+  transition: color 220ms ease, text-shadow 220ms ease;
 }
 
+/*
+  Hover used to switch the title to var(--accent) (verdigris), which is
+  perceptibly DARKER than the default --ivory — exactly backwards for a
+  dark-mode "this one is selected/lit" cue. Switched to --amber (the same
+  warm tone as the cursor and the spotlight glow) plus a soft glow, so
+  hovering reads as brighter/illuminated, not dimmer.
+*/
 .bookshelf-card:hover .bookshelf-label h2,
 .bookshelf-card:focus-visible .bookshelf-label h2 {
-  color: var(--accent);
+  color: var(--amber);
+  text-shadow: 0 0 14px rgba(212, 160, 64, 0.4);
 }
 
 .bookshelf-label p {
@@ -334,25 +555,32 @@ body:has(.bookshelf-landing) .md-header {
   Frame moods: each exhibit gets a distinct hue AND a distinct framing
   style (thickness, mat width, shadow depth, the odd structural detail) —
   so a map room reads as a different piece of framing from a cosmic
-  archive, not just a different color of the same box.
+  archive, not just a different color of the same box. Recolored for the
+  dark palette in V3; structural treatment per mood is unchanged from V2.
+
+  Selector audit: `frame-${mood}` and `bookshelf-card` are classes on the
+  SAME <a> element (see createGalleryCard() in bookshelf-gallery.js), so
+  any rule needing both must be a compound selector with no whitespace
+  (`.bookshelf-card.frame-{mood}`), never a descendant selector
+  (`.frame-{mood} .bookshelf-card`) — that bug was fixed for
+  cosmic-archive in V2.7; the pattern below preserves the fix and applies
+  it to every new hover-state rule added in this pass.
 */
 
 /* pulp-cosmic: thin minimal gallery frame, modest mat */
 .frame-pulp-cosmic .bookshelf-frame {
-  --frame: #1f2433;
-  --frame-pad: clamp(0.22rem, 0.55vw, 0.32rem);
-  --mat-width: 0.55rem;
+  --frame: #241a10;
 }
 
 /* cosmic-archive: heavier display-case frame, deeper shadow, wide mat */
 .frame-cosmic-archive .bookshelf-frame {
-  --frame: #1a2628;
+  --frame: #1a1410;
   --frame-pad: clamp(0.6rem, 1.5vw, 0.85rem);
   --mat-width: 1.05rem;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.1) inset,
     0 26px 52px var(--shadow),
-    0 6px 14px rgba(20, 20, 22, 0.26);
+    0 6px 14px rgba(0, 0, 0, 0.5);
 }
 
 .bookshelf-card.frame-cosmic-archive:hover .bookshelf-frame,
@@ -360,12 +588,13 @@ body:has(.bookshelf-landing) .md-header {
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.12) inset,
     0 32px 60px var(--shadow),
-    0 8px 18px rgba(20, 20, 22, 0.3);
+    0 8px 18px rgba(0, 0, 0, 0.55);
 }
 
-/* illuminated-manuscript: a second inset line, like a double mat */
+/* illuminated-manuscript: a second inset line, like a double mat —
+   recolored to a gold hairline so it reads as "illuminated." */
 .frame-illuminated-manuscript .bookshelf-frame {
-  --frame: #2a2230;
+  --frame: #2a1f12;
   --frame-pad: clamp(0.45rem, 1.1vw, 0.65rem);
   --mat-width: 0.7rem;
 }
@@ -374,13 +603,14 @@ body:has(.bookshelf-landing) .md-header {
   content: "";
   position: absolute;
   inset: 0.3rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(212, 160, 64, 0.22);
   pointer-events: none;
 }
 
-/* map-room: bled to the edge, almost no mat, faint corner registration ticks */
+/* map-room: bled to the edge, almost no mat, amber corner registration
+   ticks — reads like cartographer's ink under lamp light. */
 .frame-map-room .bookshelf-frame {
-  --frame: #1d2620;
+  --frame: #1d180f;
   --frame-pad: clamp(0.2rem, 0.45vw, 0.28rem);
   --mat-width: 0.3rem;
 }
@@ -391,7 +621,7 @@ body:has(.bookshelf-landing) .md-header {
   position: absolute;
   width: 0.5rem;
   height: 1px;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(212, 160, 64, 0.4);
   pointer-events: none;
 }
 
@@ -405,9 +635,9 @@ body:has(.bookshelf-landing) .md-header {
   right: 0.4rem;
 }
 
-/* paperback: thin frame line, generous mat, art floats in white space */
+/* paperback: thin frame line, generous mat, art floats in negative space */
 .frame-paperback .bookshelf-frame {
-  --frame: #232220;
+  --frame: #221b13;
   --frame-pad: clamp(0.18rem, 0.4vw, 0.24rem);
   --mat-width: 1.3rem;
 }
@@ -432,7 +662,7 @@ body:has(.bookshelf-landing) .md-header {
     gap: 2.5rem;
   }
 
-  .bookshelf-title-band h1 {
-    letter-spacing: -0.045em;
+  .bht-bookshelf {
+    letter-spacing: -0.01em;
   }
 }
