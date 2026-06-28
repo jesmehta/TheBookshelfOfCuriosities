@@ -25,7 +25,7 @@ const bookshelfTicker = {
     "The Great Game",
     "Hamzanama",
     "Comic Book History",
-    "Dataviz",
+    "Story Maps",
     "Marginalia"
   ]
 };
@@ -33,15 +33,19 @@ const bookshelfTicker = {
 // Full-bleed horizontal break: one big ghost-outline word plus a row of
 // related topic terms. `beforeSection` pins it immediately above the
 // named section (must match a `name` in bookshelfSections exactly).
+//    EMPIRE and section ii
+
 const bookshelfTextBand = {
   enabled: true,
   beforeSection: "Empire, Adventure & The Great Game",
   word: "Empire",
-  topics: ["Kipling", "Kim", "The Great Game", "The North-West Frontier", "Hamzanama", "The Mughal Manuscript"]
+  topics: ["Kipling", "Kim", "The Great Game", "The Himalayas", "The Raj"]
 };
 
 // Centered pull-quote with a large ghost-outline word behind it as
 // texture. Same `beforeSection` placement mechanism as the text band.
+//    Quote
+
 const bookshelfQuoteBreak = {
   enabled: true,
   beforeSection: "Book Data & Visualisation",
@@ -70,7 +74,7 @@ const bookshelfDataviz = {
 // Single wide dormant band introducing the "Writings on Reading" section,
 // rendered instead of a card grid (see `feature: "writings"` below).
 const bookshelfWritings = {
-  enabled: true,
+  enabled: false,
   big: "On the pleasures,<br>peculiarities &amp;<br>private rituals of reading",
   sub: "Personal essays, dispatches, and occasional marginalia.",
   chip: "In preparation"
@@ -147,7 +151,7 @@ const bookshelfSections = [
   },
   {
     name: "Empire, Adventure & The Great Game",
-    enabled: true,
+    enabled: false,
     cards: [
       {
         id: "kipling",
@@ -176,7 +180,7 @@ const bookshelfSections = [
   },
   {
     name: "Comics & Sequential Art",
-    enabled: true,
+    enabled: false,
     cards: [
       {
         id: "comic-book-history",
@@ -204,7 +208,7 @@ const bookshelfSections = [
   },
   {
     name: "Book Data & Visualisation",
-    enabled: true,
+    enabled: false,
     feature: "dataviz",
     cards: [
       {
@@ -244,7 +248,7 @@ const bookshelfSections = [
   },
   {
     name: "Writings on Reading",
-    enabled: true,
+    enabled: false,
     feature: "writings",
     cards: []
   }
