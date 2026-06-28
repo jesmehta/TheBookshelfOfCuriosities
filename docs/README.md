@@ -19,6 +19,45 @@ full swap, not a refinement, per the design doc's own instruction not to
 blend old and new. See the V4.0 changelog entry near the bottom of this
 file for what changed and why.
 
+For the portable lessons from this rebuild (MkDocs/Material gotchas, bugs
+and fixes, patterns worth reusing) — not specific to this project — see
+**`MKDOCS-LANDING-PAGE-NOTES.md`** at the repo root. That file is written
+to be lifted into a different repo (e.g. a future "Cabinet" or "fffx"
+site); this section and the one below are about *this* site specifically.
+
+## V4.0 architecture reference
+
+The whole page is data-driven from one file, `docs/js/bookshelf-data.js`.
+`docs/js/bookshelf-gallery.js` reads every block below and renders it into
+empty mount points in `index.md` — no content strings or rendering logic
+live anywhere else. Every block has an `enabled` flag; flip it to remove
+that block from the page without deleting its content.
+
+| Variable | Shape | Renders as |
+|---|---|---|
+| `bookshelfTicker` | `{ enabled, items: string[] }` | the scrolling marquee band |
+| `bookshelfTextBand` | `{ enabled, beforeSection, word, topics: string[] }` | full-bleed ghost-word break, pinned immediately above the named section |
+| `bookshelfQuoteBreak` | `{ enabled, beforeSection, bgWord, quote, attribution }` | centered pull-quote over a ghost-word texture, same pinning mechanism |
+| `bookshelfDataviz` | `{ enabled, kicker, title, desc, chips: string[] }` | the wide feature block — only rendered for the section with `feature: "dataviz"` |
+| `bookshelfWritings` | `{ enabled, big, sub, chip }` | the single dormant writings band — only rendered for the section with `feature: "writings"` |
+| `bookshelfSections` | `[{ name, enabled, feature?, cards: Card[] }]` | section header (numbered i/ii/iii… by array order) + a 12-col card grid |
+
+A `Card` is `{ id, cat, title, desc, tag, href, live, ghost, span, titleVariant? }`.
+`live: true` + a real `href` renders an `<a class="card">` with a "Live ↗"
+badge; `live: false` renders a `<div class="card card-dormant">` (hatched
+overlay, `pointer-events: none`, a "soon-chip" instead). `span` is one of
+`c4`/`c5`/`c6`/`c7`/`c8`/`c12` (12-column grid). `ghost: ""` omits the
+card-ghost letter entirely (used for the three dataviz cards, which don't
+have one in the source reference). `titleVariant: "inst"` swaps the title
+font from Libre Baskerville to Instrument Serif for that one card.
+
+`bookshelfTextBand`/`bookshelfQuoteBreak`'s `beforeSection` must exactly
+match a `name` in `bookshelfSections` — the renderer inserts that block
+immediately before the matching section as it iterates, which is also why
+section *names* are load-bearing, not just labels: renaming a section
+without updating any `beforeSection` referencing it silently drops the
+text band or quote break with no error.
+
 ## Intent
 
 > The Bookshelf of Curiosities is a quiet literary gallery where books
