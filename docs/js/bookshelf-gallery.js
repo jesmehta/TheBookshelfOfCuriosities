@@ -1,118 +1,190 @@
-function createTagChips(tags) {
-  if (!Array.isArray(tags)) return "";
+/*
+  Render engine for the V4.0 landing page. Reads every block defined in
+  bookshelf-data.js and renders it into the mount points left empty in
+  index.md. No content strings or card data live in this file — only
+  rendering logic, per the design system's "only file to edit is the data
+  file" rule.
+*/
 
-  return tags
-    .map(tag => `<span class="bookshelf-chip">${tag}</span>`)
+function toRoman(n) {
+  const numerals = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x"];
+  return numerals[n - 1] || String(n);
+}
+
+function createTickerMarkup() {
+  if (!bookshelfTicker.enabled) return "";
+
+  const items = bookshelfTicker.items
+    .map(item => `<span class="ticker-item"><b>✦</b>${item}</span>`)
+    .join("");
+
+  // Doubled so the 50s linear loop has no visible seam.
+  return `
+    <div class="ticker-outer" aria-hidden="true">
+      <div class="ticker-track">${items}${items}</div>
+    </div>
+  `;
+}
+
+function createHeroIndexMarkup() {
+  return bookshelfSections
+    .filter(section => section.enabled)
+    .map((section, i) => `<span>${toRoman(i + 1)} — ${section.name}</span>`)
     .join("");
 }
 
-function createThumbnail(project) {
+function createSecHeadMarkup(num, name) {
   return `
-    <img
-      src="${project.thumbnail}"
-      alt="${project.alt || project.title}"
-      class="bookshelf-thumbnail"
-      loading="lazy"
-    >
+    <div class="sec-head reveal">
+      <span class="sec-num">${num}.</span>
+      <span class="sec-name">${name}</span>
+      <div class="sec-rule"></div>
+    </div>
   `;
 }
 
-/*
-  Typographic fallback: a project with no `thumbnail` gets a large
-  stroked initial instead of an <img>, reusing the same
-  .bookshelf-image-wrap box (random aspect ratio + weight-based area
-  scaling apply identically either way, since that box doesn't care what's
-  inside it). Lets a project go on the wall before real art exists.
-*/
-function createThumbnailContent(project) {
-  if (project.thumbnail) return createThumbnail(project);
+function createTextBandMarkup() {
+  if (!bookshelfTextBand.enabled) return "";
 
-  const initial = (project.label || project.title || "?").trim().charAt(0).toUpperCase();
-  return `<span class="bookshelf-ghost-initial" aria-hidden="true">${initial}</span>`;
-}
-
-/*
-  Frame shape: start from a square (1) and add/subtract one delta in a
-  single step. Landscape (positive delta) is favoured over portrait
-  (negative delta) so the wall reads mostly wide frames with the
-  occasional tall one, like a hand-hung gallery rather than a uniform grid.
-*/
-function randomFrameRatio() {
-  const isLandscape = Math.random() < 0.7;
-  const delta = isLandscape
-    ? 0.18 + Math.random() * 0.32 // 1.18 – 1.50
-    : -(0.05 + Math.random() * 0.2); // 0.75 – 0.95
-  return (1 + delta).toFixed(2);
-}
-
-/*
-  Frame size within its grid cell, by AREA not width: weight 10 is the
-  biggest visual area (fills the cell at aspect 1), weight 1 is about a
-  quarter of that area but stays clearly visible. Mapping weight to width
-  alone makes portrait frames look bigger than landscape ones at the same
-  weight, since area = width^2 / aspect — a portrait (aspect < 1) gets
-  taller for the same width. Solving width = areaScale * sqrt(aspect)
-  keeps width^2/aspect == areaScale^2 for any aspect, so equal weight
-  really does mean equal area. Exposed as a CSS custom property so both
-  the frame width and its spotlight glow (bookshelf.css,
-  .bookshelf-card-inner::before) scale together.
-*/
-function frameWidthFraction(weight, aspect) {
-  const w = Math.min(10, Math.max(1, Number(weight) || 1));
-  const minAreaScale = 0.5;
-  const maxAreaScale = 1;
-  const areaScale = minAreaScale + ((w - 1) / 9) * (maxAreaScale - minAreaScale);
-  const width = areaScale * Math.sqrt(aspect);
-  return Math.min(1, Math.max(0.32, width)).toFixed(2);
-}
-
-function createGalleryCard(project) {
-  const isInactive = !project.link || project.link === "#";
-  const linkTarget = isInactive ? "#" : project.link;
-  const inactiveClass = isInactive ? "is-inactive" : "";
-  const frameClass = project.frameMood ? `frame-${project.frameMood}` : "frame-default";
-  const aspect = Number(randomFrameRatio());
-  const frameScale = frameWidthFraction(project.weight, aspect);
+  const topics = bookshelfTextBand.topics
+    .map(topic => `<span class="text-band-item">${topic}</span>`)
+    .join("");
 
   return `
-    <a
-      class="bookshelf-card ${frameClass} ${inactiveClass}"
-      href="${linkTarget}"
-      ${isInactive ? 'aria-disabled="true" tabindex="-1"' : ""}
-    >
-      <article class="bookshelf-card-inner" style="--frame-scale: ${frameScale}">
-        <div class="bookshelf-frame">
-          <div class="bookshelf-image-wrap" style="aspect-ratio: ${aspect}">
-            ${createThumbnailContent(project)}
-          </div>
-        </div>
-
-        <div class="bookshelf-label">
-          <p class="bookshelf-tag">${project.label || ""}</p>
-          <h2>${project.title}</h2>
-          <p>${project.subtitle}</p>
-
-          <div class="bookshelf-chips">
-            ${createTagChips(project.tags)}
-          </div>
-
-          ${isInactive ? '<span class="bookshelf-status">Not yet on view</span>' : ""}
-        </div>
-      </article>
-    </a>
+    <div class="text-band reveal" aria-hidden="true">
+      <span class="text-band-big">${bookshelfTextBand.word}</span>
+      <div class="text-band-items">${topics}</div>
+    </div>
   `;
 }
 
-function renderBookshelfGallery() {
-  const gallery = document.getElementById("bookshelf-gallery");
+function createQuoteBreakMarkup() {
+  if (!bookshelfQuoteBreak.enabled) return "";
 
-  if (!gallery || !Array.isArray(bookshelfProjects)) return;
+  return `
+    <div class="type-break reveal">
+      <div class="type-break-bg" aria-hidden="true"><span>${bookshelfQuoteBreak.bgWord}</span></div>
+      <div class="type-break-content">
+        <p class="type-break-q">&ldquo;${bookshelfQuoteBreak.quote}&rdquo;</p>
+        <span class="type-break-attr">${bookshelfQuoteBreak.attribution}</span>
+      </div>
+    </div>
+  `;
+}
 
-  const sortedProjects = [...bookshelfProjects].sort((a, b) => {
-    return a.order - b.order;
+function createDatavizMarkup() {
+  if (!bookshelfDataviz.enabled) return "";
+
+  const chips = bookshelfDataviz.chips
+    .map(chip => `<span class="chip">${chip}</span>`)
+    .join("");
+
+  return `
+    <div class="dv-block reveal">
+      <p class="dv-kicker">${bookshelfDataviz.kicker}</p>
+      <h2 class="dv-title">${bookshelfDataviz.title}</h2>
+      <p class="dv-desc">${bookshelfDataviz.desc}</p>
+      <div class="dv-chips">${chips}</div>
+    </div>
+  `;
+}
+
+function createWritingsMarkup() {
+  if (!bookshelfWritings.enabled) return "";
+
+  return `
+    <div class="writings-card card-dormant reveal">
+      <div>
+        <p class="writings-big">${bookshelfWritings.big}</p>
+        <p class="writings-sub">${bookshelfWritings.sub}</p>
+      </div>
+      <span class="soon-chip" style="align-self:flex-start;">${bookshelfWritings.chip}</span>
+    </div>
+  `;
+}
+
+function createCardMarkup(card, delayIndex) {
+  const delay = (delayIndex * 0.04).toFixed(2);
+  const tag = card.live ? "a" : "div";
+  const hrefAttr = card.live ? ` href="${card.href}"` : "";
+  const stateClass = card.live ? "" : " card-dormant";
+  const titleClass = card.titleVariant === "inst" ? "card-title card-title-inst" : "card-title";
+  const ghostMarkup = card.ghost ? `<div class="card-ghost" aria-hidden="true">${card.ghost}</div>` : "";
+  const badgeMarkup = card.live
+    ? '<span class="badge-live">Live ↗</span>'
+    : '<span class="soon-chip">In preparation</span>';
+  const arrowMarkup = card.live
+    ? '<span class="card-arrow">↗</span>'
+    : '<span class="card-arrow" style="opacity:.25">—</span>';
+
+  return `
+    <${tag}${hrefAttr} class="card ${card.span}${stateClass} reveal" style="transition-delay:${delay}s">
+      ${ghostMarkup}
+      <div class="card-inner">
+        ${badgeMarkup}
+        <p class="card-cat">${card.cat}</p>
+        <h2 class="${titleClass}">${card.title}</h2>
+        <p class="card-body-text">${card.desc}</p>
+        <div class="card-foot">
+          <span class="card-tag">${card.tag}</span>
+          ${arrowMarkup}
+        </div>
+      </div>
+    </${tag}>
+  `;
+}
+
+function createSectionMarkup(section, num) {
+  let html = createSecHeadMarkup(num, section.name);
+
+  if (section.feature === "dataviz") {
+    html += createDatavizMarkup();
+  }
+
+  if (section.cards && section.cards.length) {
+    const cards = section.cards.map((card, i) => createCardMarkup(card, i)).join("");
+    html += `<div class="grid">${cards}</div>`;
+  }
+
+  if (section.feature === "writings") {
+    html += createWritingsMarkup();
+  }
+
+  return html;
+}
+
+function renderSections() {
+  const mount = document.getElementById("bookshelf-sections");
+  if (!mount) return;
+
+  let html = "";
+  let num = 0;
+
+  bookshelfSections.forEach(section => {
+    if (!section.enabled) return;
+
+    if (bookshelfTextBand.enabled && bookshelfTextBand.beforeSection === section.name) {
+      html += createTextBandMarkup();
+    }
+    if (bookshelfQuoteBreak.enabled && bookshelfQuoteBreak.beforeSection === section.name) {
+      html += createQuoteBreakMarkup();
+    }
+
+    num += 1;
+    html += createSectionMarkup(section, toRoman(num));
   });
 
-  gallery.innerHTML = sortedProjects.map(createGalleryCard).join("");
+  mount.innerHTML = html;
 }
 
-document.addEventListener("DOMContentLoaded", renderBookshelfGallery);
+function renderBookshelfLanding() {
+  const tickerMount = document.getElementById("bookshelf-ticker");
+  if (tickerMount) tickerMount.innerHTML = createTickerMarkup();
+
+  const heroIndexMount = document.getElementById("bookshelf-hero-index");
+  if (heroIndexMount) heroIndexMount.innerHTML = createHeroIndexMarkup();
+
+  renderSections();
+}
+
+document.addEventListener("DOMContentLoaded", renderBookshelfLanding);

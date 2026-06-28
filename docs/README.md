@@ -6,6 +6,19 @@ This file documents the design decisions behind the custom landing page
 It lives in `docs/` (not the repo root) because it is documentation *about*
 the docs site, not the project's general README.
 
+## V4.0 — full UI replacement (current)
+
+As of V4.0, the landing page's visual system is governed by
+**`DESIGN-SYSTEM_for_v4.0.md`** (repo root) — that file is the source of
+truth going forward; this README's job from here is to record *why*
+things changed and keep a changelog, not to restate the spec. Everything
+below the "Intent" section (V1 through V3.2) is preserved as historical
+record of the museum-gallery and dark-cabinet phases that preceded this
+replacement, but **none of it describes the current system** — V4.0 is a
+full swap, not a refinement, per the design doc's own instruction not to
+blend old and new. See the V4.0 changelog entry near the bottom of this
+file for what changed and why.
+
 ## Intent
 
 > The Bookshelf of Curiosities is a quiet literary gallery where books
@@ -386,10 +399,102 @@ header simply still shows, which is a safe fallback.
 
 ## Changelog
 
+- **V4.1** — Replaced the particle field with a firefly sim per direct
+  request: ~24 motes, noise-driven heading instead of a physics drift,
+  states (flying/landing/resting/takeoff) with resting biased toward the
+  side margins outside the 1080px content column, glow = sine breathing ×
+  noise flicker. File touched: `docs/js/bookshelf-particles.js`.
+- **V4.0.3** — Particles appeared on load, then visibly froze/faded.
+  Real bug, inherited from the reference's own physics (not introduced by
+  the V4.0.2 visibility boost, just made noticeable by it): each frame
+  multiplies velocity by 0.982 with nothing sustaining it after the
+  one-time random push at creation, so velocity decays to near-zero
+  within ~3 seconds — particles stopped drifting and just sat there
+  pulsing in place via the (correctly-working) alpha sine wave, which read
+  as "appeared then faded for good." Fix: a small continuous upward nudge
+  (`vy -= 0.0015`) applied every frame before the damping, so velocity
+  settles into a steady drift speed instead of decaying to a stall. File
+  touched: `docs/js/bookshelf-particles.js`.
+- **V4.0.2** — Particle field was invisible. Not a bug, exactly — the
+  reference mockup's own values (radius 0.6–2.6px, alpha capped ~58/255)
+  were faint enough that the user confirmed they never saw the effect in
+  the original mockup either. Boosted radius to 1.2–4.5px, alpha to
+  45–140/255, and swapped the raw gold/sepia RGB triples for values
+  closer to the actual `--amber`/`--bronze` design tokens — a deliberate
+  departure from "exact port" since faithfully reproducing an
+  effectively-invisible effect isn't useful. File touched:
+  `docs/js/bookshelf-particles.js`.
+- **V4.0.1** — The DOM-walk header fix (V4.0) removed the visible "Home"
+  nav bar but left a thin residual white gap above the content. Root
+  cause: hiding `.md-header` (or its siblings) removes the *element*, but
+  Material reserves vertical space for it independently, via layout math
+  that isn't tied to the header's own visibility. Two fixes layered
+  together since which mechanism Material actually uses wasn't worth
+  guessing a fourth time: (1) `bookshelf-cursor.js`'s ancestor-walk now
+  also zeroes `padding-top`/`margin-top` on each *ancestor* on the path to
+  `.bookshelf-landing` (not on `.bookshelf-landing` itself — it has its
+  own deliberate negative top margin for the full-bleed background, which
+  inline-style zeroing would otherwise have clobbered); (2)
+  `bookshelf.css` zeroes the `--md-header-height` custom property when
+  `body.bookshelf-landing-page` is set, in case the gap comes from a
+  `calc()` reading that variable rather than a literal padding/margin
+  value. Files touched: `docs/js/bookshelf-cursor.js`,
+  `docs/stylesheets/bookshelf.css`.
+- **V4.0** — Full UI replacement per `DESIGN-SYSTEM_for_v4.0.md` (repo
+  root), superseding V3 entirely rather than refining it. This ports the
+  standalone reference mockup's full structure into the real site,
+  reversing several V3 exclusions explicitly approved this round: the
+  scrolling ticker/marquee, a multi-section homepage (Author Explorations
+  / Empire, Adventure & The Great Game / Comics & Sequential Art / Book
+  Data & Visualisation / Writings on Reading), many dormant placeholder
+  cards as a forward-looking content roadmap, and a p5.js particle field
+  — all previously ruled out as "too busy," now reinstated because the
+  user wants the roadmap structure visible now and switched on
+  section-by-section as content goes live.
+  - **Data model overhaul**: `bookshelf-data.js` is now the single source
+    of truth for *everything* rendered, not just cards — ticker items,
+    the "Empire" text band, the "READING"/Victor Hugo quote break, the
+    dataviz feature block, the writings band, and all 5 sections each got
+    an `enabled` flag (sections additionally gate their entire card grid)
+    so any piece can be switched off without deleting content. This goes
+    beyond the design doc's literal spec (which only required the card
+    array to be the one editable file) to satisfy the user's explicit
+    ask: ticker words, section titles, and on/off toggles all need to be
+    easy to find and change in one place.
+  - **Old V3 system fully removed**: `.bookshelf-frame`,
+    `.bookshelf-image-wrap`, `.bookshelf-card-inner`, `frameMood`,
+    `randomFrameRatio()`, `frameWidthFraction()`, the Fraunces-based font
+    stack, and every `--font-display`/`--font-serif-display`/
+    `--font-script` token are gone, not left dead in the stylesheet — the
+    design doc explicitly forbids blending old and new systems.
+  - **Header/tab bar — third attempt, different strategy.** V3.1 (a
+    `:has()` rule plus a JS class targeting `.md-header`) and V3.2 (moved
+    the class-setting to external JS, added `!important`) both failed to
+    remove a bar showing a "Home" link, confirmed under real `mkdocs
+    serve` testing each time. Rather than guess at Material's class names
+    a third time,
+    `bookshelf-cursor.js` now runs a DOM-walk routine on load: starting
+    from `.bookshelf-landing`, it walks up to `<body>`, and at every
+    level hides all *siblings* of each ancestor on that path. Whatever
+    Material calls the offending element, it's structurally outside that
+    path and gets hidden — no class names required. The `:has()`/
+    `!important` CSS rule stays too, as defense-in-depth, per the design
+    doc's explicit instruction not to remove it.
+  - **New files**: `docs/js/bookshelf-reveal.js` (the `IntersectionObserver`
+    scroll-reveal behavior, split out as page-generic behavior independent
+    of what got rendered) and `docs/js/bookshelf-particles.js` (the p5.js
+    mote field, isolated so it can be dropped independently if it turns
+    out to hurt performance — flagged by the user as needing a visual
+    check once live, since the particles weren't visibly noticeable in
+    the original reference mockup either).
+  - Files touched: `docs/index.md`, `docs/stylesheets/bookshelf.css`,
+    `docs/js/bookshelf-data.js`, `docs/js/bookshelf-gallery.js`,
+    `docs/js/bookshelf-cursor.js`, new `docs/js/bookshelf-reveal.js`, new
+    `docs/js/bookshelf-particles.js`.
 - **V3** — Pivoted from V2's light museum-gallery mood to a dark literary
-  gallery/cabinet: new dark palette (ink/deep/bronze/gold/amber/vellum/ivory
-  + a brightened verdigris accent), a 3-font stack (Fraunces, Libre
-  Baskerville, Syne Mono), a recolored frame/mat/spotlight treatment, a
+  gallery/cabinet: new dark palette (ink/deep/bronze/gold/amber/vellum/
+  ivory plus a brightened verdigris accent), a 3-font stack (Fraunces,
+  Libre Baskerville, Syne Mono), a recolored frame/mat/spotlight treatment, a
   new split-title hero with a drifting ghost-letter motif and a placeholder
   quote line, a custom orbital cursor (precise dot + lagging ring,
   `prefers-reduced-motion`/touch guards, never breaks focus/keyboard
