@@ -438,6 +438,40 @@ header simply still shows, which is a safe fallback.
 
 ## Changelog
 
+- **V4.2** — Synced colour/typography between the landing page and the
+  rest of the Material-rendered site (prompted by doing the equivalent
+  work on the fffx sibling site and noticing this site's version was
+  incomplete). Root issue: `theme.font` (`Ubuntu`/`Ubuntu Mono`) never
+  matched the landing page's actual fonts (`Libre Baskerville`/
+  `Instrument Serif`/`Syne`/`Syne Mono`), and the existing
+  `[data-md-color-primary="custom"]` override in `bookshelf.css` only
+  patched the header bar (`--md-primary-fg-color`/`--md-accent-fg-color`)
+  — body background/text/code colours were untouched, still
+  Material's light-theme defaults. Both were invisible until now because
+  there's no actual Material content page yet besides the landing page
+  itself (header hidden there) — see
+  `MKDOCS-LANDING-PAGE-NOTES.md`'s new bug entry #7 for the full lesson.
+  Fixed by extracting every colour/font value into a new
+  `docs/stylesheets/bookshelf-tokens.css` (`:root`-scoped `--bookshelf-*`
+  custom properties, single source of truth — the Google Fonts `@import`
+  moved here too) and adding `docs/stylesheets/bookshelf-material.css`
+  (a *complete* Material variable mapping — default bg/fg, primary,
+  accent, code, link colours — targeting
+  `[data-md-color-scheme="slate"]`, replacing the old partial inline
+  block). `bookshelf.css` now reads `--ink`/`--gold`/etc. from the
+  tokens file instead of hardcoding them a second time.
+  `mkdocs.yml`: added `theme.palette.scheme: slate`; `theme.font` →
+  `text: Libre Baskerville`, `code: Syne Mono` (the other two fonts,
+  Instrument Serif and Syne, stay landing-page-only — Material's font
+  config only has two slots); `theme.favicon` → `images/favicon.svg`
+  (copied in by hand from mkdocs-material's bundled `material/lighthouse`
+  MDI icon — `theme.favicon` doesn't resolve `material/<name>` slugs the
+  way `theme.icon.logo` does, it just emits a broken `<link>` if you try;
+  found this by actually building and inspecting the output HTML, not by
+  assumption). `theme.icon.logo` (`material/tortoise`) left as-is — it
+  actually fits this site, unlike on fffx where it was a flagged
+  leftover. See `DESIGN-SYSTEM_for_v4.0.md`'s "Site architecture",
+  "Fonts", and "Colour tokens" sections, all updated to match.
 - **V4.1** — Replaced the particle field with a firefly sim per direct
   request: ~24 motes, noise-driven heading instead of a physics drift,
   states (flying/landing/resting/takeoff) with resting biased toward the

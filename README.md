@@ -5,6 +5,7 @@ Repo-level notes: structure, deployment pipeline, and how to add a new standalon
 ## Structure
 
 - `docs/` — MkDocs Material source. `index.md` is the custom landing page; other Markdown pages get the normal Material theme/sidebar.
+- `docs/stylesheets/bookshelf-tokens.css` — single source of truth for the site's colour/font values (`--bookshelf-*`), shared between `bookshelf.css` (the landing page) and `bookshelf-material.css` (Material's `--md-*` variables, for every other page). See `DESIGN-SYSTEM_for_v4.0.md` for the full token reference.
 - `mkdocs.yml`, `requirements.txt` — MkDocs config and its Python dependencies.
 - `scifi/` — a standalone static HTML/CSS/JS project (no build step), served at `/scifi/`. Independent of MkDocs; mkdocs never touches it.
 - `CNAME` — custom domain (`bookshelf.cabinetofcuriosities.in`) for GitHub Pages.

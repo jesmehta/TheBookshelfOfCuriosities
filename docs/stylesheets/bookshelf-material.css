@@ -1,0 +1,42 @@
+/* Maps Bookshelf's shared tokens (stylesheets/bookshelf-tokens.css)
+   onto MkDocs Material's own --md-* customization variables, so every
+   Material-rendered page — including the Material chrome around
+   index.md itself (header, before it's hidden on the landing page;
+   any future content page like the planned Hamzanama one) — matches
+   the landing page's ink/gold/sepia palette instead of Material's
+   light-theme defaults.
+
+   This replaces an earlier, incomplete version of this idea that lived
+   inline at the top of bookshelf.css: a `[data-md-color-primary=
+   "custom"]` block that only patched --md-primary-fg-color and
+   --md-accent-fg-color (the header bar). Body background, text, and
+   code block colours were left on Material's defaults — invisible
+   while the only page was the header-hidden landing page itself, but
+   would have been a stark light-theme/dark-theme clash the moment any
+   other content page existed.
+
+   theme.palette in mkdocs.yml sets scheme: slate, so this only ever
+   needs to target the slate scheme — there's no light/dark toggle.
+   Targeting [data-md-color-scheme="slate"] (the same selector Material
+   uses internally) rather than :root keeps specificity unambiguous
+   instead of relying on a same-specificity source-order tiebreak. */
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: var(--bookshelf-ink);
+  --md-default-fg-color: var(--bookshelf-paper);
+  --md-default-fg-color--light: var(--bookshelf-vellum);
+  --md-default-fg-color--lighter: var(--bookshelf-sand);
+  --md-default-fg-color--lightest: var(--bookshelf-bronze);
+
+  --md-primary-fg-color: var(--bookshelf-char);
+  --md-primary-fg-color--light: var(--bookshelf-brown);
+  --md-primary-fg-color--dark: var(--bookshelf-deep);
+  --md-primary-bg-color: var(--bookshelf-ivory);
+
+  --md-accent-fg-color: var(--bookshelf-gold);
+  --md-accent-bg-color: var(--bookshelf-ink);
+
+  --md-code-bg-color: var(--bookshelf-deep);
+  --md-code-fg-color: var(--bookshelf-vellum);
+
+  --md-typeset-a-color: var(--bookshelf-amber);
+}

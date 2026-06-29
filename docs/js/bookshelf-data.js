@@ -208,7 +208,7 @@ const bookshelfSections = [
   },
   {
     name: "Book Data & Visualisation",
-    enabled: false,
+    enabled: true,
     feature: "dataviz",
     cards: [
       {
@@ -228,8 +228,8 @@ const bookshelfSections = [
         title: "Geography<br>of Murder",
         desc: "Where Poirot and Marple solved their cases.",
         tag: "Interactive Map",
-        href: "",
-        live: false,
+        href: "/agatha/",
+        live: true,
         ghost: "",
         span: "c4"
       },

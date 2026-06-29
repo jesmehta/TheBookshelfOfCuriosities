@@ -14,13 +14,15 @@ The existing `docs/stylesheets/bookshelf.css` is the **old system** (V3, Fraunce
 
 MkDocs Material site. Landing page is `docs/index.md`. All landing CSS goes in `docs/stylesheets/bookshelf.css`. JS files live in `docs/js/`. Standalone projects (`scifi/`, `asimov/`, etc.) are plain HTML/CSS/JS at the repo root, copied into `public/` by CI — MkDocs never touches them.
 
+Raw colour/font values live in one place, `docs/stylesheets/bookshelf-tokens.css` (`:root`-scoped `--bookshelf-*` custom properties, plus the Google Fonts `@import`) — both `bookshelf.css` (the landing page) and `docs/stylesheets/bookshelf-material.css` (Material's `--md-*` variables, for every page including the chrome around the landing page itself) read from it instead of hardcoding the same values twice. Change a value once in tokens.css; both flows pick it up. See "Fonts" and "Colour tokens" below for what each token does, and `docs/README.md`'s changelog for why this split happened (a font/palette mismatch had been live between the landing page and the rest of the site).
+
 The landing page must continue to work inside MkDocs Material's shell. All CSS rules must be scoped under `.bookshelf-landing` to avoid clashing with Material's own styles. The MkDocs header must be hidden on the landing page (existing mechanism: `body:has(.bookshelf-landing) .md-header` and `body.bookshelf-landing-page .md-header { display: none !important }` — keep this).
 
 ---
 
 ## Fonts
 
-Load via Google Fonts. Exactly these four, no substitutions.
+Load via Google Fonts. Exactly these four, no substitutions. The `@import` lives in `docs/stylesheets/bookshelf-tokens.css`, not `bookshelf.css` — loaded once, site-wide, since the font stacks are now shared with the rest of the site (see below).
 
 ```
 https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Syne:wght@400;700;800&family=Syne+Mono&display=swap
@@ -33,11 +35,13 @@ https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700
 | `--ff-sans` | Syne | Labels only — the word "of" in the hero title, section names |
 | `--ff-mono` | Syne Mono | All mono detail — kicker, section numbers, tags, ticker, card category |
 
+Of these four, only two extend beyond the landing page: `mkdocs.yml`'s `theme.font` sets `text: Libre Baskerville` / `code: Syne Mono` for every Material-rendered page, since Material's font config only has two slots and `--ff-inst`/`--ff-sans` are landing-page-only decorative faces. Kept in sync with `bookshelf-tokens.css` *by hand* — plain YAML can't reference a CSS custom property.
+
 ---
 
 ## Colour tokens
 
-Defined as CSS custom properties on `.bookshelf-landing`. Never hardcode hex values. Never introduce new colour values.
+Raw values live in `docs/stylesheets/bookshelf-tokens.css` (`--bookshelf-*`, `:root`-scoped — loaded on every page, not just the landing page). `bookshelf.css` maps those onto the `.bookshelf-landing`-scoped names below (`--ink: var(--bookshelf-ink)`, etc.); `docs/stylesheets/bookshelf-material.css` maps the *same* tokens onto Material's `--md-*` variables for the rest of the site. Never hardcode a hex value directly in either consuming file — extend `bookshelf-tokens.css` first. Never introduce new colour values.
 
 | Token | Hex | Use |
 |---|---|---|

@@ -7,16 +7,14 @@
 
   Every rule below is scoped under .bookshelf-landing so nothing here can
   clash with Material's own styles on this page or any other.
+
+  Colour/font values are sourced from stylesheets/bookshelf-tokens.css
+  (the Google Fonts @import lives there too, loaded once site-wide) —
+  not hardcoded here. Material's own --md-* variables are overridden in
+  stylesheets/bookshelf-material.css, not in this file — that override
+  used to live here as a partial, primary-color-only patch; see
+  docs/README.md's changelog for why it was split out and completed.
 */
-
-@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Syne:wght@400;700;800&family=Syne+Mono&display=swap");
-
-[data-md-color-primary="custom"] {
-  --md-primary-fg-color: #27221d;
-  --md-primary-fg-color--light: #4a4036;
-  --md-primary-fg-color--dark: #15120f;
-  --md-accent-fg-color: #6e5b3f;
-}
 
 .md-main__inner {
   max-width: none;
@@ -65,23 +63,23 @@ body.bookshelf-landing-page {
 }
 
 .bookshelf-landing {
-  --ink: #0e0c09;
-  --deep: #161209;
-  --char: #1f1810;
-  --brown: #2e2014;
-  --sepia: #5a3e20;
-  --bronze: #8a6030;
-  --gold: #b8842a;
-  --amber: #d4a040;
-  --sand: #c8a870;
-  --vellum: #e0c898;
-  --paper: #ede0c4;
-  --ivory: #f5edd8;
+  --ink: var(--bookshelf-ink);
+  --deep: var(--bookshelf-deep);
+  --char: var(--bookshelf-char);
+  --brown: var(--bookshelf-brown);
+  --sepia: var(--bookshelf-sepia);
+  --bronze: var(--bookshelf-bronze);
+  --gold: var(--bookshelf-gold);
+  --amber: var(--bookshelf-amber);
+  --sand: var(--bookshelf-sand);
+  --vellum: var(--bookshelf-vellum);
+  --paper: var(--bookshelf-paper);
+  --ivory: var(--bookshelf-ivory);
 
-  --ff-serif: "Libre Baskerville", Georgia, serif;
-  --ff-inst: "Instrument Serif", Georgia, serif;
-  --ff-sans: "Syne", system-ui, sans-serif;
-  --ff-mono: "Syne Mono", monospace;
+  --ff-serif: var(--bookshelf-ff-serif);
+  --ff-inst: var(--bookshelf-ff-inst);
+  --ff-sans: var(--bookshelf-ff-sans);
+  --ff-mono: var(--bookshelf-ff-mono);
 
   display: block;
   position: relative;

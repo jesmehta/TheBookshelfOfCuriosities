@@ -132,6 +132,39 @@ when both exist). Harmless warning, not a bug, but confusing the first
 time you see it — a docs-notes file living alongside the real landing
 page will always trigger it.
 
+### 7. A `[data-md-color-primary="custom"]` override that only patches the header bar is not a theme
+
+`theme.palette: { primary: custom, accent: <name> }` plus an `extra_css`
+block setting `--md-primary-fg-color`/`--md-accent-fg-color` *looks*
+like a complete theme override — it changes the header bar colour, so a
+quick glance at the one page you're testing (usually the landing page,
+often with its own header hidden anyway) looks fine. It isn't complete:
+Material's body background, default text colour, and code-block colours
+are controlled by a *different* set of variables
+(`--md-default-bg-color`, `--md-default-fg-color` and its `--light`/
+`--lighter`/`--lightest` steps, `--md-code-bg-color`/`--md-code-fg-color`,
+`--md-typeset-a-color`), which stay on Material's defaults — light-theme
+white-on-black — until you override those too. With no `scheme: slate`
+set either, this is doubly invisible: there's no actual content page to
+render the mismatch on yet, only the landing page (which hides its own
+header) and the homepage shell. The bug is latent, not absent — it
+surfaces the moment a real Markdown content page gets added. Checklist
+for a *complete* dark-theme override, not a partial one: set
+`theme.palette.scheme: slate` for an actual dark baseline, then override
+at minimum `--md-default-bg-color`, `--md-default-fg-color` (+ light/
+lighter/lightest), `--md-primary-fg-color` (+ light/dark), `--md-primary-
+bg-color`, `--md-accent-fg-color`, `--md-code-bg-color`/
+`--md-code-fg-color`, and `--md-typeset-a-color` — targeting
+`[data-md-color-scheme="slate"]` (matches Material's own internal
+selector, so specificity is unambiguous) rather than `:root` or the
+primary-colour attribute alone. Also worth a one-time check on
+`theme.font` (does it actually match the font(s) your custom CSS loads
+via `@import`, or is it still pointing at Material's installation
+default?) and `theme.favicon` (a `material/<name>` icon slug resolves
+fine for `theme.icon.logo` — it gets inlined as SVG — but `theme.favicon`
+doesn't go through that resolution at all; it needs an actual file path
+and will silently emit a broken `<link rel="icon">` otherwise).
+
 ## Deploy pipeline notes (apply to any new MkDocs + static-subproject repo)
 
 - Prefer GitHub's own `actions/configure-pages` → `actions/upload-pages-artifact`

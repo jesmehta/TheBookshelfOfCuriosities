@@ -1,0 +1,35 @@
+/* Single source of truth for Bookshelf's colour + font values, shared
+   between two otherwise-separate flows:
+   - the landing page (bookshelf.css, scoped under .bookshelf-landing,
+     rendered through Material on index.md but visually self-contained)
+   - the rest of the site (stylesheets/bookshelf-material.css, mapping
+     these onto Material's own --md-* variable names, applying to every
+     page including the Material chrome around the landing page itself)
+   Change a value here once; both flows pick it up. See
+   DESIGN-SYSTEM_for_v4.0.md's "Colour tokens" and "Fonts" sections for
+   the full rationale and role of each token — this file only holds the
+   raw values. The Google Fonts @import lives here too, not in
+   bookshelf.css — it has to be loaded once, site-wide, before anything
+   references --bookshelf-ff-*, and this is the file every page already
+   loads via mkdocs.yml's extra_css. */
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Syne:wght@400;700;800&family=Syne+Mono&display=swap");
+
+:root {
+  --bookshelf-ink: #0e0c09;
+  --bookshelf-deep: #161209;
+  --bookshelf-char: #1f1810;
+  --bookshelf-brown: #2e2014;
+  --bookshelf-sepia: #5a3e20;
+  --bookshelf-bronze: #8a6030;
+  --bookshelf-gold: #b8842a;
+  --bookshelf-amber: #d4a040;
+  --bookshelf-sand: #c8a870;
+  --bookshelf-vellum: #e0c898;
+  --bookshelf-paper: #ede0c4;
+  --bookshelf-ivory: #f5edd8;
+
+  --bookshelf-ff-serif: "Libre Baskerville", Georgia, serif;
+  --bookshelf-ff-inst: "Instrument Serif", Georgia, serif;
+  --bookshelf-ff-sans: "Syne", system-ui, sans-serif;
+  --bookshelf-ff-mono: "Syne Mono", monospace;
+}

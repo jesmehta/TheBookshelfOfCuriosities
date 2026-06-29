@@ -8,6 +8,7 @@ nav:
   - Interactive Projects:
       - The Golden Age of SciFi: https://bookshelf.cabinetofcuriosities.in/scifi/
       - Isaac Asimov and the Foundation Series: https://bookshelf.cabinetofcuriosities.in/asimov/
+      - Agatha Christie : agatha.md  
   - Works in Progress:
       - Mapping the Hamzanama: "#"
   
@@ -23,15 +24,31 @@ extra:
 theme:
   name: material
   palette:
-    # try other colors https://squidfunk.github.io/mkdocs-material/getting-started/#primary-colors
+    # scheme: slate is the dark baseline; exact hex values come from
+    # extra_css below (stylesheets/bookshelf-tokens.css ->
+    # stylesheets/bookshelf-material.css), which overrides Material's
+    # --md-* variables to match the landing page's ink/gold/sepia
+    # palette precisely. No light/dark toggle — slate is the only
+    # scheme on this site, to match the landing page being dark-only.
+    scheme: slate
     primary: custom
     accent: indigo
   font:
-    # See available fonts at https://fonts.google.com/
-    text: Ubuntu
-    code: Ubuntu Mono
+    # Matches stylesheets/bookshelf-tokens.css's --bookshelf-ff-serif/
+    # --bookshelf-ff-mono — kept in sync by hand since mkdocs.yml is
+    # plain YAML and can't reference a CSS custom property. Instrument
+    # Serif and Syne (the landing page's other two fonts) stay
+    # landing-page-only decorative faces; Material's two-slot font
+    # system only has room for one text + one code face, and Libre
+    # Baskerville is the right pick for long-form essay body text.
+    text: Libre Baskerville
+    code: Syne Mono
   icon:
-    logo: material/tortoise
+    logo: material/lighthouse
+  # theme.favicon needs an actual file, unlike theme.icon.logo — it
+  # doesn't resolve material/<name> icon slugs, it just outputs the
+  # literal string as a broken <link> href. images/favicon.svg is the
+  # bundled mkdocs-material "lighthouse" MDI icon, copied in by hand.
   favicon: images/favicon.svg
   features:
     # - navigation.tabs
@@ -54,5 +71,7 @@ plugins:
   - mkdocs-video
 
 extra_css:
+  - stylesheets/bookshelf-tokens.css
+  - stylesheets/bookshelf-material.css
   - stylesheets/bookshelf.css
 
