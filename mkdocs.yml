@@ -47,9 +47,9 @@ theme:
     logo: material/lighthouse
   # theme.favicon needs an actual file, unlike theme.icon.logo — it
   # doesn't resolve material/<name> icon slugs, it just outputs the
-  # literal string as a broken <link> href. images/favicon.svg is the
-  # bundled mkdocs-material "lighthouse" MDI icon, copied in by hand.
-  favicon: images/favicon.svg
+  # literal string as a broken <link> href. assets/images/favicon.svg is
+  # the bundled mkdocs-material "lighthouse" MDI icon, copied in by hand.
+  favicon: assets/images/favicon.svg
   features:
     # - navigation.tabs
     # - navigation.instant

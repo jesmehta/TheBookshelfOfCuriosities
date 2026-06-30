@@ -73,9 +73,9 @@ hide:
 
 </section>
 
-<script src="js/bookshelf-data.js"></script>
-<script src="js/bookshelf-gallery.js"></script>
-<script src="js/bookshelf-cursor.js"></script>
-<script src="js/bookshelf-reveal.js"></script>
+<script src="assets/js/bookshelf-data.js"></script>
+<script src="assets/js/bookshelf-gallery.js"></script>
+<script src="assets/js/bookshelf-cursor.js"></script>
+<script src="assets/js/bookshelf-reveal.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-<script src="js/bookshelf-particles.js"></script>
+<script src="assets/js/bookshelf-particles.js"></script>

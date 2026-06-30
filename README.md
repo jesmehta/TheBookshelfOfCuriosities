@@ -51,7 +51,7 @@ This keeps everything under one custom domain with path-based routing (`bookshel
 
 ## Landing page
 
-The landing page (`docs/index.md` + `docs/stylesheets/bookshelf-landing.css` + `docs/js/bookshelf-data.js` / `bookshelf-gallery.js`) is a fully custom, JS-rendered front page living inside an otherwise-normal MkDocs Material site. Visual rules (fonts, colour tokens, component anatomy) live in `DESIGN-SYSTEM.md`; portable implementation lessons (bugs hit, MkDocs-vs-plain-HTML reconciliations, a starter checklist for a sibling site) live in `LANDING-PAGE-NOTES.md`. This section covers intent and the current data model; the full version history is in the Changelog below.
+The landing page (`docs/index.md` + `docs/stylesheets/bookshelf-landing.css` + `docs/assets/js/bookshelf-data.js` / `bookshelf-gallery.js`) is a fully custom, JS-rendered front page living inside an otherwise-normal MkDocs Material site. Visual rules (fonts, colour tokens, component anatomy) live in `DESIGN-SYSTEM.md`; portable implementation lessons (bugs hit, MkDocs-vs-plain-HTML reconciliations, a starter checklist for a sibling site) live in `LANDING-PAGE-NOTES.md`. This section covers intent and the current data model; the full version history is in the Changelog below.
 
 ### Intent
 
@@ -69,7 +69,7 @@ While a section isn't ready, its cards render dormant (see `DESIGN-SYSTEM.md`'s 
 
 ### Current data model (V4.0+)
 
-The whole page is data-driven from one file, `docs/js/bookshelf-data.js`. `docs/js/bookshelf-gallery.js` reads every block below and renders it into empty mount points in `index.md` — no content strings or rendering logic live anywhere else. Every block has an `enabled` flag; flip it to remove that block from the page without deleting its content. This is the actual current shape, which extends past `DESIGN-SYSTEM.md`'s simpler single-card example to cover the whole page:
+The whole page is data-driven from one file, `docs/assets/js/bookshelf-data.js`. `docs/assets/js/bookshelf-gallery.js` reads every block below and renders it into empty mount points in `index.md` — no content strings or rendering logic live anywhere else. Every block has an `enabled` flag; flip it to remove that block from the page without deleting its content. This is the actual current shape, which extends past `DESIGN-SYSTEM.md`'s simpler single-card example to cover the whole page:
 
 | Variable | Shape | Renders as |
 |---|---|---|
@@ -92,6 +92,15 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.5** — Moved `docs/js/` -> `docs/assets/js/` and `docs/images/` ->
+  `docs/assets/images/` (`docs/stylesheets/` stays put), matching the
+  preferred asset layout documented in `WORLD-SYSTEMS.md` (fffx already
+  used `docs/assets/js/`/`docs/assets/css/`). Updated every reference:
+  `index.md`'s `<script src>` tags, `mkdocs.yml`'s `favicon`, and prose
+  in this file/`DESIGN-SYSTEM.md`/`LANDING-PAGE-NOTES.md` — except
+  inside already-dated changelog entries below, which correctly still
+  say `docs/js/`/`images/` (what was true at the time). Verified via
+  `git mv` (history-preserving renames) and a clean `mkdocs build`.
 - **V4.4** — Fixed `geography-of-murder`'s `href: "/agatha/"` (root-absolute)
   to `href: "agatha/"` (relative) — same bug class fixed in fffx's
   `entries[].href` earlier: a root-absolute href only resolves correctly

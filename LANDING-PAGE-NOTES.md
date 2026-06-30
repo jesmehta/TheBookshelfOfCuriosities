@@ -213,10 +213,10 @@ and will silently emit a broken `<link rel="icon">` otherwise).
 2. `docs/index.md`: front-matter `hide: [toc, navigation]`, one wrapper
    element, mount-point divs, script tags at the bottom (data file →
    render engine → any feature-specific files, in that dependency order).
-3. `docs/js/<name>-data.js`: every content block as a data structure with
-   an `enabled` flag.
-4. `docs/js/<name>-gallery.js` (or similar): pure rendering, reads the
-   data file, writes into the mount points.
+3. `docs/assets/js/<name>-data.js`: every content block as a data
+   structure with an `enabled` flag.
+4. `docs/assets/js/<name>-gallery.js` (or similar): pure rendering, reads
+   the data file, writes into the mount points.
 5. `docs/stylesheets/<name>.css`: every rule scoped under the wrapper
    class; header-hide block (the DOM-walk JS + the `:has()`/`!important`
    CSS as a fallback layer) ported from this project's

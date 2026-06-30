@@ -39,7 +39,7 @@ Every Level 1 world in this ecosystem:
   below for which pattern new worlds should use.
 - Is driven by **one data file** as the editable IA/content source — no
   content strings or card data live in the renderer. Bookshelf:
-  `docs/js/bookshelf-data.js`. fffx: `docs/assets/js/data.js`.
+  `docs/assets/js/bookshelf-data.js`. fffx: `docs/assets/js/data.js`.
 - Maps **CSS tokens into MkDocs Material pages** — a `*-tokens.css` file
   (raw colour/font values, `:root`-scoped, single source of truth) feeds
   both the landing page's own stylesheet and a `*-material.css` file
@@ -205,12 +205,12 @@ fffx-material.css
 Both worlds' `*-tokens.css` and `*-material.css` files already follow
 this. Both worlds' landing stylesheet has been renamed to
 `*-landing.css` to match (was `bookshelf.css` in Bookshelf, `landing.css`
-in fffx). Neither world has fully moved its JS/images into
-`docs/assets/` yet — Bookshelf has no `docs/assets/` at all (`docs/js/`,
-`docs/images/`, `docs/stylesheets/` are siblings at `docs/` root); fffx
-already has `docs/assets/js/`/`docs/assets/css/` but keeps
-`docs/images/` separate. Both are deferred — see TODOs below — rather
-than moved partially.
+in fffx). Bookshelf's JS and images have been moved to
+`docs/assets/js/` and `docs/assets/images/` (was `docs/js/`,
+`docs/images/` as siblings of `docs/stylesheets/` at `docs/` root) —
+`docs/stylesheets/` stays where it is, matching fffx's own layout.
+fffx's `docs/images/` move (to `docs/assets/images/`) is still
+deferred — see TODOs below.
 
 ## Order-based rendering
 
@@ -245,10 +245,10 @@ start; no change needed there.
   dead. Left alone this pass.
 - **Derive `span` from `weight`** instead of maintaining both
   independently, if/when the card grid is revisited.
-- **Move `docs/js/`, `docs/images/` under `docs/assets/`** to fully
-  match the preferred asset layout — deferred because it touches every
-  `<script src>` in `index.md` plus any image references; not attempted
-  partially.
+- ~~Move Bookshelf's `docs/js/`, `docs/images/` under `docs/assets/`~~ —
+  done 2026-06-30: `docs/assets/js/`, `docs/assets/images/`, all
+  references updated (`index.md` script tags, `mkdocs.yml` favicon,
+  prose in README.md/DESIGN-SYSTEM.md/LANDING-PAGE-NOTES.md).
 - **fffx: move `docs/images/` under `docs/assets/images/`** — same
   reasoning, smaller blast radius (one content page references the
   Circle Packing images).
