@@ -14,7 +14,7 @@ The existing `docs/stylesheets/bookshelf.css` is the **old system** (V3, Fraunce
 
 MkDocs Material site. Landing page is `docs/index.md`. All landing CSS goes in `docs/stylesheets/bookshelf.css`. JS files live in `docs/js/`. Standalone projects (`scifi/`, `asimov/`, etc.) are plain HTML/CSS/JS at the repo root, copied into `public/` by CI — MkDocs never touches them.
 
-Raw colour/font values live in one place, `docs/stylesheets/bookshelf-tokens.css` (`:root`-scoped `--bookshelf-*` custom properties, plus the Google Fonts `@import`) — both `bookshelf.css` (the landing page) and `docs/stylesheets/bookshelf-material.css` (Material's `--md-*` variables, for every page including the chrome around the landing page itself) read from it instead of hardcoding the same values twice. Change a value once in tokens.css; both flows pick it up. See "Fonts" and "Colour tokens" below for what each token does, and `docs/README.md`'s changelog for why this split happened (a font/palette mismatch had been live between the landing page and the rest of the site).
+Raw colour/font values live in one place, `docs/stylesheets/bookshelf-tokens.css` (`:root`-scoped `--bookshelf-*` custom properties, plus the Google Fonts `@import`) — both `bookshelf.css` (the landing page) and `docs/stylesheets/bookshelf-material.css` (Material's `--md-*` variables, for every page including the chrome around the landing page itself) read from it instead of hardcoding the same values twice. Change a value once in tokens.css; both flows pick it up. See "Fonts" and "Colour tokens" below for what each token does, and `README.md`'s changelog for why this split happened (a font/palette mismatch had been live between the landing page and the rest of the site).
 
 The landing page must continue to work inside MkDocs Material's shell. All CSS rules must be scoped under `.bookshelf-landing` to avoid clashing with Material's own styles. The MkDocs header must be hidden on the landing page (existing mechanism: `body:has(.bookshelf-landing) .md-header` and `body.bookshelf-landing-page .md-header { display: none !important }` — keep this).
 
@@ -220,17 +220,13 @@ Two elements in the HTML: `#bookshelf-cur-dot` and `#bookshelf-cur-ring`. Behavi
 
 Loaded from cdnjs: `https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js`
 
-Fixed-position canvas behind all content (`z-index: 0`, `pointer-events: none`), attached to `#p5wrap`. 110 motes, two types:
-- Large (`r > 1.8`): gold `rgba(180,128,42,a)`, elongated ellipse (height randomised 0.8–2.2× width)
-- Small: sepia `rgba(90,62,32,a*0.6)`, circular
-
-All motes drift upward (`vy` negative bias), scatter away from cursor (repulsion radius 130px, force factor 0.08), fade in and out via `sin(age * PI)` on alpha. Frame rate 42. On `windowResized`, canvas resizes to match viewport.
+Fixed-position canvas behind all content (`z-index: 0`, `pointer-events: none`), attached to `#p5wrap`. As of V4.1 this is a firefly state-machine sim (~24 motes, noise-driven heading, flying/landing/resting/takeoff states) rather than the drifting-mote physics described in earlier versions of this doc — see `README.md`'s changelog (V4.1) and `LANDING-PAGE-NOTES.md` bug #5 for why. On `windowResized`, canvas resizes to match viewport.
 
 ---
 
 ## Data structure (bookshelf-data.js)
 
-The card data array is the **only file to edit** when adding or changing cards. `bookshelf-gallery.js` reads it and renders HTML. Structure per card:
+The card data array is the **only file to edit** when adding or changing cards. `bookshelf-gallery.js` reads it and renders HTML. Minimal structure per card:
 
 ```js
 {
@@ -251,6 +247,8 @@ The card data array is the **only file to edit** when adding or changing cards. 
 **To add a card:** add one object to the array. Set `live: false` and `href: ""` until the page is ready. That is the only required step.
 
 **To activate a card:** set `live: true` and `href` to the real URL.
+
+The actual implementation extends this minimal shape further (per-block `enabled` flags, a `span` field, `titleVariant`, `beforeSection` pinning for the text-band/quote-break) — see `README.md`'s "Current data model" section for the full, current shape this evolved into.
 
 ---
 

@@ -1,9 +1,9 @@
 /*
   The Bookshelf of Curiosities — Landing Page V4.0
-  Full replacement per DESIGN-SYSTEM_for_v4.0.md (repo root). The old V3
+  Full replacement per DESIGN-SYSTEM.md (repo root). The old V3
   dark-cabinet/frame system has been removed entirely, not left dead in
   this file — per that doc's explicit "do not blend the old system with
-  this one" instruction. See docs/README.md for rationale and changelog.
+  this one" instruction. See README.md for rationale and changelog.
 
   Every rule below is scoped under .bookshelf-landing so nothing here can
   clash with Material's own styles on this page or any other.
@@ -13,7 +13,7 @@
   not hardcoded here. Material's own --md-* variables are overridden in
   stylesheets/bookshelf-material.css, not in this file — that override
   used to live here as a partial, primary-color-only patch; see
-  docs/README.md's changelog for why it was split out and completed.
+  README.md's changelog for why it was split out and completed.
 */
 
 .md-main__inner {

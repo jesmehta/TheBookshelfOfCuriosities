@@ -4,7 +4,7 @@ Portable lessons from building this site's landing page (a fully custom,
 JS-rendered front page living inside an otherwise-normal MkDocs Material
 site). Written to be lifted into a different repo — a future "Cabinet" or
 "fffx" site doing the same thing. Project-specific decisions/changelog
-live in `docs/README.md`; this file is the reusable part.
+live in `README.md`; this file is the reusable part.
 
 ## The pattern
 
@@ -123,14 +123,21 @@ Two specific traps when porting a particle/motion effect:
   "it appeared then died." Fix: add a small *continuous* force each
   frame (not just at init) so velocity settles into a steady non-zero
   value instead of decaying toward zero.
+- Both traps showed up porting one reference effect, and were ultimately
+  resolved by abandoning physics-based drift entirely in favour of a
+  noise-driven state machine (explicit headings/states instead of
+  velocity/damping) — sometimes the more robust fix is a different
+  motion model, not more tuning of the existing one.
 
-### 6. `docs/README.md` vs `docs/index.md`
+### 6. A docs-folder `README.md` can silently conflict with `index.md`
 MkDocs warns and excludes `README.md` from the build if both `README.md`
 and `index.md` exist in the same directory (it tries to use `README.md`
 as a fallback index page when there's no `index.md`, and they conflict
 when both exist). Harmless warning, not a bug, but confusing the first
-time you see it — a docs-notes file living alongside the real landing
-page will always trigger it.
+time you see it. Simplest fix, used in this repo: keep all project
+documentation (README, design system, implementation notes) at the
+**repo root**, not inside `docs/` — `docs/` should hold only what MkDocs
+is meant to build.
 
 ### 7. A `[data-md-color-primary="custom"]` override that only patches the header bar is not a theme
 
@@ -219,3 +226,6 @@ and will silently emit a broken `<link rel="icon">` otherwise).
    Pages actions, plus the static-subproject copy loop if needed) rather
    than starting from a tutorial template — those tend to default to the
    older `peaceiris` pattern.
+7. Keep all project documentation (`README.md`, a design-system doc, a
+   notes file like this one) at the **repo root**, not inside `docs/` —
+   see bug #6 above for why a docs-folder `README.md` is worth avoiding.
