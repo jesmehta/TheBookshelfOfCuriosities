@@ -1,6 +1,6 @@
 /*
   Scroll-reveal: elements carrying class `.reveal` start hidden/offset
-  (see `.reveal` / `.reveal.vis` in bookshelf.css) and fade/slide into
+  (see `.reveal` / `.reveal.vis` in bookshelf-landing.css) and fade/slide into
   place the first time they enter the viewport. Generic page behavior,
   independent of what bookshelf-gallery.js rendered — so it runs after
   gallery.js on DOMContentLoaded (script tag order in index.md matters:

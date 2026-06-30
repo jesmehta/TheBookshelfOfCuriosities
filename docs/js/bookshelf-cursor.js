@@ -19,7 +19,7 @@
      reserves vertical space for its header via padding/margin on the
      elements leading down to our content (not just on a sibling we could
      hide), so the loop below also zeroes top padding/margin on every
-     ancestor on the path itself. Paired in bookshelf.css with zeroing the
+     ancestor on the path itself. Paired in bookshelf-landing.css with zeroing the
      `--md-header-height` custom property Material's own layout math reads
      from, in case the gap comes from a calc() using that variable rather
      than a literal padding/margin value.

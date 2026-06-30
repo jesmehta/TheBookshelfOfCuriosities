@@ -7,7 +7,7 @@
    light-theme defaults.
 
    This replaces an earlier, incomplete version of this idea that lived
-   inline at the top of bookshelf.css: a `[data-md-color-primary=
+   inline at the top of bookshelf-landing.css: a `[data-md-color-primary=
    "custom"]` block that only patched --md-primary-fg-color and
    --md-accent-fg-color (the header bar). Body background, text, and
    code block colours were left on Material's defaults — invisible

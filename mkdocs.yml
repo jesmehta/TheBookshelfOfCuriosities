@@ -73,5 +73,5 @@ plugins:
 extra_css:
   - stylesheets/bookshelf-tokens.css
   - stylesheets/bookshelf-material.css
-  - stylesheets/bookshelf.css
+  - stylesheets/bookshelf-landing.css
 

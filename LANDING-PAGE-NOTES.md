@@ -220,7 +220,7 @@ and will silently emit a broken `<link rel="icon">` otherwise).
 5. `docs/stylesheets/<name>.css`: every rule scoped under the wrapper
    class; header-hide block (the DOM-walk JS + the `:has()`/`!important`
    CSS as a fallback layer) ported from this project's
-   `bookshelf-cursor.js`/`bookshelf.css` rather than re-derived from
+   `bookshelf-cursor.js`/`bookshelf-landing.css` rather than re-derived from
    scratch.
 6. `.github/workflows/deploy.yml`: copy this project's version (official
    Pages actions, plus the static-subproject copy loop if needed) rather

@@ -5,7 +5,7 @@ Repo-level practical guide and changelog. Two companion docs: [`DESIGN-SYSTEM.md
 ## Structure
 
 - `docs/` — MkDocs Material source. `index.md` is the custom landing page (a mount-point shell — see "Landing page" below); other Markdown pages get the normal Material theme/sidebar. There is no `docs/README.md` — all project documentation lives at the repo root (see `LANDING-PAGE-NOTES.md` bug #6 for why mixing a docs-folder `README.md` with `index.md` is worth avoiding).
-- `docs/stylesheets/bookshelf-tokens.css` — single source of truth for the site's colour/font values (`--bookshelf-*`), shared between `bookshelf.css` (the landing page) and `bookshelf-material.css` (Material's `--md-*` variables, for every other page). See `DESIGN-SYSTEM.md` for the full token reference.
+- `docs/stylesheets/bookshelf-tokens.css` — single source of truth for the site's colour/font values (`--bookshelf-*`), shared between `bookshelf-landing.css` (the landing page) and `bookshelf-material.css` (Material's `--md-*` variables, for every other page). See `DESIGN-SYSTEM.md` for the full token reference.
 - `mkdocs.yml`, `requirements.txt` — MkDocs config and its Python dependencies.
 - `scifi/` — a standalone static HTML/CSS/JS project (no build step), served at `/scifi/`. Independent of MkDocs; mkdocs never touches it.
 - `CNAME` — custom domain (`bookshelf.cabinetofcuriosities.in`) for GitHub Pages.
@@ -51,7 +51,7 @@ This keeps everything under one custom domain with path-based routing (`bookshel
 
 ## Landing page
 
-The landing page (`docs/index.md` + `docs/stylesheets/bookshelf.css` + `docs/js/bookshelf-data.js` / `bookshelf-gallery.js`) is a fully custom, JS-rendered front page living inside an otherwise-normal MkDocs Material site. Visual rules (fonts, colour tokens, component anatomy) live in `DESIGN-SYSTEM.md`; portable implementation lessons (bugs hit, MkDocs-vs-plain-HTML reconciliations, a starter checklist for a sibling site) live in `LANDING-PAGE-NOTES.md`. This section covers intent and the current data model; the full version history is in the Changelog below.
+The landing page (`docs/index.md` + `docs/stylesheets/bookshelf-landing.css` + `docs/js/bookshelf-data.js` / `bookshelf-gallery.js`) is a fully custom, JS-rendered front page living inside an otherwise-normal MkDocs Material site. Visual rules (fonts, colour tokens, component anatomy) live in `DESIGN-SYSTEM.md`; portable implementation lessons (bugs hit, MkDocs-vs-plain-HTML reconciliations, a starter checklist for a sibling site) live in `LANDING-PAGE-NOTES.md`. This section covers intent and the current data model; the full version history is in the Changelog below.
 
 ### Intent
 
@@ -92,6 +92,30 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.4** — Fixed `geography-of-murder`'s `href: "/agatha/"` (root-absolute)
+  to `href: "agatha/"` (relative) — same bug class fixed in fffx's
+  `entries[].href` earlier: a root-absolute href only resolves correctly
+  when the page serving it sits at a domain root, and breaks under a
+  GitHub Pages project subpath (`*.github.io/TheBookshelfOfCuriosities/`)
+  with no custom domain active. Currently masked in production by the
+  `CNAME` (`bookshelf.cabinetofcuriosities.in`) actually being live, but
+  latent the moment that assumption stops holding. `docs/agatha.md` is
+  the first of what's intended to be a growing set of plain-Markdown
+  content pages linked from cards (as opposed to `scifi`/`asimov`,
+  which are standalone static HTML, copied in by CI, not MkDocs pages
+  at all) — worth getting the href convention right now since this
+  entry is the one that'll get copied for the next one.
+- **V4.3** — Cross-world normalization pass (see new `WORLD-SYSTEMS.md`,
+  shared with the fffx sibling repo). Renamed `bookshelf.css` ->
+  `bookshelf-landing.css` to match the world-prefixed CSS naming
+  convention (fffx's equivalent files got the matching treatment in its
+  own repo). Updated every reference — `mkdocs.yml`'s `extra_css`,
+  `bookshelf-tokens.css`/`bookshelf-material.css`'s own comments,
+  `bookshelf-cursor.js`/`bookshelf-reveal.js`'s comments, and prose
+  throughout this file/`DESIGN-SYSTEM.md`/`LANDING-PAGE-NOTES.md` —
+  except inside already-dated changelog entries below describing
+  earlier states, which correctly still say `bookshelf.css` (what was
+  true at the time).
 - **V4.2** — Synced colour/typography between the landing page and the
   rest of the Material-rendered site (prompted by doing the equivalent
   work on the fffx sibling site and noticing this site's version was

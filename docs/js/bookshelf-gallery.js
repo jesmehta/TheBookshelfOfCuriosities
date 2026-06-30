@@ -26,10 +26,18 @@ function createTickerMarkup() {
   `;
 }
 
+// Sorted-by-order view of bookshelfSections, computed once — every
+// renderer function below reads this instead of the raw array, so
+// section numbering/placement is driven by `order`, not array position
+// (array position and `order` currently agree, since the data file was
+// written in order, but `order` is now the authoritative signal — see
+// WORLD-SYSTEMS.md's "order-based rendering").
+const orderedSections = [...bookshelfSections].sort((a, b) => a.order - b.order);
+
 function createHeroIndexMarkup() {
-  return bookshelfSections
-    .filter(section => section.enabled)
-    .map((section, i) => `<span>${toRoman(i + 1)} — ${section.name}</span>`)
+  return orderedSections
+    .filter(section => section.status !== false)
+    .map((section, i) => `<span>${toRoman(i + 1)} — ${section.title}</span>`)
     .join("");
 }
 
@@ -135,14 +143,15 @@ function createCardMarkup(card, delayIndex) {
 }
 
 function createSectionMarkup(section, num) {
-  let html = createSecHeadMarkup(num, section.name);
+  let html = createSecHeadMarkup(num, section.title);
 
   if (section.feature === "dataviz") {
     html += createDatavizMarkup();
   }
 
   if (section.cards && section.cards.length) {
-    const cards = section.cards.map((card, i) => createCardMarkup(card, i)).join("");
+    const orderedCards = [...section.cards].sort((a, b) => a.order - b.order);
+    const cards = orderedCards.map((card, i) => createCardMarkup(card, i)).join("");
     html += `<div class="grid">${cards}</div>`;
   }
 
@@ -160,13 +169,13 @@ function renderSections() {
   let html = "";
   let num = 0;
 
-  bookshelfSections.forEach(section => {
-    if (!section.enabled) return;
+  orderedSections.forEach(section => {
+    if (section.status === false) return;
 
-    if (bookshelfTextBand.enabled && bookshelfTextBand.beforeSection === section.name) {
+    if (bookshelfTextBand.enabled && bookshelfTextBand.beforeSection === section.id) {
       html += createTextBandMarkup();
     }
-    if (bookshelfQuoteBreak.enabled && bookshelfQuoteBreak.beforeSection === section.name) {
+    if (bookshelfQuoteBreak.enabled && bookshelfQuoteBreak.beforeSection === section.id) {
       html += createQuoteBreakMarkup();
     }
 
