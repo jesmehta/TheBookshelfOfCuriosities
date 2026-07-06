@@ -12,7 +12,7 @@ The existing `docs/stylesheets/bookshelf-landing.css` is the **old system** (V3,
 
 ## Site architecture (unchanged)
 
-MkDocs Material site. Landing page is `docs/index.md`. All landing CSS goes in `docs/stylesheets/bookshelf-landing.css`. JS files live in `docs/js/`. Standalone projects (`scifi/`, `asimov/`, etc.) are plain HTML/CSS/JS at the repo root, copied into `public/` by CI — MkDocs never touches them.
+MkDocs Material site. Landing page is `docs/index.md`. All landing CSS goes in `docs/stylesheets/bookshelf-landing.css`. JS files live in `docs/assets/js/`. Standalone projects (`scifi/`, `asimov/`, etc.) are plain HTML/CSS/JS at the repo root, copied into `public/` by CI — MkDocs never touches them.
 
 Raw colour/font values live in one place, `docs/stylesheets/bookshelf-tokens.css` (`:root`-scoped `--bookshelf-*` custom properties, plus the Google Fonts `@import`) — both `bookshelf-landing.css` (the landing page) and `docs/stylesheets/bookshelf-material.css` (Material's `--md-*` variables, for every page including the chrome around the landing page itself) read from it instead of hardcoding the same values twice. Change a value once in tokens.css; both flows pick it up. See "Fonts" and "Colour tokens" below for what each token does, and `README.md`'s changelog for why this split happened (a font/palette mismatch had been live between the landing page and the rest of the site).
 
@@ -226,29 +226,47 @@ Fixed-position canvas behind all content (`z-index: 0`, `pointer-events: none`),
 
 ## Data structure (bookshelf-data.js)
 
-The card data array is the **only file to edit** when adding or changing cards. `bookshelf-gallery.js` reads it and renders HTML. Minimal structure per card:
+`bookshelf-data.js` is the **only file to edit** when adding or changing landing content. `bookshelf-gallery.js` reads it and renders HTML. Section/container metadata and entry/card metadata are separate:
 
 ```js
-{
-  id: "unique-slug",
-  section: "Section Name",      // groups cards under a section header
-  cat: "Category · Type",       // card-cat, mono label
-  title: "Card Title",          // card-title
-  desc: "One sentence.",        // card-body-text
-  tag: "Tag · Label",           // card-foot tag
-  href: "https://...",          // "" or "#" = dormant; real URL = live
-  live: true,                   // true = <a> with badge-live; false = <div> with soon-chip
-  ghost: "G"                    // single letter or digraph for the card-ghost
-}
+const bookshelfSections = [
+  {
+    id: "section-id",
+    title: "Section Title",
+    order: 10,
+    status: true,
+    feature: "dataviz" // optional: "dataviz" or "writings"
+  }
+];
+
+const bookshelfEntries = [
+  {
+    id: "unique-slug",
+    title: "Card Title",
+    subtitle: "One sentence.",       // card-body-text
+    href: "https://...",
+    section: "section-id",           // must match bookshelfSections[].id
+    kind: "author-page",
+    kicker: "Category · Type",       // card-cat, mono label
+    displayTag: "Tag · Label",       // card-foot tag
+    tags: ["tag-one", "tag-two"],
+    location: "internal-md",         // internal-md | internal-html | external | external-repo
+    status: true,                    // true | "wip" | false
+    order: 10,
+    ghost: "G",                      // single letter/digraph; "" omits ghost
+    span: "c7",                      // c4/c5/c6/c7/c8/c12
+    titleVariant: "inst"             // optional
+  }
+];
 ```
 
-`bookshelf-gallery.js` should group cards by `section`, render a `.sec-head` for each group, then the cards. Section numbering (i, ii, iii…) is derived from the order sections first appear in the array.
+`bookshelf-gallery.js` groups entries by `section`, renders a `.sec-head` for each visible section, then renders matching entries as cards. Section numbering (i, ii, iii…) is derived from `bookshelfSections[].order`.
 
-**To add a card:** add one object to the array. Set `live: false` and `href: ""` until the page is ready. That is the only required step.
+**To add an entry:** add one object to `bookshelfEntries`. Set `status: "wip"` and `href: ""` until the page is ready.
 
-**To activate a card:** set `live: true` and `href` to the real URL.
+**To activate an entry:** set `status: true` and `href` to the real URL.
 
-The actual implementation extends this minimal shape further (per-block `enabled` flags, a `span` field, `titleVariant`, `beforeSection` pinning for the text-band/quote-break) — see `README.md`'s "Current data model" section for the full, current shape this evolved into.
+Feature blocks still use their own `enabled` flags, and `beforeSection` pinning for the text-band/quote-break still matches section IDs. See `README.md`'s "Current data model" section for the full current shape.
 
 ---
 
@@ -260,6 +278,6 @@ The actual implementation extends this minimal shape further (per-block `enabled
 - Do not add `cursor: none` to `body` or `.bookshelf-landing` unconditionally
 - Do not hardcode hex colour values
 - Do not add `<style>` blocks to `index.md`
-- Do not put rendering logic in `index.md` or card data in `bookshelf-gallery.js`
+- Do not put rendering logic in `index.md` or entry data in `bookshelf-gallery.js`
 - Do not create or commit a `public/` folder — CI only
 - Do not remove the `body:has(.bookshelf-landing) .md-header` rule

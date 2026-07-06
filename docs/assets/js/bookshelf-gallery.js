@@ -1,7 +1,7 @@
 /*
   Render engine for the V4.0 landing page. Reads every block defined in
   bookshelf-data.js and renders it into the mount points left empty in
-  index.md. No content strings or card data live in this file — only
+  index.md. No content strings or entry data live in this file — only
   rendering logic, per the design system's "only file to edit is the data
   file" rule.
 */
@@ -33,6 +33,7 @@ function createTickerMarkup() {
 // written in order, but `order` is now the authoritative signal — see
 // WORLD-SYSTEMS.md's "order-based rendering").
 const orderedSections = [...bookshelfSections].sort((a, b) => a.order - b.order);
+const orderedEntries = [...bookshelfEntries].sort((a, b) => a.order - b.order);
 
 function createHeroIndexMarkup() {
   return orderedSections
@@ -111,30 +112,31 @@ function createWritingsMarkup() {
   `;
 }
 
-function createCardMarkup(card, delayIndex) {
+function createEntryMarkup(entry, delayIndex) {
   const delay = (delayIndex * 0.04).toFixed(2);
-  const tag = card.live ? "a" : "div";
-  const hrefAttr = card.live ? ` href="${card.href}"` : "";
-  const stateClass = card.live ? "" : " card-dormant";
-  const titleClass = card.titleVariant === "inst" ? "card-title card-title-inst" : "card-title";
-  const ghostMarkup = card.ghost ? `<div class="card-ghost" aria-hidden="true">${card.ghost}</div>` : "";
-  const badgeMarkup = card.live
+  const isLive = entry.status === true;
+  const tag = isLive ? "a" : "div";
+  const hrefAttr = isLive ? ` href="${entry.href}"` : "";
+  const stateClass = isLive ? "" : " card-dormant";
+  const titleClass = entry.titleVariant === "inst" ? "card-title card-title-inst" : "card-title";
+  const ghostMarkup = entry.ghost ? `<div class="card-ghost" aria-hidden="true">${entry.ghost}</div>` : "";
+  const badgeMarkup = isLive
     ? '<span class="badge-live">Live ↗</span>'
     : '<span class="soon-chip">In preparation</span>';
-  const arrowMarkup = card.live
+  const arrowMarkup = isLive
     ? '<span class="card-arrow">↗</span>'
     : '<span class="card-arrow" style="opacity:.25">—</span>';
 
   return `
-    <${tag}${hrefAttr} class="card ${card.span}${stateClass} reveal" style="transition-delay:${delay}s">
+    <${tag}${hrefAttr} class="card ${entry.span}${stateClass} reveal" style="transition-delay:${delay}s">
       ${ghostMarkup}
       <div class="card-inner">
         ${badgeMarkup}
-        <p class="card-cat">${card.cat}</p>
-        <h2 class="${titleClass}">${card.title}</h2>
-        <p class="card-body-text">${card.desc}</p>
+        <p class="card-cat">${entry.kicker}</p>
+        <h2 class="${titleClass}">${entry.title}</h2>
+        <p class="card-body-text">${entry.subtitle}</p>
         <div class="card-foot">
-          <span class="card-tag">${card.tag}</span>
+          <span class="card-tag">${entry.displayTag}</span>
           ${arrowMarkup}
         </div>
       </div>
@@ -149,10 +151,13 @@ function createSectionMarkup(section, num) {
     html += createDatavizMarkup();
   }
 
-  if (section.cards && section.cards.length) {
-    const orderedCards = [...section.cards].sort((a, b) => a.order - b.order);
-    const cards = orderedCards.map((card, i) => createCardMarkup(card, i)).join("");
-    html += `<div class="grid">${cards}</div>`;
+  const sectionEntries = orderedEntries.filter(entry =>
+    entry.section === section.id && entry.status !== false
+  );
+
+  if (sectionEntries.length) {
+    const entries = sectionEntries.map((entry, i) => createEntryMarkup(entry, i)).join("");
+    html += `<div class="grid">${entries}</div>`;
   }
 
   if (section.feature === "writings") {

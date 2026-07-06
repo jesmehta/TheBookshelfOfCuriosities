@@ -65,11 +65,11 @@ Underneath, it's still MkDocs, mapped onto the same metaphor:
 - the side nav / Markdown pages = the archive catalogue and reading rooms
 - static interactives (`/scifi/`, `/asimov/`) = larger special exhibits in adjoining rooms
 
-While a section isn't ready, its cards render dormant (see `DESIGN-SYSTEM.md`'s card states) instead of linking out — no portal pages, no iframes; the gallery is purely a front door.
+While an entry isn't ready, it renders as a dormant card (see `DESIGN-SYSTEM.md`'s card states) instead of linking out — no portal pages, no iframes; the gallery is purely a front door.
 
 ### Current data model (V4.0+)
 
-The whole page is data-driven from one file, `docs/assets/js/bookshelf-data.js`. `docs/assets/js/bookshelf-gallery.js` reads every block below and renders it into empty mount points in `index.md` — no content strings or rendering logic live anywhere else. Every block has an `enabled` flag; flip it to remove that block from the page without deleting its content. This is the actual current shape, which extends past `DESIGN-SYSTEM.md`'s simpler single-card example to cover the whole page:
+The whole page is data-driven from one file, `docs/assets/js/bookshelf-data.js`. `docs/assets/js/bookshelf-gallery.js` reads every block below and renders it into empty mount points in `index.md` — no content strings or rendering logic live anywhere else. Feature blocks still have an `enabled` flag; `bookshelfSections` and `bookshelfEntries` use the normalized `status` model (`true` = visible/live, `"wip"` = visible dormant/work-in-progress, `false` = hidden).
 
 | Variable | Shape | Renders as |
 |---|---|---|
@@ -78,11 +78,12 @@ The whole page is data-driven from one file, `docs/assets/js/bookshelf-data.js`.
 | `bookshelfQuoteBreak` | `{ enabled, beforeSection, bgWord, quote, attribution }` | centered pull-quote over a ghost-word texture, same pinning mechanism |
 | `bookshelfDataviz` | `{ enabled, kicker, title, desc, chips: string[] }` | the wide feature block — only rendered for the section with `feature: "dataviz"` |
 | `bookshelfWritings` | `{ enabled, big, sub, chip }` | the single dormant writings band — only rendered for the section with `feature: "writings"` |
-| `bookshelfSections` | `[{ name, enabled, feature?, cards: Card[] }]` | section header (numbered i/ii/iii… by array order) + a 12-col card grid |
+| `bookshelfSections` | `[{ id, title, order, status, feature? }]` | section/container metadata; section headers are numbered i/ii/iii… by `order` |
+| `bookshelfEntries` | `[{ id, title, subtitle, href, section, kind, kicker, displayTag, tags, location, status, order, ghost, span, titleVariant? }]` | entry/card metadata rendered into each section's 12-col card grid |
 
-A `Card` is `{ id, cat, title, desc, tag, href, live, ghost, span, titleVariant? }`. `live: true` + a real `href` renders an `<a class="card">` with a "Live ↗" badge; `live: false` renders a `<div class="card card-dormant">` (hatched overlay, `pointer-events: none`, a "soon-chip" instead). Both `scifi` and `asimov` are `live: true` as of V4.0 — Asimov went live at `/asimov/` after being recorded as a dead link in the V3-era data. `span` is one of `c4`/`c5`/`c6`/`c7`/`c8`/`c12` (12-column grid). `ghost: ""` omits the card-ghost letter entirely (used for the three dataviz cards, which don't have one in the source reference). `titleVariant: "inst"` swaps the title font from Libre Baskerville to Instrument Serif for that one card.
+An entry's `status` is now explicit and no longer derived from `live` (the legacy `live` field is gone). `status: true` + a real `href` renders an `<a class="card">` with a "Live ↗" badge; `status: "wip"` renders a `<div class="card card-dormant">` (hatched overlay, `pointer-events: none`, a "soon-chip" instead); `status: false` does not render the entry. `subtitle` feeds the card body text, `kicker` feeds `.card-cat`, and `displayTag` feeds the footer tag. `span` is one of `c4`/`c5`/`c6`/`c7`/`c8`/`c12` (12-column grid). `ghost: ""` omits the card-ghost letter entirely (used for the three dataviz entries, which don't have one in the source reference). `titleVariant: "inst"` swaps the title font from Libre Baskerville to Instrument Serif for that one card.
 
-`bookshelfTextBand`/`bookshelfQuoteBreak`'s `beforeSection` must exactly match a `name` in `bookshelfSections` — the renderer inserts that block immediately before the matching section as it iterates, which is also why section *names* are load-bearing, not just labels: renaming a section without updating any `beforeSection` referencing it silently drops the text band or quote break with no error.
+`bookshelfEntries[].section` and `bookshelfTextBand`/`bookshelfQuoteBreak`'s `beforeSection` must exactly match an `id` in `bookshelfSections` — the renderer groups entries and inserts feature breaks by stable section id, not display title.
 
 The header/tab-bar hiding mechanism, cursor behaviour, and the firefly particle field are implementation details — see `LANDING-PAGE-NOTES.md` and the Changelog below rather than restating them here.
 
@@ -92,6 +93,14 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.6** — Normalized the landing page data model without changing the
+  card UI: `bookshelfSections` now contains section/container metadata
+  only, and card/entry metadata lives in `bookshelfEntries`. Entry fields
+  now use `subtitle`/`section`/`kind`/`kicker`/`displayTag`/`tags`/
+  `location` with explicit `status` (`true`, `"wip"`, `false`);
+  the legacy `desc`, `primarySection`, and `live` fields were removed,
+  and `bookshelf-gallery.js` now renders from `status` instead of
+  deriving behavior from `live`.
 - **V4.5** — Moved `docs/js/` -> `docs/assets/js/` and `docs/images/` ->
   `docs/assets/images/` (`docs/stylesheets/` stays put), matching the
   preferred asset layout documented in `WORLD-SYSTEMS.md` (fffx already

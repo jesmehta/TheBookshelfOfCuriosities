@@ -18,7 +18,7 @@ content:
   `<div id="...">` mount points, and `<script src="...">` tags at the
   bottom.
 - One JS file is the single source of content data (here
-  `bookshelf-data.js`) — every string, every card, every toggle lives
+  `bookshelf-data.js`) — every string, every entry, every toggle lives
   there, nothing in the Markdown or in other JS files.
 - One JS "render engine" file reads that data on `DOMContentLoaded` and
   fills the mount points with generated markup.

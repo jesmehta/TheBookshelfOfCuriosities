@@ -24,8 +24,8 @@ as correct and backport.
   Bookshelf's `bookshelfSections[]` (`Author Explorations`, `Book Data &
   Visualisation`, etc.); fffx's `sections[]` registry
   (`prompt-collections`, `tools-and-libraries`, etc.).
-- **Level 3** — an actual object/page/tool/project. Bookshelf's section
-  `cards[]`; fffx's `entries[]` portals.
+- **Level 3** — an actual object/page/tool/project. Bookshelf's
+  `bookshelfEntries[]`; fffx's `entries[]` portals.
 
 ## The common Level 1 world pattern
 
@@ -38,7 +38,7 @@ Every Level 1 world in this ecosystem:
   `docs/index.html` (bypasses Material entirely). See "Homepage rule"
   below for which pattern new worlds should use.
 - Is driven by **one data file** as the editable IA/content source — no
-  content strings or card data live in the renderer. Bookshelf:
+  content strings or entry data live in the renderer. Bookshelf:
   `docs/assets/js/bookshelf-data.js`. fffx: `docs/assets/js/data.js`.
 - Maps **CSS tokens into MkDocs Material pages** — a `*-tokens.css` file
   (raw colour/font values, `:root`-scoped, single source of truth) feeds
@@ -86,28 +86,25 @@ subtitle
 href            // relative, never root-absolute (breaks under a GitHub
                 // Pages project subpath — see each world's notes for
                 // the incident that taught this)
-section         // OR primarySection — see below
+section
 sections        // optional, for genuinely cross-listed-within-one-world entries
-primarySection
 kind
 order           // placement priority — see "order-based rendering" below
 weight          // editorial/visual importance — see below
 status          // see "Standard status model" below
 tags
 location
-repo            // { name, url } — if the entry has its own source repo
 relatedLinks    // [{ label, href }]
 notes
 ```
 
 `section` (singular) is what both worlds currently use for an entry's
-one home section. `primarySection`/`sections` (plural) are the
-forward-looking fields for an entry that's genuinely cross-listed across
-multiple sections *within the same world's data file* — neither world
-needs this yet (no entry currently lives in more than one section), so
-neither has added it mechanically. Adopt `primarySection`/`sections`
-instead of `section` when that need actually arises, rather than
-bolting on unused fields now.
+one home section. `sections` (plural) is the forward-looking field for
+an entry that's genuinely cross-listed across multiple sections *within
+the same world's data file* — neither world needs this yet (no entry
+currently lives in more than one section), so neither has added it
+mechanically. Adopt `sections` only when that need actually arises,
+rather than bolting on unused fields now.
 
 Section objects (Level 2) should carry:
 
@@ -130,17 +127,12 @@ status: "wip"     // visible but muted/dormant/work-in-progress
 status: false     // hidden/not rendered
 ```
 
-fffx's `entries[]` already use this exactly. Bookshelf's cards currently
-use a different boolean, `live` (`true` = clickable/full-colour,
-`false` = dormant placeholder — visually equivalent to `status: "wip"`,
-not `status: false`, since dormant cards still render). Bookshelf now
-also carries a `status` field on every card, computed from `live`
-(`live: true` → `status: true`, `live: false` → `status: "wip"`) — added
-*alongside* `live`, not replacing it, since the renderer still reads
-`live` directly. Bookshelf's per-section `enabled` boolean has been
-replaced outright with `status` (`enabled: true/false` mapped 1:1 to
-`status: true/false`), since no section currently needs the "wip" middle
-state and the renderer was already trivial to update for that one.
+Both worlds now use this model directly for entries. Bookshelf's legacy
+`live` boolean is gone: `status: true` renders the active clickable card,
+`status: "wip"` renders the visible dormant card, and `status: false`
+hides the entry. Bookshelf sections also use `status` for visibility;
+today they only use `true`/`false`, but the same `"wip"` value remains
+available if a section-level dormant state is ever needed.
 
 ## `weight` vs. world-specific layout fields
 
@@ -226,10 +218,10 @@ Bookshelf's sections previously had no `order` field at all (array
 position was the only ordering signal) and its `beforeSection` pinning
 mechanism (for the text-band/quote-break inserts) matched against each
 section's *display name* — fragile, since renaming a section in the UI
-silently broke the pin. Both fixed: sections now carry `id`/`order`,
-cards within a section now carry `order`, and `beforeSection` matches
-against the stable `id` instead of the display title. See this repo's
-`README.md` changelog for the specific commit.
+silently broke the pin. Both fixed: sections carry `id`/`order`, entries
+carry `section`/`order`, and `beforeSection` matches against the stable
+`id` instead of the display title. See this repo's `README.md` changelog
+for the specific commit.
 
 fffx's `entries[]`/`sections[]` already used explicit `order` from the
 start; no change needed there.
@@ -252,12 +244,12 @@ start; no change needed there.
 - **fffx: move `docs/images/` under `docs/assets/images/`** — same
   reasoning, smaller blast radius (one content page references the
   Circle Packing images).
-- **Cross-world `primarySection`/`sections[]` fields** — add only when
+- **Cross-world `sections[]` fields** — add only when
   an actual cross-listed-within-one-world entry exists; not bolted on
   speculatively.
-- **Stricter CI checks** — e.g. a lint step that fails the build if a
-  `section`/`primarySection` value doesn't match any registered section
-  `id`. Not added this pass.
+- **Stricter CI checks** — e.g. a lint step that fails the build if an
+  entry's `section` value doesn't match any registered section `id`. Not
+  added this pass.
 - **Card component unification** — Bookshelf's cards and fffx's tiles
   remain two separate, world-specific render functions. Not merged into
   one shared component; the two sites' visual identities are
