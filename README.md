@@ -4,7 +4,7 @@ Repo-level practical guide and changelog. Two companion docs: [`DESIGN-SYSTEM.md
 
 ## Structure
 
-- `docs/` — MkDocs Material source. `index.md` is the custom landing page (a mount-point shell — see "Landing page" below); other Markdown pages get the normal Material theme/sidebar. There is no `docs/README.md` — all project documentation lives at the repo root (see `LANDING-PAGE-NOTES.md` bug #6 for why mixing a docs-folder `README.md` with `index.md` is worth avoiding).
+- `docs/` — MkDocs Material source plus the standalone `index.html` landing page. Other Markdown pages get the normal Material theme/sidebar. There is no `docs/README.md` — all project documentation lives at the repo root.
 - `docs/stylesheets/bookshelf-tokens.css` — single source of truth for the site's colour/font values (`--bookshelf-*`), shared between `bookshelf-landing.css` (the landing page) and `bookshelf-material.css` (Material's `--md-*` variables, for every other page). See `DESIGN-SYSTEM.md` for the full token reference.
 - `mkdocs.yml`, `requirements.txt` — MkDocs config and its Python dependencies.
 - `scifi/` — a standalone static HTML/CSS/JS project (no build step), served at `/scifi/`. Independent of MkDocs; mkdocs never touches it.
@@ -51,7 +51,7 @@ This keeps everything under one custom domain with path-based routing (`bookshel
 
 ## Landing page
 
-The landing page (`docs/index.md` + `docs/stylesheets/bookshelf-landing.css` + `docs/assets/js/bookshelf-data.js` / `bookshelf-gallery.js`) is a fully custom, JS-rendered front page living inside an otherwise-normal MkDocs Material site. Visual rules (fonts, colour tokens, component anatomy) live in `DESIGN-SYSTEM.md`; portable implementation lessons (bugs hit, MkDocs-vs-plain-HTML reconciliations, a starter checklist for a sibling site) live in `LANDING-PAGE-NOTES.md`. This section covers intent and the current data model; the full version history is in the Changelog below.
+The landing page (`docs/index.html` + `docs/stylesheets/bookshelf-landing.css` + `docs/assets/js/bookshelf-data.js` / `bookshelf-gallery.js`) is a fully custom, JS-rendered front page that MkDocs copies through as static HTML alongside the normal Material documentation pages. Visual rules (fonts, colour tokens, component anatomy) live in `DESIGN-SYSTEM.md`; portable implementation lessons (bugs hit, MkDocs-vs-plain-HTML reconciliations, a starter checklist for a sibling site) live in `LANDING-PAGE-NOTES.md`. This section covers intent and the current data model; the full version history is in the Changelog below.
 
 ### Intent
 
@@ -69,7 +69,7 @@ While an entry isn't ready, it renders as a dormant card (see `DESIGN-SYSTEM.md`
 
 ### Current data model (V4.0+)
 
-The landing page is still data-driven, but bulk-editable content is now split from hand-edited display/config blocks. Feature/display blocks remain in `docs/assets/js/bookshelf-data.js`; sections and entries are edited in TSV files under `content/` and generated into `docs/assets/js/bookshelf-generated-content.js`. `docs/assets/js/bookshelf-gallery.js` reads those globals and renders them into empty mount points in `index.md` — no content strings or rendering logic live in the Markdown.
+The landing page is still data-driven, but bulk-editable content is now split from hand-edited display/config blocks. Feature/display blocks remain in `docs/assets/js/bookshelf-data.js`; sections and entries are edited in TSV files under `content/` and generated into `docs/assets/js/bookshelf-generated-content.js`. `docs/assets/js/bookshelf-gallery.js` reads those globals and renders them into empty mount points in `index.html` — no content strings or rendering logic live in the HTML shell.
 
 Regenerate after editing the TSV files:
 
@@ -107,6 +107,13 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.8** — Migrated the landing page shell from `docs/index.md` to
+  standalone `docs/index.html` while preserving the same HTML structure,
+  CSS classes, script order, generated gallery rendering, feature blocks,
+  cursor, reveal, and p5 particle loading. The former Markdown shell is
+  archived at `archived-landing-pages/bookshelf-index.md.bak` so it is not
+  published by MkDocs, and `mkdocs.yml`'s Home nav now points to the live
+  site root instead of the removed Markdown page.
 - **V4.7** — Added the spreadsheet-friendly TSV workflow for landing
   sections and entries. `bookshelf-data.js` now keeps only hand-edited
   display/config blocks; `content/bookshelf-sections.tsv` and

@@ -1,7 +1,7 @@
 /* Maps Bookshelf's shared tokens (stylesheets/bookshelf-tokens.css)
    onto MkDocs Material's own --md-* customization variables, so every
    Material-rendered page — including the Material chrome around
-   index.md itself (header, before it's hidden on the landing page;
+   Material-rendered pages;
    any future content page like the planned Hamzanama one) — matches
    the landing page's ink/gold/sepia palette instead of Material's
    light-theme defaults.

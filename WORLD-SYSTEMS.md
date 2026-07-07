@@ -33,13 +33,15 @@ Every Level 1 world in this ecosystem:
 
 - Uses **MkDocs Material** for normal (non-landing) pages.
 - Has a **custom landing page** for its own homepage — not a generic
-  Material content page. Bookshelf's is `docs/index.md` (rendered
-  through Material with the header/nav hidden); fffx's is a standalone
-  `docs/index.html` (bypasses Material entirely). See "Homepage rule"
-  below for which pattern new worlds should use.
-- Is driven by **one data file** as the editable IA/content source — no
-  content strings or entry data live in the renderer. Bookshelf:
-  `docs/assets/js/bookshelf-data.js`. fffx: `docs/assets/js/data.js`.
+  Material content page. Bookshelf and fffx both use standalone
+  `docs/index.html` shells that bypass Material for the homepage. See
+  "Homepage rule" below for which pattern new worlds should use.
+- Keeps **content data outside the renderer** — no content strings or entry
+  data live in gallery/layout code. Bookshelf uses hand-edited
+  `docs/assets/js/bookshelf-data.js` for display/config blocks plus
+  generated `docs/assets/js/bookshelf-generated-content.js` from TSV
+  sources; fffx follows the same split with `fffx-data.js` and
+  `fffx-generated-content.js`.
 - Maps **CSS tokens into MkDocs Material pages** — a `*-tokens.css` file
   (raw colour/font values, `:root`-scoped, single source of truth) feeds
   both the landing page's own stylesheet and a `*-material.css` file
@@ -153,8 +155,8 @@ renderer turns that into actual pixels:
 ## Homepage rule
 
 New Level 1 worlds should default to a **standalone `docs/index.html`**
-for a fully custom landing page (fffx's pattern), not `docs/index.md`
-rendered through Material with the header hidden (Bookshelf's pattern).
+for a fully custom landing page, not `docs/index.md` rendered through
+Material with the header hidden.
 The standalone-HTML approach needs no header-hiding CSS/JS workaround,
 no Markdown-pipeline risk for inline logic, and no `:has()`/sibling-walk
 fragility — see fffx's `LANDING-PAGE-NOTES.md` for the full comparison.
@@ -164,10 +166,9 @@ MkDocs will happily build both, but only one can actually serve as `/`,
 and the collision is a confusing, easy-to-reintroduce mistake (see the
 guard described in fffx's `README.md`/`LANDING-PAGE-NOTES.md`).
 
-Bookshelf still uses `docs/index.md` today. Migrating it to a standalone
-`docs/index.html` is a real, deferred piece of work — see TODOs below —
-not something to attempt incidentally while doing this normalization
-pass.
+Bookshelf's previous `docs/index.md` shell is archived at
+`archived-landing-pages/bookshelf-index.md.bak`; keeping the backup outside
+`docs/` prevents MkDocs from publishing it.
 
 ## Asset naming
 
@@ -261,9 +262,6 @@ start; no change needed there.
 
 ## TODOs (deferred, not done in this pass)
 
-- **Migrate `docs/index.md` → standalone `docs/index.html`.** Real
-  architectural change (drop the header-hiding CSS/JS, restructure how
-  the page mounts), not attempted here.
 - **Review and prune world-specific extra attributes** — Bookshelf's
   `cat`/`ghost`/`titleVariant` and similar, and fffx's `era` field, are
   unreviewed; some may be worth promoting to shared fields, some may be

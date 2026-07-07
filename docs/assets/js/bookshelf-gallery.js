@@ -2,7 +2,7 @@
   Render engine for the V4.0 landing page. Reads hand-edited display
   blocks from bookshelf-data.js plus generated sections/entries from
   bookshelf-generated-content.js, then renders into the mount points left
-  empty in index.md. No content strings or entry data live in this file.
+  empty in index.html. No content strings or entry data live in this file.
 */
 
 function toRoman(n) {

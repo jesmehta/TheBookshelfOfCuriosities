@@ -1,7 +1,7 @@
 /* Single source of truth for Bookshelf's colour + font values, shared
    between two otherwise-separate flows:
    - the landing page (bookshelf-landing.css, scoped under .bookshelf-landing,
-     rendered through Material on index.md but visually self-contained)
+     rendered as standalone index.html but visually self-contained)
    - the rest of the site (stylesheets/bookshelf-material.css, mapping
      these onto Material's own --md-* variable names, applying to every
      page including the Material chrome around the landing page itself)

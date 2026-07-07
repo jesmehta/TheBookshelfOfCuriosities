@@ -8,11 +8,12 @@ live in `README.md`; this file is the reusable part.
 
 ## The pattern
 
-One Markdown page (`index.md`) becomes a mount-point shell, not real
-content:
+One standalone HTML page (`index.html`) becomes a mount-point shell, not
+real content:
 
-- Front-matter `hide: [toc, navigation]` removes Material's sidebar/TOC
-  on that page only.
+- The document is a proper static HTML page (`<!DOCTYPE html>`, `<head>`,
+  `<body>`) copied through by MkDocs, while sibling Markdown pages still use
+  Material.
 - The page body is one wrapper element (here `<section class="bookshelf-landing">`)
   containing static brand chrome (hero text, footer) plus a few empty
   `<div id="...">` mount points, and `<script src="...">` tags at the
@@ -31,8 +32,8 @@ content:
   This is what lets the custom page coexist with Material's own styles
   without clashing, on this page or any other.
 
-Why bother with mount points instead of writing the HTML directly in
-Markdown: it keeps content changes in data files, not a wall of HTML, and
+Why bother with mount points instead of writing the landing cards directly
+in HTML: it keeps content changes in data files, not a wall of markup, and
 it means `enabled`/`status`-style toggles are data values, not commented
 markup.
 
@@ -227,9 +228,10 @@ and will silently emit a broken `<link rel="icon">` otherwise).
 
 1. `mkdocs.yml` with `theme: material`, a `nav:` entry for the landing
    page, `extra_css: [stylesheets/<name>.css]`.
-2. `docs/index.md`: front-matter `hide: [toc, navigation]`, one wrapper
-   element, mount-point divs, script tags at the bottom (data file →
-   render engine → any feature-specific files, in that dependency order).
+2. `docs/index.html`: standalone HTML shell, one wrapper element,
+   mount-point divs, stylesheet links in `<head>`, script tags at the
+   bottom (data file → generated content → render engine → any
+   feature-specific files, in that dependency order).
 3. `docs/assets/js/<name>-data.js`: every content block as a data
    structure with an `enabled` flag.
 4. `docs/assets/js/<name>-gallery.js` (or similar): pure rendering, reads

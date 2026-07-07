@@ -13,7 +13,7 @@
      to our content — no class names required. Everything that belongs to
      this page (cursor dot/ring, #p5wrap, the landing section itself)
      must live INSIDE .bookshelf-landing for this to be safe, which is how
-     index.md is structured.
+     index.html is structured.
 
      This removed the visible nav, but left a thin residual gap — Material
      reserves vertical space for its header via padding/margin on the
