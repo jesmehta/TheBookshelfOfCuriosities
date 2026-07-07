@@ -17,22 +17,39 @@ content:
   containing static brand chrome (hero text, footer) plus a few empty
   `<div id="...">` mount points, and `<script src="...">` tags at the
   bottom.
-- One JS file is the single source of content data (here
-  `bookshelf-data.js`) — every string, every entry, every toggle lives
-  there, nothing in the Markdown or in other JS files.
-- One JS "render engine" file reads that data on `DOMContentLoaded` and
-  fills the mount points with generated markup.
+- Keep bulk content in spreadsheet-friendly TSV files, generate a browser
+  JS data file from them, and keep hand-edited display/config blocks in a
+  separate JS file. Here, `content/bookshelf-sections.tsv` and
+  `content/bookshelf-entries.tsv` generate
+  `bookshelf-generated-content.js`; `bookshelf-data.js` holds ticker/text
+  band/quote/dataviz/writings config.
+- One JS "render engine" file reads the hand-edited config plus generated
+  data on `DOMContentLoaded` and fills the mount points with generated
+  markup.
 - All CSS lives in one stylesheet, every rule scoped under the wrapper
   class (`.bookshelf-landing .foo { ... }`, never bare `.foo { ... }`).
   This is what lets the custom page coexist with Material's own styles
   without clashing, on this page or any other.
 
 Why bother with mount points instead of writing the HTML directly in
-Markdown: it makes the one editable surface for content changes a plain
-JS data file, not a wall of HTML — and it means `enabled`-style toggles
-are just booleans, not commenting out chunks of markup.
+Markdown: it keeps content changes in data files, not a wall of HTML, and
+it means `enabled`/`status`-style toggles are data values, not commented
+markup.
 
 ## Bugs hit, root cause, fix
+
+### 0. Spreadsheet TSVs and Excel encoding/casing traps
+
+Double-clicking a UTF-8 TSV in Excel can reopen typographic punctuation as
+mojibake (`Â`, `â€¦`), and Excel may uppercase boolean-looking cells to
+`TRUE`/`FALSE`. The durable workflow is:
+
+- keep TSV source ASCII-safe where practical (` / ` for compact display
+  separators, `...` for ellipses);
+- let the generator restore those aliases to display punctuation only in
+  selected rendered fields;
+- parse `status` case-insensitively so `TRUE`/`WIP`/`FALSE` normalize to
+  the same generated JS values as `true`/`wip`/`false`.
 
 ### 1. Material's own CSS silently wins image sizing
 `.md-typeset img { height: auto; max-width: 100% }` is in Material's base

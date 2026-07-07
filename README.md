@@ -69,7 +69,21 @@ While an entry isn't ready, it renders as a dormant card (see `DESIGN-SYSTEM.md`
 
 ### Current data model (V4.0+)
 
-The whole page is data-driven from one file, `docs/assets/js/bookshelf-data.js`. `docs/assets/js/bookshelf-gallery.js` reads every block below and renders it into empty mount points in `index.md` — no content strings or rendering logic live anywhere else. Feature blocks still have an `enabled` flag; `bookshelfSections` and `bookshelfEntries` use the normalized `status` model (`true` = visible/live, `"wip"` = visible dormant/work-in-progress, `false` = hidden).
+The landing page is still data-driven, but bulk-editable content is now split from hand-edited display/config blocks. Feature/display blocks remain in `docs/assets/js/bookshelf-data.js`; sections and entries are edited in TSV files under `content/` and generated into `docs/assets/js/bookshelf-generated-content.js`. `docs/assets/js/bookshelf-gallery.js` reads those globals and renders them into empty mount points in `index.md` — no content strings or rendering logic live in the Markdown.
+
+Regenerate after editing the TSV files:
+
+```bash
+node tools/build-bookshelf-content.js
+```
+
+Do not manually edit `docs/assets/js/bookshelf-generated-content.js`; it is auto-generated from `content/bookshelf-sections.tsv` and `content/bookshelf-entries.tsv`. Feature blocks still have an `enabled` flag; `bookshelfSections` and `bookshelfEntries` use the normalized `status` model (`true` = visible/live, `"wip"` = visible dormant/work-in-progress, `false` = hidden).
+
+Spreadsheet/Excel notes:
+
+- Keep TSV source text ASCII-safe where practical. Use ` / ` in compact display labels and `...` for ellipses; this avoids Excel reopening UTF-8 punctuation as mojibake such as `Â` or `â€¦`.
+- The generator restores display typography in generated JS for selected rendered text fields: ` / ` becomes a middle dot separator and `...` becomes an ellipsis.
+- `status` is case-insensitive in TSV (`true`/`TRUE`, `wip`/`WIP`, `false`/`FALSE`) and is normalized to `true`, `"wip"`, or `false` in generated JS.
 
 | Variable | Shape | Renders as |
 |---|---|---|
@@ -78,8 +92,8 @@ The whole page is data-driven from one file, `docs/assets/js/bookshelf-data.js`.
 | `bookshelfQuoteBreak` | `{ enabled, beforeSection, bgWord, quote, attribution }` | centered pull-quote over a ghost-word texture, same pinning mechanism |
 | `bookshelfDataviz` | `{ enabled, kicker, title, desc, chips: string[] }` | the wide feature block — only rendered for the section with `feature: "dataviz"` |
 | `bookshelfWritings` | `{ enabled, big, sub, chip }` | the single dormant writings band — only rendered for the section with `feature: "writings"` |
-| `bookshelfSections` | `[{ id, title, order, status, feature? }]` | section/container metadata; section headers are numbered i/ii/iii… by `order` |
-| `bookshelfEntries` | `[{ id, title, subtitle, href, section, kind, kicker, displayTag, tags, location, status, order, ghost, span, titleVariant? }]` | entry/card metadata rendered into each section's 12-col card grid |
+| `content/bookshelf-sections.tsv` -> `bookshelfSections` | `id, title, order, status, feature` | section/container metadata; section headers are numbered i/ii/iii… by `order` |
+| `content/bookshelf-entries.tsv` -> `bookshelfEntries` | `id, title, subtitle, href, section, kind, kicker, displayTag, tags, location, status, order, ghost, span, titleVariant` | entry/card metadata rendered into each section's 12-col card grid |
 
 An entry's `status` is now explicit and no longer derived from `live` (the legacy `live` field is gone). `status: true` + a real `href` renders an `<a class="card">` with a "Live ↗" badge; `status: "wip"` renders a `<div class="card card-dormant">` (hatched overlay, `pointer-events: none`, a "soon-chip" instead); `status: false` does not render the entry. `subtitle` feeds the card body text, `kicker` feeds `.card-cat`, and `displayTag` feeds the footer tag. `span` is one of `c4`/`c5`/`c6`/`c7`/`c8`/`c12` (12-column grid). `ghost: ""` omits the card-ghost letter entirely (used for the three dataviz entries, which don't have one in the source reference). `titleVariant: "inst"` swaps the title font from Libre Baskerville to Instrument Serif for that one card.
 
@@ -93,6 +107,21 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.7** — Added the spreadsheet-friendly TSV workflow for landing
+  sections and entries. `bookshelf-data.js` now keeps only hand-edited
+  display/config blocks; `content/bookshelf-sections.tsv` and
+  `content/bookshelf-entries.tsv` are the source for bulk content edits;
+  `tools/build-bookshelf-content.js` generates
+  `docs/assets/js/bookshelf-generated-content.js`; and `docs/index.md`
+  loads generated content between config and renderer. Verified the
+  generated arrays match the previous committed `bookshelfSections` and
+  `bookshelfEntries` exactly.
+- **V4.7.1** — Hardened the TSV workflow after Excel surfaced encoding and
+  casing problems: TSV files are kept ASCII-safe for compact display
+  punctuation, `tools/build-bookshelf-content.js` converts display aliases
+  (` / ` -> middle dot, `...` -> ellipsis) when generating JS, and
+  `status` parsing now accepts `TRUE`/`WIP`/`FALSE` as well as lowercase
+  values.
 - **V4.6** — Normalized the landing page data model without changing the
   card UI: `bookshelfSections` now contains section/container metadata
   only, and card/entry metadata lives in `bookshelfEntries`. Entry fields

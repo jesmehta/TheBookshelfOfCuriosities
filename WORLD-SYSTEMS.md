@@ -194,6 +194,39 @@ fffx-landing.css
 fffx-material.css
 ```
 
+Browser-facing JS, spreadsheet sources, and generator scripts follow the
+same world prefix:
+
+```text
+bookshelf-data.js
+bookshelf-generated-content.js
+bookshelf-gallery.js
+content/bookshelf-sections.tsv
+content/bookshelf-entries.tsv
+tools/build-bookshelf-content.js
+
+fffx-data.js
+fffx-generated-content.js
+fffx-layout.js
+fffx-random.js
+fffx-subdivision.js
+content/fffx-sections.tsv
+content/fffx-entries.tsv
+tools/build-fffx-content.js
+```
+
+Spreadsheet TSV convention:
+
+- Prefer ASCII-safe source values for content that will be edited in Excel.
+  Use ` / ` for compact display separators and `...` for ellipses in TSV;
+  generators may restore those aliases to middle dots and ellipses in
+  selected rendered text fields.
+- Do not apply display prettification globally. Never transform URLs, IDs,
+  tags, locations, or machine-readable fields.
+- Parse `status` case-insensitively so Excel's `TRUE`/`FALSE` cells and
+  human-entered `WIP` normalize to the shared JS values `true`, `false`,
+  and `"wip"`.
+
 Both worlds' `*-tokens.css` and `*-material.css` files already follow
 this. Both worlds' landing stylesheet has been renamed to
 `*-landing.css` to match (was `bookshelf.css` in Bookshelf, `landing.css`

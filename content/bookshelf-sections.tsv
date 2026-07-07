@@ -1,0 +1,6 @@
+id	title	order	status	feature
+author-explorations	Author Explorations	10	true	
+empire-adventure-great-game	Empire, Adventure & The Great Game	20	true	
+comics-sequential-art	Comics & Sequential Art	30	false	
+book-data-visualisation	Book Data & Visualisation	40	true	dataviz
+writings-on-reading	Writings on Reading	50	false	writings

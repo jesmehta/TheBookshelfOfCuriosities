@@ -74,6 +74,7 @@ hide:
 </section>
 
 <script src="assets/js/bookshelf-data.js"></script>
+<script src="assets/js/bookshelf-generated-content.js"></script>
 <script src="assets/js/bookshelf-gallery.js"></script>
 <script src="assets/js/bookshelf-cursor.js"></script>
 <script src="assets/js/bookshelf-reveal.js"></script>
