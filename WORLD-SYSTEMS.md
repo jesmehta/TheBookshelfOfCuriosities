@@ -96,8 +96,7 @@ weight          // editorial/visual importance — see below
 status          // see "Standard status model" below
 tags
 location
-relatedLinks    // [{ label, href }]
-notes
+repo            // { name, url } — if the entry has its own source repo
 ```
 
 `section` (singular) is what both worlds currently use for an entry's
@@ -142,12 +141,11 @@ available if a section-level dormant state is ever needed.
 visual presence an entry deserves, independent of how each world's
 renderer turns that into actual pixels:
 
-- **Bookshelf** uses `weight` as the normalized editorial signal but
-  still renders card size via its own `span` field (`c4`/`c5`/`c6`/`c7`/
-  `c8`/`c12`, a 12-column grid width) — `span` is Bookshelf-specific
-  layout plumbing, not a shared field, and is not derived from `weight`
-  automatically. Unifying the two (deriving `span` from `weight`) is
-  deferred — see TODOs below.
+- **Bookshelf does not have a `weight` field yet** — card size is set
+  directly via its own `span` field (`c4`/`c5`/`c6`/`c7`/`c8`/`c12`, a
+  12-column grid width), with no separate editorial-importance signal.
+  Adding `weight` and deriving `span` from it is deferred — see TODOs
+  below.
 - **fffx** uses `weight` directly as the subdivision tile-area scoring
   multiplier (`scoreRectForEntry` in `subdivision.js`) — higher weight
   targets a larger rectangle.
@@ -262,19 +260,22 @@ start; no change needed there.
 
 ## TODOs (deferred, not done in this pass)
 
-- **Review and prune world-specific extra attributes** — Bookshelf's
-  `cat`/`ghost`/`titleVariant` and similar, and fffx's `era` field, are
-  unreviewed; some may be worth promoting to shared fields, some may be
-  dead. Left alone this pass.
+- ~~Review fffx's extra attributes~~ — done 2026-06-30: removed unused
+  `era` and `sourceFolder`, renamed the rendered `image` field to
+  `thumbnail`, and removed uncurated `relatedLinks`/`notes`. Retained
+  `location` and `repo`; `repo` holds a genuine source-repository link.
+- **Review Bookshelf's extra attributes** — `cat`/`ghost`/`titleVariant`
+  and similar remain world-specific; some may be worth promoting to
+  shared fields and some may be removable. Not started.
 - **Derive `span` from `weight`** instead of maintaining both
-  independently, if/when the card grid is revisited.
+  independently, if/when the card grid is revisited — Bookshelf does not
+  currently have a `weight` field, so it would need to be added first.
 - ~~Move Bookshelf's `docs/js/`, `docs/images/` under `docs/assets/`~~ —
   done 2026-06-30: `docs/assets/js/`, `docs/assets/images/`, all
   references updated (`index.md` script tags, `mkdocs.yml` favicon,
   prose in README.md/DESIGN-SYSTEM.md/LANDING-PAGE-NOTES.md).
-- **fffx: move `docs/images/` under `docs/assets/images/`** — same
-  reasoning, smaller blast radius (one content page references the
-  Circle Packing images).
+- ~~Move fffx's `docs/images/` under `docs/assets/images/`~~ — done
+  2026-06-30; image references and documentation were updated.
 - **Cross-world `sections[]` fields** — add only when
   an actual cross-listed-within-one-world entry exists; not bolted on
   speculatively.
