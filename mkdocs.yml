@@ -9,9 +9,11 @@ nav:
       - The Golden Age of SciFi: https://bookshelf.cabinetofcuriosities.in/scifi/
       - Isaac Asimov and the Foundation Series: https://bookshelf.cabinetofcuriosities.in/asimov/
       - Agatha Christie : agatha.md
-  - Favourite Poems: favorite-poems/general/index.md
-  - Long Poems: favorite-poems/long-poems/index.md
-  - British Poetry Workshop: favorite-poems/workshop/index.md
+  - Favourite Poetry:
+      - favorite-poems/index.md
+      - Favourite Poems: favorite-poems/general/index.md
+      - Long Poems: favorite-poems/long-poems/index.md
+      - British Poetry Workshop: favorite-poems/workshop/index.md
   - My Writings:
       - my-writings/index.md
       - My Essays: my-writings/essays/index.md
