@@ -115,6 +115,12 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.10** — Added `conversation-bookshelf-editor.md`, the real
+  conversation log behind the Admin Dash's design decisions (same
+  transcript as fffx's own `conversation-fffx-editor.md`, since both
+  editors were planned together in one combined conversation before
+  being built separately). Companion to `BOOKSHELF-EDITOR.md`, which now
+  points to it.
 - **V4.9** — Added a local browser Admin Dash for editing
   `content/bookshelf-sections.tsv`/`bookshelf-entries.tsv` and running the
   build/mkdocs-check scripts by button instead of the CLI

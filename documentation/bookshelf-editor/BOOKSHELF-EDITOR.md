@@ -4,10 +4,12 @@ A local-only Node HTTP admin server for editing `content/bookshelf-sections.tsv`
 and `content/bookshelf-entries.tsv` through a browser UI instead of
 hand-editing either file, plus buttons for the two build/check scripts
 this repo has. Second of two copies built this session — see
-`form-follows-fx/FFFX-EDITOR.md` for the first (built first since FFFX's
-schema is the closer match to Cabinet's), and
+`form-follows-fx/documentation/fffx-editor/FFFX-EDITOR.md` for the first
+(built first since FFFX's schema is the closer match to Cabinet's), and
 `CabinetOfCuriosities/documentation/cabinet-editor/CABINET-EDITOR.md` for
-the original this pattern is modeled on.
+the original this pattern is modeled on. The real conversation behind
+these decisions is recorded in `conversation-bookshelf-editor.md`,
+alongside this file.
 
 ## Initial need
 
