@@ -77,7 +77,7 @@ Regenerate after editing the TSV files:
 node tools/build-bookshelf-content.js
 ```
 
-Do not manually edit `docs/assets/js/bookshelf-generated-content.js`; it is auto-generated from `content/bookshelf-sections.tsv` and `content/bookshelf-entries.tsv`. Feature blocks still have an `enabled` flag; `bookshelfSections` and `bookshelfEntries` use the normalized `status` model (`true` = visible/live, `"wip"` = visible dormant/work-in-progress, `false` = hidden).
+Do not manually edit `docs/assets/js/bookshelf-generated-content.js`; it is auto-generated from `content/bookshelf-sections.tsv` and `content/bookshelf-entries.tsv` — or use the local Admin Dash (`run-bookshelf-editor.bat`, `http://127.0.0.1:7858/admin/`) to edit both TSVs in a browser and run that build (plus an mkdocs strict check) with a button instead. See `BOOKSHELF-EDITOR.md` for the full design notes. Feature blocks still have an `enabled` flag; `bookshelfSections` and `bookshelfEntries` use the normalized `status` model (`true` = visible/live, `"wip"` = visible dormant/work-in-progress, `false` = hidden).
 
 Spreadsheet/Excel notes:
 
@@ -107,6 +107,15 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.9** — Added a local browser Admin Dash for editing
+  `content/bookshelf-sections.tsv`/`bookshelf-entries.tsv` and running the
+  build/mkdocs-check scripts by button instead of the CLI
+  (`tools/bookshelf-tsv.js`/`bookshelf-editor.js`/`bookshelf-editor-ui/`,
+  `run-bookshelf-editor.bat`). Modeled on Cabinet's equivalent editor and
+  built as the second of two copies this session (after fffx's). Full
+  design notes and verification, including the literal `<br>`/quote
+  round-trip check this schema specifically needs, in
+  `BOOKSHELF-EDITOR.md`.
 - **V4.8** — Migrated the landing page shell from `docs/index.md` to
   standalone `docs/index.html` while preserving the same HTML structure,
   CSS classes, script order, generated gallery rendering, feature blocks,
