@@ -7,7 +7,9 @@ has to its own `README.md`, and fffx's `FILE-MANIFEST.md` has to its own.
 Not auto-built — update by hand alongside structural changes, same as
 every other doc here. Generated 2026-09-05, alongside the `documentation/`
 reorg that moved `BOOKSHELF-EDITOR.md`, `DESIGN-SYSTEM.md`, and
-`LANDING-PAGE-NOTES.md` off repo root into per-feature folders.
+`LANDING-PAGE-NOTES.md` off repo root into per-feature folders, and the
+`docs/` reorg (same date) that split `docs/assets/`/`docs/stylesheets/`
+into the `_assets/`/`_images/` convention below.
 
 ## Root-level files
 
@@ -69,32 +71,42 @@ recovery; not yet attempted here.
 
 | File | Role |
 |---|---|
-| `build-bookshelf-content.js` | Parses both `bookshelf-*.tsv` files into `docs/assets/js/bookshelf-generated-content.js`. Independent implementation from `bookshelf-tsv.js`'s parser (not refactored onto it), same as fffx's equivalent script. |
+| `build-bookshelf-content.js` | Parses both `bookshelf-*.tsv` files into `docs/_assets/backend/js/bookshelf-generated-content.js`. Independent implementation from `bookshelf-tsv.js`'s parser (not refactored onto it), same as fffx's equivalent script. |
 | `bookshelf-tsv.js` | Shared TSV parse/serialize/validate logic used by the Admin Dash server. Plain strict tab/newline splitter (no CSV-quote-awareness) — load-bearing here, since this schema's data genuinely contains literal `<br>`/quote characters that quoting would corrupt. |
 | `bookshelf-editor.js` | Local-only zero-dependency Node HTTP Admin Dash server (`/admin/`, port `7858` by default, `BOOKSHELF_EDITOR_PORT` to override) — TSV CRUD/validate API plus two build-script routes (`rebuild-content`, `mkdocs-check`), all in one process (unlike Cabinet's editor-server/admin-controls-server split). |
 | `bookshelf-editor-ui/index.html`, `editor.css`, `editor.js` | The Admin Dash's browser UI — Sections/Entries/Build tabs, sortable/resizable columns, a `<select>` for `span`/`location` from the fixed value lists documented in `WORLD-SYSTEMS.md`. |
 
 ## `docs/` — the live MkDocs site + standalone landing page
 
-Not yet reorganized into Cabinet's/fffx's content-vs-system split (a
-leading underscore marking "supporting files, not a browsable page") —
-still a flat `assets/`/`stylesheets/` layout. See the docs reorg plan
-under discussion for the proposed shape.
+Reorganized 2026-09-05 around Cabinet's/fffx's own convention: a leading
+underscore marks "supporting files, not a browsable page." Content page
+folders (`docs/index.html`, `docs/agatha.md`) were not relocated —
+MkDocs derives a page's URL from its `docs/` path.
 
 | Path | Role |
 |---|---|
 | `docs/index.html` | Standalone landing page — the firefly-lit gallery-wall field. Not rendered through Material's theme; MkDocs copies it through byte-for-byte. |
 | `docs/agatha.md` | Placeholder stub for the "Agatha Christie" nav entry — one line of text, no real content yet. |
-| `docs/assets/images/` | `asimov.jpg`, `favicon.svg`, `hamzanama.jpg`, `scifi.jpg` — nav/card thumbnail images. |
-| `docs/assets/js/bookshelf-data.js` | Hand-edited stable config — display/config blocks not sourced from TSV. |
-| `docs/assets/js/bookshelf-generated-content.js` | Auto-generated from `content/bookshelf-*.tsv` by `tools/build-bookshelf-content.js` — do not hand-edit. |
-| `docs/assets/js/bookshelf-gallery.js` | Gallery rendering: card layout, dormant-card states, `span`-based grid placement. |
-| `docs/assets/js/bookshelf-cursor.js` | Custom cursor behaviour for the landing page. |
-| `docs/assets/js/bookshelf-particles.js` | The firefly particle-field simulation (state-machine sim as of V4.1 — see `DESIGN-SYSTEM.md`'s changelog). |
-| `docs/assets/js/bookshelf-reveal.js` | Scroll/reveal animation logic. |
-| `docs/stylesheets/bookshelf-tokens.css` | Single source of truth for colour/font `--bookshelf-*` custom properties — shared between the landing page and the Material theme mapping below. |
-| `docs/stylesheets/bookshelf-landing.css` | All landing-page CSS, scoped under `.bookshelf-landing`. V4.0 full replacement of the V1–V3 frame/mat system, removed entirely rather than left dead. |
-| `docs/stylesheets/bookshelf-material.css` | Maps `bookshelf-tokens.css`'s values onto MkDocs Material's own `--md-*` variables, so every non-landing page matches the landing page's palette. |
+| `docs/_images/` | `asimov.jpg`, `favicon.svg`, `hamzanama.jpg`, `scifi.jpg` — nav/card thumbnail images. |
+
+### `docs/_assets/` — CSS/JS shipped to production
+
+Split into `backend/` (the landing page's own engine — hand-written plus
+one generated file, kept together since it's one subsystem rather than
+split further) and `material/` (pure MkDocs theme chrome), matching
+fffx's own split.
+
+| File | Role |
+|---|---|
+| `backend/css/bookshelf-tokens.css` | Single source of truth for colour/font `--bookshelf-*` custom properties — shared between the landing page and the Material theme mapping below. |
+| `backend/css/bookshelf-landing.css` | All landing-page CSS, scoped under `.bookshelf-landing`. V4.0 full replacement of the V1–V3 frame/mat system, removed entirely rather than left dead. |
+| `backend/js/bookshelf-data.js` | Hand-edited stable config — display/config blocks not sourced from TSV. |
+| `backend/js/bookshelf-generated-content.js` | Auto-generated from `content/bookshelf-*.tsv` by `tools/build-bookshelf-content.js` — do not hand-edit. |
+| `backend/js/bookshelf-gallery.js` | Gallery rendering: card layout, dormant-card states, `span`-based grid placement. |
+| `backend/js/bookshelf-cursor.js` | Custom cursor behaviour for the landing page. |
+| `backend/js/bookshelf-particles.js` | The firefly particle-field simulation (state-machine sim as of V4.1 — see `DESIGN-SYSTEM.md`'s changelog). |
+| `backend/js/bookshelf-reveal.js` | Scroll/reveal animation logic. |
+| `material/css/bookshelf-material.css` | Maps `bookshelf-tokens.css`'s values onto MkDocs Material's own `--md-*` variables, so every non-landing page matches the landing page's palette. |
 
 ## Standalone static sub-projects (no MkDocs build step)
 

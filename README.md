@@ -13,7 +13,7 @@ specifically, see `scifi/README.md`.
 
 - `docs/` — MkDocs Material source plus the standalone `index.html` landing page. Other Markdown pages get the normal Material theme/sidebar.
 - `documentation/` — technical-reference docs, one folder per feature (`landing-page-notes/`, `bookshelf-editor/`), plus `FILE-MANIFEST.md`. Only `README.md` and `WORLD-SYSTEMS.md` stay at repo root.
-- `docs/stylesheets/bookshelf-tokens.css` — single source of truth for the site's colour/font values (`--bookshelf-*`), shared between `bookshelf-landing.css` (the landing page) and `bookshelf-material.css` (Material's `--md-*` variables, for every other page). See `documentation/landing-page-notes/DESIGN-SYSTEM.md` for the full token reference.
+- `docs/_assets/backend/css/bookshelf-tokens.css` — single source of truth for the site's colour/font values (`--bookshelf-*`), shared between `bookshelf-landing.css` (the landing page) and `docs/_assets/material/css/bookshelf-material.css` (Material's `--md-*` variables, for every other page). See `documentation/landing-page-notes/DESIGN-SYSTEM.md` for the full token reference.
 - `mkdocs.yml`, `requirements.txt` — MkDocs config and its Python dependencies.
 - `scifi/` — a standalone static HTML/CSS/JS project (no build step), served at `/scifi/`. Independent of MkDocs; mkdocs never touches it.
 - `CNAME` — custom domain (`bookshelf.cabinetofcuriosities.in`) for GitHub Pages.
@@ -59,7 +59,7 @@ This keeps everything under one custom domain with path-based routing (`bookshel
 
 ## Landing page
 
-The landing page (`docs/index.html` + `docs/stylesheets/bookshelf-landing.css` + `docs/assets/js/bookshelf-data.js` / `bookshelf-gallery.js`) is a fully custom, JS-rendered front page that MkDocs copies through as static HTML alongside the normal Material documentation pages. Visual rules (fonts, colour tokens, component anatomy) live in `DESIGN-SYSTEM.md`; portable implementation lessons (bugs hit, MkDocs-vs-plain-HTML reconciliations, a starter checklist for a sibling site) live in `LANDING-PAGE-NOTES.md`. This section covers intent and the current data model; the full version history is in the Changelog below.
+The landing page (`docs/index.html` + `docs/_assets/backend/css/bookshelf-landing.css` + `docs/_assets/backend/js/bookshelf-data.js` / `bookshelf-gallery.js`) is a fully custom, JS-rendered front page that MkDocs copies through as static HTML alongside the normal Material documentation pages. Visual rules (fonts, colour tokens, component anatomy) live in `DESIGN-SYSTEM.md`; portable implementation lessons (bugs hit, MkDocs-vs-plain-HTML reconciliations, a starter checklist for a sibling site) live in `LANDING-PAGE-NOTES.md`. This section covers intent and the current data model; the full version history is in the Changelog below.
 
 ### Intent
 
@@ -77,7 +77,7 @@ While an entry isn't ready, it renders as a dormant card (see `DESIGN-SYSTEM.md`
 
 ### Current data model (V4.0+)
 
-The landing page is still data-driven, but bulk-editable content is now split from hand-edited display/config blocks. Feature/display blocks remain in `docs/assets/js/bookshelf-data.js`; sections and entries are edited in TSV files under `content/` and generated into `docs/assets/js/bookshelf-generated-content.js`. `docs/assets/js/bookshelf-gallery.js` reads those globals and renders them into empty mount points in `index.html` — no content strings or rendering logic live in the HTML shell.
+The landing page is still data-driven, but bulk-editable content is now split from hand-edited display/config blocks. Feature/display blocks remain in `docs/_assets/backend/js/bookshelf-data.js`; sections and entries are edited in TSV files under `content/` and generated into `docs/_assets/backend/js/bookshelf-generated-content.js`. `docs/_assets/backend/js/bookshelf-gallery.js` reads those globals and renders them into empty mount points in `index.html` — no content strings or rendering logic live in the HTML shell.
 
 Regenerate after editing the TSV files:
 
@@ -85,7 +85,7 @@ Regenerate after editing the TSV files:
 node tools/build-bookshelf-content.js
 ```
 
-Do not manually edit `docs/assets/js/bookshelf-generated-content.js`; it is auto-generated from `content/bookshelf-sections.tsv` and `content/bookshelf-entries.tsv` — or use the local Admin Dash (`run-bookshelf-editor.bat`, `http://127.0.0.1:7858/admin/`) to edit both TSVs in a browser and run that build (plus an mkdocs strict check) with a button instead. See `BOOKSHELF-EDITOR.md` for the full design notes. Feature blocks still have an `enabled` flag; `bookshelfSections` and `bookshelfEntries` use the normalized `status` model (`true` = visible/live, `"wip"` = visible dormant/work-in-progress, `false` = hidden).
+Do not manually edit `docs/_assets/backend/js/bookshelf-generated-content.js`; it is auto-generated from `content/bookshelf-sections.tsv` and `content/bookshelf-entries.tsv` — or use the local Admin Dash (`run-bookshelf-editor.bat`, `http://127.0.0.1:7858/admin/`) to edit both TSVs in a browser and run that build (plus an mkdocs strict check) with a button instead. See `BOOKSHELF-EDITOR.md` for the full design notes. Feature blocks still have an `enabled` flag; `bookshelfSections` and `bookshelfEntries` use the normalized `status` model (`true` = visible/live, `"wip"` = visible dormant/work-in-progress, `false` = hidden).
 
 Spreadsheet/Excel notes:
 
@@ -115,6 +115,18 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.11** — Reorganized `docs/assets/`/`docs/stylesheets/` into
+  `docs/_assets/backend/{css,js}/`, `docs/_assets/material/css/`, and
+  `docs/_images/`, matching fffx's/Cabinet's content-vs-system split (a
+  leading underscore marks "supporting files, not a browsable page").
+  Content pages (`index.html`, `agatha.md`) stay put. Updated every
+  reference: `mkdocs.yml`'s `favicon`/`extra_css`/comments, `index.html`'s
+  `<link>`/`<script>` tags, `tools/build-bookshelf-content.js`'s output
+  path, the Admin Dash UI's build-tab description, and prose in this file
+  — except inside already-dated changelog entries below, same rule as
+  V4.5. `BOOKSHELF-EDITOR.md`/`DESIGN-SYSTEM.md`/`LANDING-PAGE-NOTES.md`
+  also moved off repo root into `documentation/`, one folder per feature
+  — see `documentation/FILE-MANIFEST.md`.
 - **V4.10** — Added `conversation-bookshelf-editor.md`, the real
   conversation log behind the Admin Dash's design decisions (same
   transcript as fffx's own `conversation-fffx-editor.md`, since both

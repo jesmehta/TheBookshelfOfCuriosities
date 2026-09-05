@@ -25,8 +25,8 @@ theme:
   name: material
   palette:
     # scheme: slate is the dark baseline; exact hex values come from
-    # extra_css below (stylesheets/bookshelf-tokens.css ->
-    # stylesheets/bookshelf-material.css), which overrides Material's
+    # extra_css below (_assets/backend/css/bookshelf-tokens.css ->
+    # _assets/material/css/bookshelf-material.css), which overrides Material's
     # --md-* variables to match the landing page's ink/gold/sepia
     # palette precisely. No light/dark toggle — slate is the only
     # scheme on this site, to match the landing page being dark-only.
@@ -34,7 +34,7 @@ theme:
     primary: custom
     accent: indigo
   font:
-    # Matches stylesheets/bookshelf-tokens.css's --bookshelf-ff-serif/
+    # Matches _assets/backend/css/bookshelf-tokens.css's --bookshelf-ff-serif/
     # --bookshelf-ff-mono — kept in sync by hand since mkdocs.yml is
     # plain YAML and can't reference a CSS custom property. Instrument
     # Serif and Syne (the landing page's other two fonts) stay
@@ -47,9 +47,9 @@ theme:
     logo: material/lighthouse
   # theme.favicon needs an actual file, unlike theme.icon.logo — it
   # doesn't resolve material/<name> icon slugs, it just outputs the
-  # literal string as a broken <link> href. assets/images/favicon.svg is
+  # literal string as a broken <link> href. _images/favicon.svg is
   # the bundled mkdocs-material "lighthouse" MDI icon, copied in by hand.
-  favicon: assets/images/favicon.svg
+  favicon: _images/favicon.svg
   features:
     # - navigation.tabs
     # - navigation.instant
@@ -71,7 +71,7 @@ plugins:
   - mkdocs-video
 
 extra_css:
-  - stylesheets/bookshelf-tokens.css
-  - stylesheets/bookshelf-material.css
-  - stylesheets/bookshelf-landing.css
+  - _assets/backend/css/bookshelf-tokens.css
+  - _assets/material/css/bookshelf-material.css
+  - _assets/backend/css/bookshelf-landing.css
 
