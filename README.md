@@ -1,11 +1,19 @@
 # The Bookshelf of Curiosities
 
-Repo-level practical guide and changelog. Two companion docs: [`DESIGN-SYSTEM.md`](DESIGN-SYSTEM.md) (the landing page's visual design rules — fonts, colour tokens, component anatomy) and [`LANDING-PAGE-NOTES.md`](LANDING-PAGE-NOTES.md) (portable MkDocs/Material implementation lessons, written to be reused in a future sibling site, e.g. a "Cabinet" or "fffx" site). For the SciFi project specifically, see `scifi/README.md`.
+Repo-level practical guide and changelog. Two companion docs:
+[`DESIGN-SYSTEM.md`](documentation/landing-page-notes/DESIGN-SYSTEM.md) (the
+landing page's visual design rules — fonts, colour tokens, component
+anatomy) and
+[`LANDING-PAGE-NOTES.md`](documentation/landing-page-notes/LANDING-PAGE-NOTES.md)
+(portable MkDocs/Material implementation lessons, written to be reused in a
+future sibling site, e.g. a "Cabinet" or "fffx" site). For the SciFi project
+specifically, see `scifi/README.md`.
 
 ## Structure
 
-- `docs/` — MkDocs Material source plus the standalone `index.html` landing page. Other Markdown pages get the normal Material theme/sidebar. There is no `docs/README.md` — all project documentation lives at the repo root.
-- `docs/stylesheets/bookshelf-tokens.css` — single source of truth for the site's colour/font values (`--bookshelf-*`), shared between `bookshelf-landing.css` (the landing page) and `bookshelf-material.css` (Material's `--md-*` variables, for every other page). See `DESIGN-SYSTEM.md` for the full token reference.
+- `docs/` — MkDocs Material source plus the standalone `index.html` landing page. Other Markdown pages get the normal Material theme/sidebar.
+- `documentation/` — technical-reference docs, one folder per feature (`landing-page-notes/`, `bookshelf-editor/`), plus `FILE-MANIFEST.md`. Only `README.md` and `WORLD-SYSTEMS.md` stay at repo root.
+- `docs/stylesheets/bookshelf-tokens.css` — single source of truth for the site's colour/font values (`--bookshelf-*`), shared between `bookshelf-landing.css` (the landing page) and `bookshelf-material.css` (Material's `--md-*` variables, for every other page). See `documentation/landing-page-notes/DESIGN-SYSTEM.md` for the full token reference.
 - `mkdocs.yml`, `requirements.txt` — MkDocs config and its Python dependencies.
 - `scifi/` — a standalone static HTML/CSS/JS project (no build step), served at `/scifi/`. Independent of MkDocs; mkdocs never touches it.
 - `CNAME` — custom domain (`bookshelf.cabinetofcuriosities.in`) for GitHub Pages.
