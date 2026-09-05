@@ -75,6 +75,7 @@ markdown_extensions:
 
 plugins:
   - mkdocs-video
+  - section-index
 
 extra_css:
   - _assets/backend/css/bookshelf-tokens.css
