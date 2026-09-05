@@ -2,7 +2,7 @@
 
 *In which we view fifty millennia of humans doing design, and do little justice to any single area and none to quite a few.*
 
-*Jesal Mehta — PG-II, Product Design*  
+*Jesal Mehta — PG-II, Product Design, 2011*  
 *Presented to Prof. Deepankar Bhattacharyya*
 
 > "Design is that area of human experience, skill and knowledge which is concerned with man's ability to mould his environment to suit his material and spiritual needs."

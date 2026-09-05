@@ -1,6 +1,6 @@
 # Graphic Novels: An Underrated Medium
 
-*Jesal Mehta — PG-III, Product Design, MITID*  
+*Jesal Mehta — PG-III, Product Design, MITID, 2012*  
 *Presented at Colloquium*
 
 **Abstract**
