@@ -24,8 +24,8 @@ the other two repos.
 |---|---|
 | `README.md` | Practical guide: structure, deploy pipeline, landing-page intent/data model, changelog. Start here. |
 | `WORLD-SYSTEMS.md` | Conventions shared across Cabinet/Bookshelf/fffx (data schema, status model, homepage rule). Hand-synced identically across all three repos — don't edit without also updating the other two. Currently stale (predates Cabinet's own 3-world rewrite of this file) — pending sync, tracked separately. |
-| `mkdocs.yml` | MkDocs site config: nav tree, theme (slate scheme, custom primary via token override), plugins, `extra_css`. |
-| `requirements.txt` | Python deps for `mkdocs build`/`mkdocs serve`. |
+| `mkdocs.yml` | MkDocs site config: nav tree, theme (slate scheme, custom primary via token override), plugins (`mkdocs-video`, `section-index` — see `LANDING-PAGE-NOTES.md` bug #8 for why the latter is needed), `extra_css`. |
+| `requirements.txt` | Python deps for `mkdocs build`/`mkdocs serve`. If this machine has more than one Python install, `mkdocs` on `PATH` may resolve to a different one than `pip`/`py -3` — check `where mkdocs` vs `where python`/`py -3 -m pip show mkdocs` before assuming a package installed in one is visible to the other. |
 | `CNAME` | Custom domain (`bookshelf.cabinetofcuriosities.in`) for GitHub Pages. |
 | `.github/workflows/deploy.yml` | CI: `mkdocs build --site-dir public`, copies standalone static sub-projects (`scifi/`, `asimov/`) into `public/`, then `actions/configure-pages` → `upload-pages-artifact` → `deploy-pages`. |
 | `run-bookshelf-editor.bat` | Double-click launcher for `tools/bookshelf-editor.js` (the Admin Dash). |
@@ -60,6 +60,21 @@ recovery; not yet attempted here.
 | `BOOKSHELF-EDITOR.md` | Design decisions and as-built record for `tools/bookshelf-editor.js` (mirrors Cabinet's `CABINET-EDITOR.md` and fffx's `FFFX-EDITOR.md`) — architecture, routes, files, update workflow, verified checks, todo, changelog. |
 | `conversation-bookshelf-editor.md` | Conversation-log companion, recorded from the same live transcript as fffx's `conversation-fffx-editor.md` — this repo's Admin Dash was planned in one combined conversation covering both fffx and Bookshelf together, then built second. |
 
+### `content/` — editorial documentation (what got written and why)
+
+Umbrella for content-initiative docs, kept separate from the technical
+subsystem docs above — these cover the actual written material (poems,
+essays), not code or site mechanics. One subfolder per initiative; each
+pairs a `*-CONTENT.md` reference doc with a `conversation-*.md` log of the
+actual back-and-forth that produced it.
+
+| File | Role |
+|---|---|
+| `favorite-poems/FAVORITE-POEMS-CONTENT.md` | What the three Favourite Poetry collections (`general/`/`long-poems/`/`workshop/`) are, where their source `.docx` files came from, the now-deleted custom docx→Markdown extraction pipeline, and editorial conventions (no invented prose, cross-link style, `poetry.com` sourcing). |
+| `favorite-poems/conversation-favorite-poems-content.md` | Conversation-log companion — the user's own words behind the decisions above. |
+| `my-writings/MY-WRITINGS-CONTENT.md` | What the three My Writings collections (`essays/`/`miscellany/`/`poems/`) are, their source `.docx`/`.pdf` files, the pandoc-based conversion approach, and editorial conventions (byline/date format, footnote handling). |
+| `my-writings/conversation-my-writings-content.md` | Conversation-log companion for the above. |
+
 ## `content/` — canonical data sources (hand-edited, or via the Admin Dash)
 
 | File | Role |
@@ -87,6 +102,8 @@ MkDocs derives a page's URL from its `docs/` path.
 |---|---|
 | `docs/index.html` | Standalone landing page — the firefly-lit gallery-wall field. Not rendered through Material's theme; MkDocs copies it through byte-for-byte. |
 | `docs/agatha.md` | Placeholder stub for the "Agatha Christie" nav entry — one line of text, no real content yet. |
+| `docs/favorite-poems/` | Plain Material content pages — poems by other poets. See `documentation/content/favorite-poems/FAVORITE-POEMS-CONTENT.md` for the `general/`/`long-poems/`/`workshop/` sub-collection layout and page conventions. |
+| `docs/my-writings/` | Plain Material content pages — my own essays/miscellany/poems. See `documentation/content/my-writings/MY-WRITINGS-CONTENT.md`. |
 | `docs/_images/` | `asimov.jpg`, `favicon.svg`, `hamzanama.jpg`, `scifi.jpg` — nav/card thumbnail images. |
 
 ### `docs/_assets/` — CSS/JS shipped to production

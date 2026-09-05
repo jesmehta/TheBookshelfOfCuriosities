@@ -190,6 +190,22 @@ fine for `theme.icon.logo` — it gets inlined as SVG — but `theme.favicon`
 doesn't go through that resolution at all; it needs an actual file path
 and will silently emit a broken `<link rel="icon">` otherwise).
 
+### 8. A nav section can't be both a page and a section — not without a plugin
+
+Plain MkDocs nav syntax for a nested section:
+
+```yaml
+nav:
+  - My Section:
+      - my-section/index.md
+      - Child A: my-section/a.md
+      - Child B: my-section/b.md
+```
+
+The unlabeled first entry (`my-section/index.md`) becomes a *child* item in the sidebar, and its nav label is taken from that page's own `# Title` — so if the index page's title matches the section name (a natural choice), the sidebar shows the section name nested under itself (`My Section > My Section`), which reads as a bug even though it's working as designed. The section header itself is not a link in plain MkDocs; clicking it only toggles expand/collapse.
+
+**Fix**: the [`mkdocs-section-index`](https://github.com/oprypin/mkdocs-section-index) plugin. Add `mkdocs-section-index` to `requirements.txt` and `- section-index` to `mkdocs.yml`'s `plugins:` list — no nav restructuring needed, same YAML shape as above. It makes the section header itself a link to that first child page, and removes the redundant child entry from the sidebar entirely. Needs installing into *every* Python environment `mkdocs` might run from on a given machine — worth checking `where mkdocs` / `where python` if a machine has more than one Python install (this repo's dev machine has two: installing the plugin via `py -3 -m pip install` did not make it visible to the separate `mkdocs.exe` on `PATH`, which resolved to a different Python install entirely; had to `pip install` into both).
+
 ## Deploy pipeline notes (apply to any new MkDocs + static-subproject repo)
 
 - Prefer GitHub's own `actions/configure-pages` → `actions/upload-pages-artifact`
