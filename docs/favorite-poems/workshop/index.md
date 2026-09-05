@@ -1,6 +1,10 @@
 # British Poetry Workshop
 
-Poems read for a British Poetry workshop (India Study Center, May 2021, with Dr. Sridhar Rajeshwaran, Dr. Nilufer Bharucha, and Dr. Preeti Shirodkar), compiled poet by poet from Chaucer through Eliot's *The Waste Land* -- plus a few extra poems added per poet beyond what was assigned. The syllabus's final session (Pound, Owen, Larkin, Douglas, Sitwell, Macaulay, Sinclair, Raine, Jennings) was never reached, so it isn't here.
+Poems read for a British Poetry workshop (India Study Center, May 2021, with Dr. Sridhar Rajeshwaran, Dr. Nilufer Bharucha, and Dr. Preeti Shirodkar), compiled poet by poet from Chaucer through Eliot's *The Waste Land* -- plus a few extra poems I found on the way.
+
+After the workshop, I lovingly collected these into a single document, which laid out, split into folios, got printed and then bound it myself for a copy of my own.
+
+Putting them up here so I can read them whenever I please without too much of a hunt.
 
 ## Geoffrey Chaucer
 
@@ -32,16 +36,19 @@ Poems read for a British Poetry workshop (India Study Center, May 2021, with Dr.
 
 - [To the Virgins, to Make Much of Time](robert-herrick/to-the-virgins-to-make-much-of-time.md)
 - [To Anthea, who may Command him Anything](robert-herrick/to-anthea-who-may-command-him-anything.md)
+- [To Anthea](robert-herrick/to-anthea.md)\*
 
 ## [Sir John Suckling](https://www.poetryfoundation.org/poets/sir-john-suckling)
 
 - [A Soldier](sir-john-suckling/a-soldier.md)
 - [Song: I prithee send me back my heart](sir-john-suckling/song.md)
+- [Song: I prithee spare me gentle boy](sir-john-suckling/song-i-prithee-spare-me-gentle-boy.md)\*
 
 ## Richard Lovelace
 
 - [The Snail](richard-lovelace/the-snail.md)
 - [To Althea, from Prison](richard-lovelace/to-althea-from-prison.md)
+- [The Grasshopper](richard-lovelace/the-grasshopper.md)\*
 
 ## Thomas Carew
 
@@ -83,6 +90,8 @@ Poems read for a British Poetry workshop (India Study Center, May 2021, with Dr.
 
 - [Ode on Solitude](alexander-pope/ode-on-solitude.md)
 - [On A Certain Lady At Court](alexander-pope/on-a-certain-lady-at-court.md)
+- [The Universal Prayer](alexander-pope/the-universal-prayer.md)\*
+- [You know where you did despise](alexander-pope/you-know-where-you-did-despise.md)\*
 
 ## Oliver Goldsmith
 
@@ -102,6 +111,7 @@ Poems read for a British Poetry workshop (India Study Center, May 2021, with Dr.
 - [The Clod and the Pebble](william-blake/the-clod-and-the-pebble.md)
 - [Introduction to the Songs of Experience](william-blake/introduction-to-the-songs-of-experience.md)
 - [A Poison Tree](william-blake/a-poison-tree.md)
+- [The Chimney Sweeper: A little black thing among the snow](william-blake/the-chimney-sweeper-a-little-black-thing-among-the-snow.md)\*
 
 ## Samuel Taylor Coleridge
 
@@ -112,7 +122,7 @@ Poems read for a British Poetry workshop (India Study Center, May 2021, with Dr.
 
 - [We Are Seven](william-wordsworth/we-are-seven.md)
 - [Composed upon Westminster Bridge, September 3, 1802](william-wordsworth/composed-upon-westminster-bridge-september-3-1802.md)
-- [She Dwelt among the Untrodden Ways](william-wordsworth/she-dwelt-among-the-untrodden-ways.md)
+- [She Dwelt among the Untrodden Ways](william-wordsworth/she-dwelt-among-the-untrodden-ways.md) -- also a [favourite poem](../general/wordsworth--she-dwelt-among-the-untrodden-ways.md)
 - [The Solitary Reaper](william-wordsworth/the-solitary-reaper.md)
 
 ## John Keats
@@ -195,7 +205,7 @@ Poems read for a British Poetry workshop (India Study Center, May 2021, with Dr.
 - [The Lake Isle of Innisfree](william-butler-yeats/the-lake-isle-of-innisfree.md)
 - [When You Are Old](william-butler-yeats/when-you-are-old.md)
 - [An Acre Of Grass](william-butler-yeats/an-acre-of-grass.md)
-- [He Wishes for the Cloths of Heaven](william-butler-yeats/he-wishes-for-the-cloths-of-heaven.md)
+- [He Wishes for the Cloths of Heaven](william-butler-yeats/he-wishes-for-the-cloths-of-heaven.md) -- also a [favourite poem](../general/yeats--aedh-wishes-for-the-cloths-of-heaven.md)
 - [The Four Ages of Man](william-butler-yeats/the-four-ages-of-man.md)
 - [The Second Coming](william-butler-yeats/the-second-coming.md)
 
@@ -215,5 +225,9 @@ Poems read for a British Poetry workshop (India Study Center, May 2021, with Dr.
 
 ## T. S. Eliot
 
-- [The Waste Land](t-s-eliot/the-waste-land.md) (Part I only) -- full poem is a [favourite poem](../general/eliot--the-waste-land.md)
+- [The Waste Land](t-s-eliot/the-waste-land.md) (Part I only) -- full poem is a [long poem](../long-poems/eliot--the-waste-land.md)
+
+---
+
+\* I discovered these while compiling the main set.
 

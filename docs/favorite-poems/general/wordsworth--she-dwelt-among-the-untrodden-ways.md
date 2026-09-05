@@ -2,7 +2,7 @@
 
 *William Wordsworth*
 
-[Favourite poems: She Dwelt among the Untrodden Ways](../../general/wordsworth--she-dwelt-among-the-untrodden-ways.md)
+[British Poetry workshop: She Dwelt among the Untrodden Ways](../workshop/william-wordsworth/she-dwelt-among-the-untrodden-ways.md)
 
 She dwelt among the untrodden ways  
 Beside the springs of Dove,  

@@ -2,7 +2,7 @@
 
 *Samuel Taylor Coleridge*
 
-*Also one of the [favourite poems](../../general/coleridge--kubla-khan.md).*
+[Favourite poems: Kubla Khan](../../general/coleridge--kubla-khan.md)
 
 **Or, a vision in a dream. A Fragment.**
 

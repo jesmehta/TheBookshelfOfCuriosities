@@ -1,0 +1,14 @@
+# Song, from Pippa Passes
+
+*Robert Browning*
+
+[Read on poetry.com](https://www.poetry.com/poem/30402/pippa's-song)
+
+The year's at the spring,  
+And day's at the morn;  
+Morning's at seven;  
+The hill-side's dew-pearl'd;  
+The lark's on the wing;  
+The snail's on the thorn;  
+God's in His heaven—  
+All's right with the world!

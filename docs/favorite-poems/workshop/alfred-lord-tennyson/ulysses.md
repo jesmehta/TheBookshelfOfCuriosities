@@ -2,7 +2,7 @@
 
 *Alfred, Lord Tennyson*
 
-*Also one of the [favourite poems](../../general/tennyson--ulysses.md) -- with the lines that stuck most highlighted.*
+[Favourite poems: Ulysses](../../general/tennyson--ulysses.md)
 
 It little profits that an idle king,  
 By this still hearth, among these barren crags,  

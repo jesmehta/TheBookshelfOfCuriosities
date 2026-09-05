@@ -4,7 +4,7 @@
 
 [Read on poetry.com](https://www.poetry.com/poem/29194/ozymandias)
 
-*Also read in the [British Poetry workshop](../workshop/percy-bysshe-shelley/ozymandias.md).*
+[British Poetry workshop: Ozymandias](../workshop/percy-bysshe-shelley/ozymandias.md)
 
 I met a traveller from an antique land  
 Who said: "Two vast and trunkless legs of stone  

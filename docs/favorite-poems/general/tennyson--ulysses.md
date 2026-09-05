@@ -4,7 +4,7 @@
 
 [Read on poetry.com](https://www.poetry.com/poem/1128/ulysses)
 
-*Also read in the [British Poetry workshop](../workshop/alfred-lord-tennyson/ulysses.md).*
+[British Poetry workshop: Ulysses](../workshop/alfred-lord-tennyson/ulysses.md)
 
 It little profits that an idle king,  
 By this still hearth, among these barren crags,  

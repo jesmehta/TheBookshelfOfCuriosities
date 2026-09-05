@@ -43,4 +43,4 @@ and the blind woman's tea cup.
 But don't worry, I'm not the bread and the knife.  
 You are still the bread and the knife.  
 You will always be the bread and the knife,  
-not to mention the crystal goblet andsomehowthe wine.
+not to mention the crystal goblet and—somehow—the wine.

@@ -4,7 +4,7 @@
 
 [Read on poetry.com](https://www.poetry.com/poem/34266/kubla-khan)
 
-*Also read in the [British Poetry workshop](../workshop/samuel-taylor-coleridge/kubla-khan.md).*
+[British Poetry workshop: Kubla Khan](../workshop/samuel-taylor-coleridge/kubla-khan.md)
 
 In Xanadu did Kubla Khan  
     A stately pleasure dome decree:  

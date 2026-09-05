@@ -4,7 +4,7 @@
 
 [Read on poetry.com](https://www.poetry.com/poem/154317/the-waste-land)
 
-*Part I was also read in the [British Poetry workshop](../workshop/t-s-eliot/the-waste-land.md) -- that's as far as the workshop got.*
+[British Poetry workshop: The Waste Land (Part I)](../workshop/t-s-eliot/the-waste-land.md)
 
 *Nam Sibyllam quidem Cumis ego ipse oculis meis vidi in ampulla pendere, et cum illi pueri dicerent: Σιβυλλα τι θελεις; respondebat illa: αποθανειν θελω.*
 

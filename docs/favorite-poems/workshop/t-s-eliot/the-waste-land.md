@@ -2,7 +2,7 @@
 
 *T. S. Eliot*
 
-*This is as far as the workshop got -- Part I only. The [full poem](../../general/eliot--the-waste-land.md), with Eliot's own notes, is in the favourite poems.*
+[Long poems: The Waste Land (full poem, with notes)](../../long-poems/eliot--the-waste-land.md)
 
 *FOR EZRA POUNDIL MIGLIOR FABBRO*
 

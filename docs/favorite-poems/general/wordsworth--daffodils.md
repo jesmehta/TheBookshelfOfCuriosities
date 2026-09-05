@@ -22,7 +22,7 @@ The waves beside them danced; but they
 Out-did the sparkling waves in glee:  
 A poet could not but be gay,  
 In such a jocund company:  
-I gazedand gazedbut little thought  
+I gazed—and gazed—but little thought  
 What wealth the show to me had brought:
 
 For oft, when on my couch I lie  

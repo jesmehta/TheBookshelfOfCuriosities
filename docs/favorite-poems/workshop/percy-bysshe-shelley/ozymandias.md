@@ -2,7 +2,7 @@
 
 *Percy Bysshe Shelley*
 
-*Also one of the [favourite poems](../../general/shelley--ozymandias.md).*
+[Favourite poems: Ozymandias](../../general/shelley--ozymandias.md)
 
 I met a traveller from an antique land,  
 Who said—“Two vast and trunkless legs of stone  

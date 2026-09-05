@@ -1,8 +1,8 @@
-# He Wishes for the Cloths of Heaven
+# Aedh Wishes for the Cloths of Heaven
 
 *William Butler Yeats*
 
-[Favourite poems: Aedh Wishes for the Cloths of Heaven](../../general/yeats--aedh-wishes-for-the-cloths-of-heaven.md)
+[British Poetry workshop: He Wishes for the Cloths of Heaven](../workshop/william-butler-yeats/he-wishes-for-the-cloths-of-heaven.md)
 
 Had I the heavens' embroidered cloths,  
 Enwrought with golden and silver light,  
