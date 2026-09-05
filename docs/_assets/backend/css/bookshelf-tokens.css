@@ -12,7 +12,7 @@
    bookshelf-landing.css — it has to be loaded once, site-wide, before anything
    references --bookshelf-ff-*, and this is the file every page already
    loads via mkdocs.yml's extra_css. */
-@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Syne:wght@400;700;800&family=Syne+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Syne:wght@400;700;800&family=Syne+Mono&family=Literata:ital,wght@0,400;0,700;1,400&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap");
 
 :root {
   --bookshelf-ink: #0e0c09;
@@ -32,4 +32,13 @@
   --bookshelf-ff-inst: "Instrument Serif", Georgia, serif;
   --bookshelf-ff-sans: "Syne", system-ui, sans-serif;
   --bookshelf-ff-mono: "Syne Mono", monospace;
+
+  /* Doc-page (MkDocs Material) typography — deliberately separate from
+     the four landing-page tokens above, which stay untouched. Chosen
+     after a type-specimen comparison (see DESIGN-SYSTEM.md's "Fonts"
+     section, Bookshelf docs); Spectral solo and a Spectral-titles/Libre
+     Franklin-body sans pairing were the runners-up, noted there for a
+     future change rather than implemented. */
+  --bookshelf-ff-docs-heading: "Literata", Georgia, serif;
+  --bookshelf-ff-docs-body: "Spectral", Georgia, serif;
 }

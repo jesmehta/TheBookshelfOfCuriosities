@@ -42,15 +42,21 @@ theme:
     primary: custom
     accent: indigo
   font:
-    # Matches _assets/backend/css/bookshelf-tokens.css's --bookshelf-ff-serif/
-    # --bookshelf-ff-mono — kept in sync by hand since mkdocs.yml is
-    # plain YAML and can't reference a CSS custom property. Instrument
-    # Serif and Syne (the landing page's other two fonts) stay
-    # landing-page-only decorative faces; Material's two-slot font
-    # system only has room for one text + one code face, and Libre
-    # Baskerville is the right pick for long-form essay body text.
-    text: Libre Baskerville
-    code: Syne Mono
+    # theme.font.text is a base only — Material applies it to both body
+    # and headings, but bookshelf-material.css overrides headings (h1-h3)
+    # to Literata separately, so what actually ships is Literata titles /
+    # Spectral body. Matches _assets/backend/css/bookshelf-tokens.css's
+    # --bookshelf-ff-docs-heading/--bookshelf-ff-docs-body — kept in sync
+    # by hand since mkdocs.yml is plain YAML and can't reference a CSS
+    # custom property. See DESIGN-SYSTEM.md's "Fonts" section (Bookshelf
+    # docs) for the alternatives considered (Spectral solo, Spectral
+    # titles/Libre Franklin sans body) and why this pairing won.
+    #
+    # theme.font.code is intentionally unset: Syne Mono (the landing
+    # page's mono face) was previously reused here, but no doc page
+    # actually has code blocks — Material just falls back to its own
+    # default monospace for the rare inline `code` span.
+    text: Spectral
   icon:
     logo: material/lighthouse
   # theme.favicon needs an actual file, unlike theme.icon.logo — it

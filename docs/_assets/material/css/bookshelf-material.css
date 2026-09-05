@@ -40,3 +40,22 @@
 
   --md-typeset-a-color: var(--bookshelf-amber);
 }
+
+/* theme.font.text (mkdocs.yml) sets Spectral as the base for everything
+   Material typesets, headings included. This retargets just the
+   headings to Literata — Material's font config has no separate heading
+   slot, so a plain font-family override on top is the whole mechanism.
+   Also bumps the base reading size/line-height: the type-specimen
+   comparison found Spectral at Material's default ~16px felt cramped
+   on the --bookshelf-ink background; 18.5px/1.8 gave the serif hairlines
+   room to breathe without the paragraph column overflowing 75ch. */
+.md-typeset {
+  font-size: 18.5px;
+  line-height: 1.8;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-family: var(--bookshelf-ff-docs-heading);
+}
