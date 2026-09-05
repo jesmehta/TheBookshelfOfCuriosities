@@ -35,7 +35,18 @@ https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700
 | `--ff-sans` | Syne | Labels only ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â the word "of" in the hero title, section names |
 | `--ff-mono` | Syne Mono | All mono detail ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â kicker, section numbers, tags, ticker, card category |
 
-Of these four, only two extend beyond the landing page: `mkdocs.yml`'s `theme.font` sets `text: Libre Baskerville` / `code: Syne Mono` for every Material-rendered page, since Material's font config only has two slots and `--ff-inst`/`--ff-sans` are landing-page-only decorative faces. Kept in sync with `bookshelf-tokens.css` *by hand* ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â plain YAML can't reference a CSS custom property.
+Of these four, only two extend beyond the landing page: `mkdocs.yml`'s `theme.font` sets `text: Libre Baskerville` / `code: Syne Mono` for every Material-rendered page — this was true through V4.11, but as of V4.12 the doc pages have their own font pair instead (see the note below the table). `--ff-inst`/`--ff-sans` stay landing-page-only decorative faces. Kept in sync with `bookshelf-tokens.css` *by hand* ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â plain YAML can't reference a CSS custom property.
+
+**V4.12 update:** doc pages no longer use Libre Baskerville/Syne Mono at all. A type-specimen comparison (same paragraph and a Keats stanza, set on the real `--bookshelf-ink` background) found Libre Baskerville's thin hairlines halate on the dark ground and read cramped at Material's default size. Doc-page typography now runs on its own pair of tokens:
+
+| CSS variable | Font | Role |
+|---|---|---|
+| `--bookshelf-ff-docs-heading` | Literata | `.md-typeset h1`-`h3` |
+| `--bookshelf-ff-docs-body` | Spectral, 18.5px/1.8 line-height (up from Material's ~16px default) | Everything else `.md-typeset` sets |
+
+`mkdocs.yml`'s `theme.font.text: Spectral` sets the Material-wide base (headings included); `bookshelf-material.css` overrides just `h1`-`h3` to Literata, since Material's font config has no separate heading slot. `theme.font.code` is now unset — no doc page has code blocks, so Syne Mono wasn't doing anything there beyond the landing page's own decorative use of it.
+
+Runners-up, not implemented but worth revisiting if this pairing stops working: Spectral solo (no Literata split) at the same 18.5px, and a sans-body pairing (Spectral titles / Libre Franklin body) if the serif body ever feels wrong for a stretch of content. Comparison specimen (all six options, same sample text, same dark background): <https://claude.ai/code/artifact/c6943eda-ae74-4bb8-9a4b-323affe227a8>
 
 ---
 

@@ -119,6 +119,19 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.12** — Replaced doc-page typography: `theme.font.text` (`mkdocs.yml`)
+  switched from Libre Baskerville to Spectral, with a new
+  `bookshelf-material.css` rule retargeting `.md-typeset h1`-`h3` to
+  Literata (Material has no separate heading font slot) and bumping base
+  body size/line-height to 18.5px/1.8. `theme.font.code` (Syne Mono) was
+  dropped — no doc page has code blocks. New tokens
+  `--bookshelf-ff-docs-heading`/`--bookshelf-ff-docs-body` in
+  `bookshelf-tokens.css`, separate from the landing page's own
+  `--ff-serif` (unchanged, still Libre Baskerville). Landing page and the
+  standalone `scifi/`/`asimov/` sub-sites are untouched. Decided from a
+  type-specimen comparison artifact; alternatives considered (Spectral
+  solo, Spectral titles/Libre Franklin sans body) are noted in
+  `DESIGN-SYSTEM.md`'s "Fonts" section for future revisiting.
 - **V4.11** — Reorganized `docs/assets/`/`docs/stylesheets/` into
   `docs/_assets/backend/{css,js}/`, `docs/_assets/material/css/`, and
   `docs/_images/`, matching fffx's/Cabinet's content-vs-system split (a
