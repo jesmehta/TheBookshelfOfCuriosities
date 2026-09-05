@@ -12,6 +12,10 @@ nav:
   - Favourite Poems: favorite-poems/general/index.md
   - Long Poems: favorite-poems/long-poems/index.md
   - British Poetry Workshop: favorite-poems/workshop/index.md
+  - My Writings: my-writings/index.md
+  - My Essays: my-writings/essays/index.md
+  - My Fiction: my-writings/fiction/index.md
+  - My Poems: my-writings/poems/index.md
 
 extra:
   # Set your own social media below (or remove)
