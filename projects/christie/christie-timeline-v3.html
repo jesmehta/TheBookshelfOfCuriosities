@@ -51,12 +51,12 @@ html,body{margin:0;padding:0;background:var(--ink);color:var(--ivory);font-famil
 body{background-image:
     radial-gradient(ellipse at 20% -10%, var(--bg-glow-1), transparent 40%),
     radial-gradient(ellipse at 90% 110%, var(--bg-glow-2), transparent 45%);}
-.wrap{max-width:1440px;margin:0 auto;padding:36px 28px 80px;position:relative;}
+.wrap{max-width:1520px;margin:0 auto;padding:36px 28px 80px;position:relative;}
 
 .deco-frame{position:relative; border:1px solid var(--frame-outer);}
 .deco-frame::before{content:""; position:absolute; inset:5px; border:1px solid var(--frame-inner); pointer-events:none;}
 
-.theme-toggle{position:absolute; top:36px; right:28px; font-family:'Josefin Sans', sans-serif; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-faint); background:transparent; border:1px solid var(--rule); padding:6px 12px; cursor:pointer;}
+.theme-toggle{position:absolute; z-index:5; top:36px; right:28px; font-family:'Josefin Sans', sans-serif; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-faint); background:transparent; border:1px solid var(--rule); padding:6px 12px; cursor:pointer;}
 .theme-toggle:hover{border-color:var(--gold-dim); color:var(--ivory);}
 
 .masthead{position:relative; padding-bottom:16px; margin-bottom:26px; text-align:center;}
@@ -81,7 +81,7 @@ body{background-image:
   background-size: 18px 9px; background-position: 0 0; background-repeat:repeat-x;}
 
 .layout{display:flex; align-items:flex-start; gap:22px;}
-.sidebar{flex:0 0 220px; display:flex; flex-direction:column; gap:20px; background:var(--panel); padding:18px 18px 20px; position:sticky; top:20px;}
+.sidebar{flex:0 0 232px; display:flex; flex-direction:column; gap:20px; background:var(--panel); padding:18px 18px 20px; position:sticky; top:20px;}
 .content{flex:1 1 auto; min-width:0;}
 
 .filter-label{font-family:'Josefin Sans', sans-serif; font-weight:600; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); display:block; margin-bottom:9px;}
@@ -118,12 +118,16 @@ svg#timeline{display:block;}
 .dot-mark{cursor:pointer; stroke:var(--ink); stroke-width:0.8; transition:opacity .15s;}
 .dot-mark.dim{opacity:0.15;}
 .dot-mark.selected{stroke:var(--select-stroke); stroke-width:1.6;}
+.dot-label{font-family:'Josefin Sans', sans-serif; font-weight:600; font-size:12px; letter-spacing:0.015em; fill:var(--ivory); paint-order:stroke; stroke:var(--panel); stroke-width:3px; stroke-linejoin:round; pointer-events:none;}
+.dot-label.dim{opacity:0.15;}
+.leader-line{stroke:var(--gold-dim); stroke-width:0.8; stroke-dasharray:1.5 2.5; opacity:0.5; pointer-events:none;}
+.leader-line.dim{opacity:0.1;}
 
 .tooltip{position:fixed; z-index:40; pointer-events:none; opacity:0; transition:opacity .1s; max-width:280px; background:var(--ink); border:1px solid var(--gold-dim); padding:10px 12px; font-size:13px; line-height:1.5; font-family:'Cormorant Garamond',serif; box-shadow:0 12px 30px rgba(0,0,0,.5);}
 .tooltip b{display:block; font-style:italic; color:var(--gold-bright); margin-bottom:3px; font-size:14.5px;}
 .tooltip .tt-meta{font-family:'Josefin Sans', sans-serif; font-size:10.5px; letter-spacing:0.02em; color:var(--ivory-dim);}
 
-table{width:100%; border-collapse:collapse; font-size:14.5px;}
+table{width:100%; border-collapse:collapse; font-size:15px; font-family:'Josefin Sans', sans-serif; font-weight:400;}
 thead th{text-align:left; font-family:'Josefin Sans', sans-serif; font-weight:600; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-dim); border-bottom:1px solid var(--rule); padding:10px 12px; cursor:pointer; white-space:nowrap;}
 thead th:hover{color:var(--gold-bright);}
 thead th.sorted::after{content:' ▾'; color:var(--gold-bright);}
@@ -131,10 +135,10 @@ tbody tr{border-bottom:1px solid var(--rule-soft); cursor:pointer; transition:ba
 tbody tr:hover{background:rgba(240,230,207,0.03);}
 tbody tr.selected{background:rgba(201,162,39,0.09);}
 tbody td{padding:10px 12px; vertical-align:top; color:var(--ivory-dim);}
-tbody td.title-cell{color:var(--ivory); font-style:italic;}
+tbody td.title-cell{color:var(--ivory); font-style:italic; font-family:'Cormorant Garamond',serif; font-size:16.5px;}
 tbody tr.dim{opacity:0.28;}
 
-@media (max-width:900px){ .layout{flex-direction:column;} .sidebar{flex:1 1 auto; width:100%;} }
+@media (max-width:900px){ .layout{flex-direction:column;} .sidebar{flex:1 1 auto; position:static; width:100%;} }
 </style>
 </head>
 <body>
@@ -142,7 +146,7 @@ tbody tr.dim{opacity:0.28;}
   <button class="theme-toggle" id="themeToggle">Light</button>
   <div class="masthead">
     <div class="masthead-title">Agatha Christie</div>
-    <div class="masthead-tagline">Murder Across Time and Space</div>
+    <div class="masthead-tagline">Murder, She Wrote</div>
     <div class="chevron-rule"></div>
   </div>
 
@@ -341,13 +345,13 @@ function renderFilterBar(){
 function renderLegend(){
   document.getElementById("legend").innerHTML = `
     <div class="legend-group">
-      <span class="legend-title">Shape · format</span>
+      <span class="legend-title">Format</span>
       <span class="legend-item"><span class="legend-swatch"></span> Novel</span>
       <span class="legend-item"><span class="legend-swatch tri"></span> Short story</span>
       <span class="legend-item"><span class="legend-swatch circ"></span> Collection</span>
     </div>
     <div class="legend-group">
-      <span class="legend-title">Colour · location</span>
+      <span class="legend-title">Location</span>
       <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-london)"></span> London</span>
       <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-uk)"></span> UK</span>
       <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-europe)"></span> Continent/Orient</span>
@@ -392,29 +396,52 @@ function bisectionRungs(maxMag, count){
   return rungs;
 }
 
-// Decluttering the Poirot 1933-38 run. The first version assigned a
-// vertical zigzag offset (0, +s, -s, +2s, -2s, ...) in ascending-x order
-// — looked wrong in practice: magnitude grows monotonically with index
-// while walking left-to-right, so it draws two diagonal "ramps" (one up,
-// one down), not a scatter. Fixed with a bisection ladder instead: every
-// new point lands as far as possible from every point placed so far,
-// which reads as a genuine scatter regardless of x-order.
-function computeJitter(laneAll, xFn){
+// Group points that land within `threshold` px of each other along the
+// year axis and spread them vertically so dense years (e.g. Poirot's
+// 1933-38 run) don't render as a single overlapping blob. Marks always
+// stay on their correct year's x — only the y offset varies — so
+// connector lines stay strictly vertical (graphical correctness first).
+// Three layouts:
+//   "scatter"   — bisection ladder, alternating + and - for each rung
+//                 (0, +5, -5, +10, -10, +2.5, -2.5, ...), which scatters
+//                 the cluster outward from the centreline instead of
+//                 ramping one side up and the other side down.
+//   "fishbone"  — ranked rungs alternate above/below the centreline,
+//                 stepping outward symmetrically (rung 1 up, rung 1 down,
+//                 rung 2 up, rung 2 down, ...) — a comb/staircase shape
+//                 rather than a scatter, but still purely vertical.
+//   "cascade"   — a single-direction fan (top-to-bottom, like a spread
+//                 hand of cards): monotonically increasing y offset in
+//                 publication order, so overlaps read as a deliberate
+//                 stack rather than a coincidence.
+// Returns a plain y-offset Map keyed by item id.
+function computeJitter(laneAll, xFn, layout){
   const items = [...laneAll].sort((a,b)=> a.yr-b.yr || a.id-b.id);
   const threshold = 15, maxMag = 20;
-  const offsets = new Map();
+  const y = new Map();
   let cluster = [], lastX = null;
   const flush = ()=>{
     const n = cluster.length;
-    if(n===1){ offsets.set(cluster[0].id, 0); }
-    else if(n>1){
+    if(n===0) return;
+    if(n===1){ y.set(cluster[0].id, 0); }
+    else if(layout === "fishbone"){
+      const stepY = 10;
+      cluster.forEach((d,i)=>{
+        const rank = Math.ceil((i+1)/2);
+        const sign = (i%2===0) ? 1 : -1;
+        y.set(d.id, sign*rank*stepY);
+      });
+    } else if(layout === "cascade"){
+      const stepY = 9;
+      cluster.forEach((d,i)=>{ y.set(d.id, (i-(n-1)/2)*stepY); });
+    } else {
       const seq = [0];
       for(const m of bisectionRungs(maxMag, Math.ceil((n-1)/2))){
         if(seq.length>=n) break;
         seq.push(m);
         if(seq.length<n) seq.push(-m);
       }
-      cluster.forEach((d,i)=> offsets.set(d.id, seq[i]));
+      cluster.forEach((d,i)=>{ y.set(d.id, seq[i]); });
     }
     cluster = [];
   };
@@ -424,8 +451,86 @@ function computeJitter(laneAll, xFn){
     cluster.push(d); lastX = xx;
   });
   flush();
-  return offsets;
+  return y;
 }
+const LANE_LAYOUT = { "Hercule Poirot":"fishbone", "Parker Pyne":"cascade" };
+function truncateTitle(s, n){
+  const clean = s.replace(/^"|"$/g,"");
+  return clean.length > n ? clean.slice(0, n-1)+"…" : clean;
+}
+
+// Label placement, ported from the SciFi Golden Age timeline's
+// computeLabelLayout (TheBookshelfOfCuriosities/scifi/script.js): for each
+// item, try the side (right, then left, or vice-versa depending on which
+// has room) and a small set of vertical tracks close to the mark, placing
+// on the first combination whose horizontal interval doesn't collide with
+// anything already placed on that same side+track. Labels that fit no
+// track are dropped rather than forced into an overlap — the point is to
+// stay close to the mark, not to guarantee every label prints somewhere.
+function approxTextWidth(label, size){ return Math.max(28, Math.round(label.length*(size*0.62))); }
+function computeLabelLayout(items, xFn, bounds, opts){
+  opts = opts || {};
+  const pad = opts.pad || 6;
+  const labelPad = opts.labelPad || 10;
+  const offsets = opts.trackOffsets || [0];
+  const sorted = [...items].sort((a,b)=> a.yr-b.yr || a.id-b.id);
+  const tracks = {};
+  const placed = [];
+  const ensureTrack = k=>{ if(!tracks[k]) tracks[k] = []; return tracks[k]; };
+  const fits = (intervals,start,end)=> intervals.every(iv=> end < iv.start-pad || start > iv.end+pad);
+  sorted.forEach(d=>{
+    const label = truncateTitle(d.t, opts.maxChars || 30);
+    const width = approxTextWidth(label, opts.fontSize || 12);
+    const xx = xFn(d.yr);
+    const canRight = xx+labelPad+width <= bounds.maxX;
+    const canLeft = xx-labelPad-width >= bounds.minX;
+    const preferred = (!canLeft || (canRight && xx < (bounds.minX+bounds.maxX)/2)) ? "R" : "L";
+    const sideOrder = preferred==="R" ? ["R","L"] : ["L","R"];
+    let chosen = null;
+    for(const side of sideOrder){
+      if(side==="R" && !canRight) continue;
+      if(side==="L" && !canLeft) continue;
+      for(const offset of offsets){
+        const labelX = side==="R" ? xx+labelPad : xx-labelPad;
+        const start = side==="R" ? labelX : labelX-width;
+        const end = side==="R" ? labelX+width : labelX;
+        const intervals = ensureTrack(side+"_"+offset);
+        if(fits(intervals,start,end)){
+          intervals.push({start,end}); intervals.sort((a,b)=>a.start-b.start);
+          chosen = {d, label, markX:xx, labelX, offset, side};
+          break;
+        }
+      }
+      if(chosen) break;
+    }
+    if(chosen) placed.push(chosen);
+  });
+  return placed;
+}
+
+// ---- Landmark titles: the only ones that ever get an inline chart label.
+// Everything else relies on the hover tooltip + table — with 87 entries
+// (33 of them Poirot) printing every title on the chart itself is either
+// overlapping the spine or too crowded to read regardless of layout.
+const HIT_TITLES = new Set([
+  "Murder on the Orient Express",
+  "The Murder of Roger Ackroyd",
+  "And Then There Were None",
+  "Death on the Nile",
+]);
+function computeLandmarkIds(){
+  const ids = new Set();
+  const byYr = (a,b)=> a.yr-b.yr || a.id-b.id;
+  const overall = [...DATA].sort(byYr);
+  ids.add(overall[0].id); ids.add(overall[overall.length-1].id);
+  ["Hercule Poirot","Miss Marple"].forEach(lane=>{
+    const items = DATA.filter(d=>d.p.includes(lane)).sort(byYr);
+    if(items.length){ ids.add(items[0].id); ids.add(items[items.length-1].id); }
+  });
+  DATA.forEach(d=>{ if(HIT_TITLES.has(d.t)) ids.add(d.id); });
+  return ids;
+}
+const LANDMARK_IDS = computeLandmarkIds();
 
 let tt;
 function tip(evt, html){
@@ -449,11 +554,29 @@ function renderTimeline(){
   const left = 168, right = 40, top = 34, lifeRowH = 56, rowH = 56;
   const plotW = Math.max(1000, (end-start)*8);
   const w = left+plotW+right;
-  const h = top + lifeRowH + LANES.length*rowH + 24;
-  svg.setAttribute("width", w); svg.setAttribute("height", h);
-  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
   const x = yr => left + ((yr-start)/(end-start))*plotW;
+
+  // Per-lane jitter maps, computed before layout sizing: a lane whose
+  // densest cluster needs a wide vertical spread (Poirot's 1933-38 run)
+  // gets a taller band instead of letting its marks overflow into the
+  // lane above/below — height grows to absorb overlap that x-spacing
+  // alone can't resolve, rather than clipping or cramming.
+  const jitterByLane = new Map();
+  const laneHeight = new Map();
+  LANES.forEach(lane=>{
+    const jitter = computeJitter(DATA.filter(d=>d.p.includes(lane)), x, LANE_LAYOUT[lane]);
+    jitterByLane.set(lane, jitter);
+    let maxAbs = 0;
+    jitter.forEach(v=>{ if(Math.abs(v) > maxAbs) maxAbs = Math.abs(v); });
+    laneHeight.set(lane, Math.max(rowH, maxAbs*2 + 40));
+  });
+  const laneTop = new Map();
+  let cursorY = top + lifeRowH;
+  LANES.forEach(lane=>{ laneTop.set(lane, cursorY); cursorY += laneHeight.get(lane); });
+  const h = cursorY + 24;
+  svg.setAttribute("width", w); svg.setAttribute("height", h);
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
 
   // decade gridlines spanning the whole chart height
   let gStart = Math.ceil(start/10)*10;
@@ -498,15 +621,9 @@ function renderTimeline(){
   lifeSub.textContent = `${CHRISTIE_LIFE.bornLabel} – ${CHRISTIE_LIFE.diedLabel}`;
   svg.appendChild(lifeSub);
 
-  // per-lane jitter maps, shared between the connector pass and the dot pass
-  const jitterByLane = new Map();
-  LANES.forEach(lane=>{
-    jitterByLane.set(lane, computeJitter(DATA.filter(d=>d.p.includes(lane)), x));
-  });
-
   // ---- connector threads from the spine down into each lane ----
-  LANES.forEach((lane, idx)=>{
-    const baseY = top + lifeRowH + idx*rowH + rowH/2;
+  LANES.forEach((lane)=>{
+    const baseY = laneTop.get(lane) + laneHeight.get(lane)/2;
     const jitter = jitterByLane.get(lane);
     DATA.filter(d=>d.p.includes(lane)).forEach(d=>{
       const xx = x(d.yr);
@@ -522,14 +639,15 @@ function renderTimeline(){
 
   // ---- protagonist lanes ----
   LANES.forEach((lane, idx)=>{
-    const baseY = top + lifeRowH + idx*rowH + rowH/2;
+    const laneY = laneTop.get(lane), laneH = laneHeight.get(lane);
+    const baseY = laneY + laneH/2;
     const jitter = jitterByLane.get(lane);
     const laneAll = DATA.filter(d=>d.p.includes(lane));
     const laneVisible = laneAll.filter(matches);
 
     const band = document.createElementNS(svgNS,"rect");
     band.setAttribute("class","lane-band"+(idx%2?" alt":""));
-    band.setAttribute("x",0); band.setAttribute("y", top+lifeRowH+idx*rowH); band.setAttribute("width", w); band.setAttribute("height", rowH);
+    band.setAttribute("x",0); band.setAttribute("y", laneY); band.setAttribute("width", w); band.setAttribute("height", laneH);
     svg.appendChild(band);
 
     if(laneAll.length){
@@ -561,6 +679,51 @@ function renderTimeline(){
       g.onmouseleave = untip;
       g.onclick = ()=> selectBook(d.id);
       svg.appendChild(g);
+    });
+
+  });
+
+  // ---- landmark labels: stay next to the mark, not floating elsewhere ----
+  // Titles print only for a curated landmark set (corpus/lane firsts+lasts,
+  // plus a short hand-picked HIT_TITLES list) — with 87 entries, labeling
+  // everything is unreadable regardless of layout. Everything else still
+  // has the hover tooltip + table below. Placement itself is ported from
+  // the SciFi Golden Age timeline's computeLabelLayout: try right of the
+  // mark, then left, across a few close vertical tracks, and only move as
+  // far as the nearest free track requires — never further. A short
+  // leader line is drawn whenever a label lands off-track (offset !== 0)
+  // so it's still visually tied to its mark.
+  LANES.forEach(lane=>{
+    const laneY = laneTop.get(lane), laneH = laneHeight.get(lane);
+    const baseY = laneY + laneH/2;
+    const jitter = jitterByLane.get(lane);
+    const landmarks = DATA.filter(d=> d.p.includes(lane) && LANDMARK_IDS.has(d.id));
+    if(!landmarks.length) return;
+    const maxTrack = Math.max(0, laneH/2 - 16);
+    const trackOffsets = [0];
+    for(let r=14; r<=maxTrack; r+=14) trackOffsets.push(-r, r);
+    const placed = computeLabelLayout(landmarks, x, {minX:left+6, maxX:w-right-6}, {trackOffsets, maxChars:30, fontSize:12});
+    placed.forEach(p=>{
+      // Track offsets are relative to the lane's shared baseline (baseY),
+      // not this mark's own jitter — two labels using different tracks
+      // must land at genuinely different absolute y, or the collision
+      // check above (which assumes that) is meaningless. The mark itself
+      // keeps its real jittered position; the leader line bridges the gap.
+      const markY = baseY + (jitter.get(p.d.id)||0);
+      const labelY = baseY + p.offset;
+      const dim = !matches(p.d);
+      const leader = document.createElementNS(svgNS,"line");
+      leader.setAttribute("class","leader-line"+(dim?" dim":""));
+      leader.setAttribute("x1", p.labelX); leader.setAttribute("y1", labelY);
+      leader.setAttribute("x2", p.markX); leader.setAttribute("y2", markY);
+      svg.appendChild(leader);
+      const label = document.createElementNS(svgNS,"text");
+      label.setAttribute("class","dot-label"+(dim?" dim":""));
+      label.setAttribute("x", p.labelX);
+      label.setAttribute("y", labelY+4);
+      label.setAttribute("text-anchor", p.side==="R" ? "start" : "end");
+      label.textContent = p.label;
+      svg.appendChild(label);
     });
   });
 }
