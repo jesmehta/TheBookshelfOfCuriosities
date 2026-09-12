@@ -163,6 +163,7 @@ tbody tr.dim{opacity:0.28;}
             <th data-key="loc">In‑universe location</th>
             <th data-key="time">In‑universe time</th>
             <th data-key="realWorld">Closest real place</th>
+            <th data-key="coll">First collected in</th>
           </tr>
         </thead>
         <tbody id="tl-tbody"></tbody>
@@ -247,17 +248,17 @@ const DATA = [
 {t:"Destination Unknown", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1954, loc:"Morocco", time:"Cold War era", panel:"europe", region:"The Continent and the Orient", rw:"Casablanca / Fez, Morocco"},
 {t:"Passenger to Frankfurt", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1970, loc:"Frankfurt + multiple capitals", time:"1970, Cold War", panel:"europe", region:"The Continent and the Orient", rw:"Frankfurt, Germany"},
 {t:"The Mysterious Mr Quin (English tales)", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story collection", yr:1930, loc:"Various English country houses", time:"1920s", panel:"uk", region:"UK", rw:"Composite — not specifically located"},
-{t:"\"The Soul of the Croupier\"", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Monte Carlo", time:"1920s", panel:"europe", region:"The Continent and the Orient", rw:"Monaco"},
-{t:"\"The World's End\"", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Corsica", time:"1920s", panel:"europe", region:"The Continent and the Orient", rw:"Corsica"},
+{t:"\"The Soul of the Croupier\"", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Monte Carlo", time:"1920s", panel:"europe", region:"The Continent and the Orient", rw:"Monaco", coll:"The Mysterious Mr Quin (1930)"},
+{t:"\"The World's End\"", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Corsica", time:"1920s", panel:"europe", region:"The Continent and the Orient", rw:"Corsica", coll:"The Mysterious Mr Quin (1930)"},
 {t:"Parker Pyne Investigates (client cases)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story collection", yr:1934, loc:"London office, Richmond Street", time:"Early 1930s", panel:"london", region:"London", rw:"Central London"},
-{t:"\"Have You Got Everything You Want?\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Orient Express train", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Simplon-Orient-Express route, Europe"},
-{t:"\"The Gate of Baghdad\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Baghdad, Iraq", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Baghdad, Iraq"},
-{t:"\"The House at Shiraz\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Shiraz / Teheran, Persia", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Shiraz, Iran"},
-{t:"\"The Pearl of Price\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Petra, Jordan", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Petra, Jordan"},
-{t:"\"Death on the Nile\" (short story)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Nile cruise, Egypt", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Nile River, Egypt"},
-{t:"\"The Oracle at Delphi\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Delphi, Greece", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Delphi, Greece"},
-{t:"\"The Regatta Mystery\" (Parker Pyne)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1936, loc:"Dartmouth Harbour, Devon", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Dartmouth, Devon"},
-{t:"\"Problem at Pollensa Bay\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1935, loc:"Pollença Bay, Mallorca", time:"Mid-1930s", panel:"europe", region:"The Continent and the Orient", rw:"Pollença, Mallorca, Spain"},
+{t:"\"Have You Got Everything You Want?\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Orient Express train", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Simplon-Orient-Express route, Europe", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"The Gate of Baghdad\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Baghdad, Iraq", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Baghdad, Iraq", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"The House at Shiraz\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Shiraz / Teheran, Persia", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Shiraz, Iran", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"The Pearl of Price\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Petra, Jordan", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Petra, Jordan", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"Death on the Nile\" (short story)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Nile cruise, Egypt", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Nile River, Egypt", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"The Oracle at Delphi\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Delphi, Greece", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Delphi, Greece", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"The Regatta Mystery\" (Parker Pyne)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1936, loc:"Dartmouth Harbour, Devon", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Dartmouth, Devon", coll:"The Regatta Mystery and Other Stories (1939, US)"},
+{t:"\"Problem at Pollensa Bay\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1935, loc:"Pollença Bay, Mallorca", time:"Mid-1930s", panel:"europe", region:"The Continent and the Orient", rw:"Pollença, Mallorca, Spain", coll:"The Regatta Mystery and Other Stories (1939, US)"},
 {t:"Poirot Investigates", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1924, loc:"Mostly London, some international", time:"Early 1920s", panel:"london", region:"London", rw:"Central London (Poirot's early flat)"},
 {t:"The Listerdale Mystery", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1934, loc:"Various English settings", time:"Early 1930s", panel:"uk", region:"UK", rw:"Unconfirmed"},
 {t:"The Labours of Hercules", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1947, loc:"Various, London + Europe (myth-themed)", time:"Mid-1940s", panel:"europe", region:"The Continent and the Orient", rw:"Mixed — several explicitly European"},
@@ -576,6 +577,7 @@ const COLS = [
   {key:"title", get:d=>d.t}, {key:"protagonist", get:d=>d.p.join(", ")}, {key:"type", get:d=>d.ty},
   {key:"format", get:d=>d.f}, {key:"year", get:d=>d.yr}, {key:"region", get:d=>d.region},
   {key:"loc", get:d=>d.loc}, {key:"time", get:d=>d.time}, {key:"realWorld", get:d=>d.rw},
+  {key:"coll", get:d=>d.coll || ""},
 ];
 function renderTable(){
   const thead = document.querySelector("#tl-table thead tr");
@@ -603,7 +605,7 @@ function renderTable(){
     tr.innerHTML = `
       <td class="title-cell">${d.t}</td>
       <td>${d.p.join(", ")}</td><td>${d.ty}</td><td>${d.f}</td><td>${d.yr}</td>
-      <td>${d.region}</td><td>${d.loc}</td><td>${d.time}</td><td>${d.rw}</td>
+      <td>${d.region}</td><td>${d.loc}</td><td>${d.time}</td><td>${d.rw}</td><td>${d.coll || "—"}</td>
     `;
     tr.onclick = ()=> selectBook(d.id);
     tbody.appendChild(tr);
