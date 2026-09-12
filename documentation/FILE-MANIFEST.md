@@ -27,7 +27,7 @@ the other two repos.
 | `mkdocs.yml` | MkDocs site config: nav tree, theme (slate scheme, custom primary via token override), plugins (`mkdocs-video`, `section-index` — see `LANDING-PAGE-NOTES.md` bug #8 for why the latter is needed), `extra_css`. |
 | `requirements.txt` | Python deps for `mkdocs build`/`mkdocs serve`. If this machine has more than one Python install, `mkdocs` on `PATH` may resolve to a different one than `pip`/`py -3` — check `where mkdocs` vs `where python`/`py -3 -m pip show mkdocs` before assuming a package installed in one is visible to the other. |
 | `CNAME` | Custom domain (`bookshelf.cabinetofcuriosities.in`) for GitHub Pages. |
-| `.github/workflows/deploy.yml` | CI: `mkdocs build --site-dir public`, copies standalone static sub-projects (`scifi/`, `asimov/`) into `public/`, then `actions/configure-pages` → `upload-pages-artifact` → `deploy-pages`. |
+| `.github/workflows/deploy.yml` | CI: `mkdocs build --site-dir public`, copies every standalone static sub-project under `projects/` into `public/`, then `actions/configure-pages` → `upload-pages-artifact` → `deploy-pages`. |
 | `run-bookshelf-editor.bat` | Double-click launcher for `tools/bookshelf-editor.js` (the Admin Dash). |
 | `.gitignore` | Ignores the versioned `.zip` archives under `zips/` (see below) and standard editor/OS cruft. |
 
@@ -95,13 +95,15 @@ actual back-and-forth that produced it.
 
 Reorganized 2026-09-05 around Cabinet's/fffx's own convention: a leading
 underscore marks "supporting files, not a browsable page." Content page
-folders (`docs/index.html`, `docs/agatha.md`) were not relocated —
-MkDocs derives a page's URL from its `docs/` path.
+folders (`docs/index.html`) were not relocated — MkDocs derives a page's
+URL from its `docs/` path. `docs/agatha.md` (the old "Agatha Christie"
+nav placeholder stub) was removed 2026-09-12 once Christie went live as
+`projects/christie/` with a real absolute-URL nav entry, matching how
+`scifi`/`asimov` are linked.
 
 | Path | Role |
 |---|---|
 | `docs/index.html` | Standalone landing page — the firefly-lit gallery-wall field. Not rendered through Material's theme; MkDocs copies it through byte-for-byte. |
-| `docs/agatha.md` | Placeholder stub for the "Agatha Christie" nav entry — one line of text, no real content yet. |
 | `docs/favorite-poems/` | Plain Material content pages — poems by other poets. See `documentation/content/favorite-poems/FAVORITE-POEMS-CONTENT.md` for the `general/`/`long-poems/`/`workshop/` sub-collection layout and page conventions. |
 | `docs/my-writings/` | Plain Material content pages — my own essays/miscellany/poems. See `documentation/content/my-writings/MY-WRITINGS-CONTENT.md`. |
 | `docs/_images/` | `asimov.jpg`, `favicon.svg`, `hamzanama.jpg`, `scifi.jpg` — nav/card thumbnail images. |
@@ -125,15 +127,20 @@ fffx's own split.
 | `backend/js/bookshelf-reveal.js` | Scroll/reveal animation logic. |
 | `material/css/bookshelf-material.css` | Maps `bookshelf-tokens.css`'s values onto MkDocs Material's own `--md-*` variables, so every non-landing page matches the landing page's palette. |
 
-## Standalone static sub-projects (no MkDocs build step)
+## `projects/` — standalone static sub-projects (no MkDocs build step)
 
-Copied into `public/` verbatim by `.github/workflows/deploy.yml`, served
-at their own path (`/scifi/`, `/asimov/`) alongside the MkDocs site.
+Copied into `public/` verbatim by `.github/workflows/deploy.yml` (one
+`cp -r` per subfolder, no allow-list — see README's "Adding a new
+standalone static project"), served at their own path (`/scifi/`,
+`/asimov/`, `/christie/`) alongside the MkDocs site. Moved under this
+parent folder 2026-09-12 when Christie became the third such project,
+firing the "root clutter threshold" plan recorded in README.md.
 
 | Path | Role |
 |---|---|
-| `scifi/` | "The Golden Age of SciFi" interactive timeline — own `README.md`/`ToDo.md`, own `data/` (TSV + generated JSON), own `index.html`/`script.js`/`style.css`. Independent of the Bookshelf TSV/Admin Dash pipeline entirely. |
-| `asimov/` | "Isaac Asimov and the Foundation Series" timeline — own four-file `Readme_N_*.md` doc set (overview, design brief, working context, todo/decisions — an earlier, differently-shaped take on the same four-tier documentation principle), `app.js`, `data.js`, `index.html`, `style.css`. |
+| `projects/scifi/` | "The Golden Age of SciFi" interactive timeline — own `README.md`/`ToDo.md`, own `data/` (TSV + generated JSON), own `index.html`/`script.js`/`style.css`. Independent of the Bookshelf TSV/Admin Dash pipeline entirely. |
+| `projects/asimov/` | "Isaac Asimov and the Foundation Series" timeline — own four-file `Readme_N_*.md` doc set (overview, design brief, working context, todo/decisions — an earlier, differently-shaped take on the same four-tier documentation principle), `app.js`, `data.js`, `index.html`, `style.css`. |
+| `projects/christie/` | "Agatha Christie — Murder, She Wrote" — timeline + table (`christie-timeline-v3.html`), plus a separate map atlas (`christie-atlas-v2.html`, not yet wired into the tab UI), own `documentation.md`, `fonts/`, `tests/`. See `documentation/christie/conversation-christie.md` for the origin conversation. |
 
 ## Archival / not-live
 
