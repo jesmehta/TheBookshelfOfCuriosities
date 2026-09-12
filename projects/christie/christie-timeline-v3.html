@@ -5,127 +5,151 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Christie Timeline — Bookshelf of Curiosities</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Syne:wght@500;700;800&family=Syne+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Josefin+Sans:wght@400;500;600;700&display=swap');
 
 :root{
-  --ink:#100e0b; --panel:#171310; --panel-2:#1d1811;
-  --rule: rgba(238,227,196,0.16); --rule-soft: rgba(238,227,196,0.08);
-  --ivory:#ece2c6; --ivory-dim: rgba(236,226,198,0.58); --ivory-faint: rgba(236,226,198,0.32);
-  --gold:#c9a227; --gold-bright:#e0bd45; --gold-dim: rgba(201,162,39,0.4);
-  --loc-london:#e0bd45; --loc-uk:#7fae8e; --loc-europe:#c1653b; --loc-elsewhere:#8d8577;
+  --ink:#0a0a07; --panel:#141210; --panel-2:#1a1713;
+  --rule: rgba(224,201,138,0.22); --rule-soft: rgba(224,201,138,0.1);
+  --ivory:#f0e6cf; --ivory-dim: rgba(240,230,207,0.62); --ivory-faint: rgba(240,230,207,0.36);
+  --gold:#c9a227; --gold-bright:#e8c04a; --gold-dim: rgba(201,162,39,0.45);
+  --loc-london:#e8c04a; --loc-uk:#2f9169; --loc-europe:#a3314a; --loc-elsewhere:#1f8f95;
+  --select-stroke:#fff;
+  --frame-outer: var(--gold-dim); --frame-inner: var(--rule-soft);
+  --bg-glow-1: rgba(201,162,39,0.07); --bg-glow-2: rgba(31,143,149,0.05);
+}
+html[data-theme="light"]{
+  /* First pass at a light theme — same gold tone used for both frame
+     lines front-to-back, no independent contrast swap yet. */
+  --ink:#f6efd9; --panel:#fffcf2; --panel-2:#efe1bd;
+  --rule: rgba(169,116,10,0.3); --rule-soft: rgba(169,116,10,0.16);
+  --ivory:#4a3a10; --ivory-dim: rgba(74,58,16,0.7); --ivory-faint: rgba(74,58,16,0.42);
+  --gold:#a9740a; --gold-bright:#c68a0d; --gold-dim: rgba(169,116,10,0.4);
+  --loc-london:#c68a0d; --loc-uk:#3f8f63; --loc-europe:#a3314a; --loc-elsewhere:#1f8f95;
+  --select-stroke:#4a3a10;
+  --frame-outer: var(--gold-dim); --frame-inner: var(--gold-dim);
+  --bg-glow-1: rgba(169,116,10,0.08); --bg-glow-2: rgba(31,143,149,0.05);
 }
 *{box-sizing:border-box;}
-html,body{margin:0;padding:0;background:var(--ink);color:var(--ivory);font-family:'Libre Baskerville',serif;}
+html,body{margin:0;padding:0;background:var(--ink);color:var(--ivory);font-family:'Cormorant Garamond',serif;}
 body{background-image:
-    radial-gradient(ellipse at 20% -10%, rgba(201,162,39,0.06), transparent 40%),
-    radial-gradient(ellipse at 90% 110%, rgba(201,162,39,0.05), transparent 45%);}
-.wrap{max-width:1440px;margin:0 auto;padding:36px 28px 80px;}
+    radial-gradient(ellipse at 20% -10%, var(--bg-glow-1), transparent 40%),
+    radial-gradient(ellipse at 90% 110%, var(--bg-glow-2), transparent 45%);}
+.wrap{max-width:1440px;margin:0 auto;padding:36px 28px 80px;position:relative;}
 
-.masthead{border-bottom:1px solid var(--rule); padding-bottom:22px; margin-bottom:24px;}
-.masthead-title{font-family:'Instrument Serif', serif; font-style:italic; font-size:46px; line-height:1; color:var(--ivory);}
-.masthead-title em{font-style:normal; color:var(--gold-bright);}
-.masthead-sub{font-family:'Syne Mono', monospace; font-size:11.5px; letter-spacing:0.04em; color:var(--ivory-dim); margin-top:8px; max-width:680px;}
+.deco-frame{position:relative; border:1px solid var(--frame-outer);}
+.deco-frame::before{content:""; position:absolute; inset:5px; border:1px solid var(--frame-inner); pointer-events:none;}
 
-.top-row{display:flex; justify-content:space-between; align-items:flex-start; gap:22px; margin-bottom:14px; flex-wrap:wrap;}
-.filterbar{display:flex; flex-wrap:wrap; gap:22px; padding:16px 18px; background:var(--panel); border:1px solid var(--rule); flex:1 1 640px; min-width:340px;}
-.filter-group{min-width:140px;}
-.filter-label{font-family:'Syne Mono', monospace; font-size:10.5px; letter-spacing:0.08em; color:var(--gold-dim); display:block; margin-bottom:8px;}
+.theme-toggle{position:absolute; top:36px; right:28px; font-family:'Josefin Sans', sans-serif; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-faint); background:transparent; border:1px solid var(--rule); padding:6px 12px; cursor:pointer;}
+.theme-toggle:hover{border-color:var(--gold-dim); color:var(--ivory);}
+
+.masthead{position:relative; padding-bottom:16px; margin-bottom:26px; text-align:center;}
+.masthead::before{
+  content:""; position:absolute; left:50%; top:-20px; width:700px; height:180px; transform:translateX(-50%);
+  background: repeating-conic-gradient(from -90deg at 50% 100%, var(--gold-dim) 0deg 3deg, transparent 3deg 11deg);
+  -webkit-mask-image: radial-gradient(ellipse 55% 100% at 50% 100%, #000 35%, transparent 78%);
+  mask-image: radial-gradient(ellipse 55% 100% at 50% 100%, #000 35%, transparent 78%);
+  opacity:0.5; pointer-events:none; z-index:0;
+}
+.masthead-title, .chevron-rule{position:relative; z-index:1;}
+.masthead-title{font-family:'Cinzel Decorative', serif; font-weight:700; font-size:38px; letter-spacing:0.04em; color:var(--ivory); text-transform:uppercase;}
+.masthead-sub{position:relative; z-index:1; font-family:'Josefin Sans', sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ivory-dim); margin-top:10px;}
+.chevron-rule{height:9px; margin-top:18px; opacity:0.8;
+  background-image:
+    linear-gradient(135deg, var(--gold-bright) 25%, transparent 25.5%),
+    linear-gradient(225deg, var(--gold-bright) 25%, transparent 25.5%);
+  background-size: 18px 9px; background-position: 0 0; background-repeat:repeat-x;}
+
+.layout{display:flex; align-items:flex-start; gap:22px;}
+.sidebar{flex:0 0 220px; display:flex; flex-direction:column; gap:20px; background:var(--panel); padding:18px 18px 20px; position:sticky; top:20px;}
+.content{flex:1 1 auto; min-width:0;}
+
+.filter-label{font-family:'Josefin Sans', sans-serif; font-weight:600; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); display:block; margin-bottom:9px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px;}
-.chip{font-family:'Syne Mono', monospace; font-size:10.5px; padding:5px 9px; border:1px solid var(--rule); color:var(--ivory-dim); cursor:pointer; background:transparent; user-select:none; transition:border-color .15s, color .15s, background .15s;}
+.chip{font-family:'Josefin Sans', sans-serif; font-weight:500; font-size:11px; letter-spacing:0.03em; padding:5px 9px; border:1px solid var(--rule); color:var(--ivory-dim); cursor:pointer; background:transparent; user-select:none; transition:border-color .15s, color .15s, background .15s;}
 .chip:hover{border-color:var(--gold-dim); color:var(--ivory);}
-.chip.on{background:rgba(201,162,39,0.14); border-color:var(--gold); color:var(--gold-bright);}
-.filter-clear{font-family:'Syne Mono', monospace; font-size:11px; color:var(--ivory-faint); background:none; border:none; cursor:pointer; text-decoration:underline; text-decoration-color:var(--rule); align-self:flex-start; margin-top:18px;}
+.chip.on{background:rgba(201,162,39,0.16); border-color:var(--gold); color:var(--gold-bright);}
+.filter-clear{font-family:'Josefin Sans', sans-serif; font-size:11px; letter-spacing:0.04em; color:var(--ivory-faint); background:none; border:none; cursor:pointer; text-decoration:underline; text-decoration-color:var(--rule); padding:0; text-align:left;}
 .filter-clear:hover{color:var(--gold-bright);}
-.result-count{font-family:'Syne Mono', monospace; font-size:11px; color:var(--ivory-faint); align-self:flex-start; margin-top:18px;}
+.result-count{font-family:'Josefin Sans', sans-serif; font-size:11px; letter-spacing:0.04em; color:var(--ivory-faint); border-top:1px solid var(--rule-soft); padding-top:14px;}
 
-.side-panel{flex:0 0 300px; display:flex; flex-direction:column; gap:14px; background:var(--panel); border:1px solid var(--rule); padding:16px 18px;}
-.legend{display:flex; flex-direction:column; gap:10px; font-family:'Syne Mono', monospace; font-size:10.5px; color:var(--ivory-faint);}
-.legend-title{color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.06em; font-size:9.5px; margin-bottom:2px;}
-.legend-row{display:flex; gap:14px; flex-wrap:wrap;}
+.legend-strip{display:flex; flex-wrap:wrap; gap:26px; align-items:center; background:var(--panel); padding:12px 18px; margin-bottom:10px; font-family:'Josefin Sans', sans-serif; font-size:10.5px; color:var(--ivory-faint);}
+.legend-title{color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.1em; font-size:9.5px; margin-right:4px;}
+.legend-group{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
 .legend-item{display:flex; align-items:center; gap:6px;}
-.legend-swatch{width:11px; height:11px; display:inline-block; background:var(--ivory-faint); border:1px solid var(--ink);}
-.legend-swatch.tri{background:transparent; width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:10px solid var(--ivory-faint);}
+.legend-swatch{width:10px; height:10px; display:inline-block; background:var(--ivory-faint); border:1px solid var(--ink);}
+.legend-swatch.tri{background:transparent; width:0; height:0; border-left:5.5px solid transparent; border-right:5.5px solid transparent; border-bottom:9.5px solid var(--ivory-faint);}
 .legend-swatch.circ{border-radius:50%;}
-.year-range{display:flex; align-items:center; gap:8px; font-family:'Syne Mono', monospace; font-size:11px; color:var(--ivory-dim); padding-top:10px; border-top:1px solid var(--rule);}
-.year-range input[type=number]{width:60px; background:var(--panel-2); border:1px solid var(--rule); color:var(--ivory); font-family:'Syne Mono', monospace; font-size:11px; padding:5px 6px;}
 
-.chart-wrap{background:var(--panel); border:1px solid var(--rule); padding:10px 4px 4px; margin-bottom:8px; overflow-x:auto;}
+.chart-wrap{background:var(--panel); padding:10px 4px 4px; margin-bottom:8px; overflow-x:auto;}
 svg#timeline{display:block;}
-.life-band{fill:rgba(201,162,39,0.05);}
-.lane-band{fill:rgba(236,226,198,0.02);}
-.lane-band.alt{fill:rgba(236,226,198,0.045);}
-.lane-label{font-family:'Syne', sans-serif; font-weight:700; font-size:12px; fill:var(--ivory);}
-.life-label{font-family:'Syne', sans-serif; font-weight:800; font-size:13px; fill:var(--gold-bright); letter-spacing:0.02em;}
-.lane-count{font-family:'Syne Mono', monospace; font-size:9.5px; fill:var(--ivory-faint);}
+.life-band{fill:rgba(201,162,39,0.06);}
+.lane-band{fill:rgba(240,230,207,0.02);}
+.lane-band.alt{fill:rgba(240,230,207,0.045);}
+.lane-label{font-family:'Josefin Sans', sans-serif; font-weight:700; font-size:12px; letter-spacing:0.04em; text-transform:uppercase; fill:var(--ivory);}
+.life-label{font-family:'Josefin Sans', sans-serif; font-weight:700; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; fill:var(--gold-bright);}
+.lane-count{font-family:'Josefin Sans', sans-serif; font-size:9.5px; fill:var(--ivory-faint);}
 .life-line{stroke:var(--gold-bright); stroke-width:3; stroke-linecap:round;}
 .life-tick{stroke:var(--gold-dim); stroke-width:1;}
 .span-bar{stroke:var(--gold-dim); stroke-width:2; stroke-linecap:round; opacity:0.5;}
 .connector{stroke:var(--gold-dim); stroke-width:0.8; stroke-dasharray:1.5 3; opacity:0.35; pointer-events:none;}
 .grid-line{stroke:var(--rule-soft); stroke-width:1;}
-.grid-label{font-family:'Syne Mono', monospace; font-size:10px; fill:var(--ivory-faint);}
+.grid-label{font-family:'Josefin Sans', sans-serif; font-size:10px; fill:var(--ivory-faint);}
 .dot-mark{cursor:pointer; stroke:var(--ink); stroke-width:0.8; transition:opacity .15s;}
 .dot-mark.dim{opacity:0.15;}
-.dot-mark.selected{stroke:#fff; stroke-width:1.6;}
+.dot-mark.selected{stroke:var(--select-stroke); stroke-width:1.6;}
 
-.tooltip{position:fixed; z-index:40; pointer-events:none; opacity:0; transition:opacity .1s; max-width:280px; background:var(--ink); border:1px solid var(--gold-dim); padding:10px 12px; font-size:12px; line-height:1.5; font-family:'Libre Baskerville',serif; box-shadow:0 12px 30px rgba(0,0,0,.5);}
-.tooltip b{display:block; font-style:italic; color:var(--gold-bright); margin-bottom:3px; font-size:13px;}
-.tooltip .tt-meta{font-family:'Syne Mono', monospace; font-size:10.5px; color:var(--ivory-dim);}
+.tooltip{position:fixed; z-index:40; pointer-events:none; opacity:0; transition:opacity .1s; max-width:280px; background:var(--ink); border:1px solid var(--gold-dim); padding:10px 12px; font-size:13px; line-height:1.5; font-family:'Cormorant Garamond',serif; box-shadow:0 12px 30px rgba(0,0,0,.5);}
+.tooltip b{display:block; font-style:italic; color:var(--gold-bright); margin-bottom:3px; font-size:14.5px;}
+.tooltip .tt-meta{font-family:'Josefin Sans', sans-serif; font-size:10.5px; letter-spacing:0.02em; color:var(--ivory-dim);}
 
-.hint{font-family:'Syne Mono', monospace; font-size:11px; color:var(--ivory-faint); margin: 6px 4px 22px;}
-
-table{width:100%; border-collapse:collapse; font-size:13.5px;}
-thead th{text-align:left; font-family:'Syne Mono', monospace; font-size:10.5px; letter-spacing:0.06em; color:var(--gold-dim); border-bottom:1px solid var(--rule); padding:10px 12px; cursor:pointer; white-space:nowrap;}
+table{width:100%; border-collapse:collapse; font-size:14.5px;}
+thead th{text-align:left; font-family:'Josefin Sans', sans-serif; font-weight:600; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-dim); border-bottom:1px solid var(--rule); padding:10px 12px; cursor:pointer; white-space:nowrap;}
 thead th:hover{color:var(--gold-bright);}
 thead th.sorted::after{content:' ▾'; color:var(--gold-bright);}
 tbody tr{border-bottom:1px solid var(--rule-soft); cursor:pointer; transition:background .12s;}
-tbody tr:hover{background:rgba(236,226,198,0.03);}
+tbody tr:hover{background:rgba(240,230,207,0.03);}
 tbody tr.selected{background:rgba(201,162,39,0.09);}
-tbody td{padding:11px 12px; vertical-align:top; color:var(--ivory-dim);}
+tbody td{padding:10px 12px; vertical-align:top; color:var(--ivory-dim);}
 tbody td.title-cell{color:var(--ivory); font-style:italic;}
 tbody tr.dim{opacity:0.28;}
 
-@media (max-width:900px){ .top-row{flex-direction:column;} .side-panel{flex:1 1 auto;} }
+@media (max-width:900px){ .layout{flex-direction:column;} .sidebar{flex:1 1 auto; width:100%;} }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <button class="theme-toggle" id="themeToggle">Light</button>
   <div class="masthead">
-    <div class="masthead-title">Christie <em>Timeline</em></div>
-    <div class="masthead-sub">Every case laid along Agatha Christie's own lifetime (1890–1976) — the spine at top — with works branching down into the protagonist who carries them.</div>
+    <div class="masthead-title">Christie Timeline</div>
+    <div class="masthead-sub">Agatha Christie's bibliography, laid along her own lifetime</div>
+    <div class="chevron-rule"></div>
   </div>
 
-  <div class="top-row">
-    <div class="filterbar" id="filterbar"></div>
-    <div class="side-panel">
-      <div class="legend" id="legend"></div>
-      <div class="year-range">
-        <span class="filter-label" style="margin:0;">Year</span>
-        <input type="number" id="yearMin" /> – <input type="number" id="yearMax" />
-        <button class="filter-clear" id="resetYears" style="margin:0;">reset</button>
-      </div>
+  <div class="layout">
+    <aside class="sidebar deco-frame" id="sidebar"></aside>
+    <div class="content">
+      <div class="legend-strip deco-frame" id="legend"></div>
+      <div class="chart-wrap deco-frame"><svg id="timeline"></svg></div>
+      <div id="tooltip" class="tooltip"></div>
+
+      <table id="tl-table">
+        <thead>
+          <tr>
+            <th data-key="title">Title</th>
+            <th data-key="protagonist">Protagonist</th>
+            <th data-key="type">Type</th>
+            <th data-key="format">Format</th>
+            <th data-key="year">Published</th>
+            <th data-key="region">Location</th>
+            <th data-key="loc">In‑universe location</th>
+            <th data-key="time">In‑universe time</th>
+            <th data-key="realWorld">Closest real place</th>
+          </tr>
+        </thead>
+        <tbody id="tl-tbody"></tbody>
+      </table>
     </div>
   </div>
-
-  <div class="chart-wrap"><svg id="timeline"></svg></div>
-  <div id="tooltip" class="tooltip"></div>
-  <div class="hint">Gold line at top is Christie's own lifetime (born 15 Sep 1890, died 12 Jan 1976). Dashed threads drop each work down into its protagonist's lane. Shape = format (▪ novel · ▸ short story · ● collection); colour = location. "Elsewhere" is split into South Africa, Caribbean, and Global/Unconfirmed rather than lumped together.</div>
-
-  <table id="tl-table">
-    <thead>
-      <tr>
-        <th data-key="title">Title</th>
-        <th data-key="protagonist">Protagonist</th>
-        <th data-key="type">Type</th>
-        <th data-key="format">Format</th>
-        <th data-key="year">Published</th>
-        <th data-key="region">Location</th>
-        <th data-key="loc">In‑universe location</th>
-        <th data-key="time">In‑universe time</th>
-        <th data-key="realWorld">Closest real place</th>
-      </tr>
-    </thead>
-    <tbody id="tl-tbody"></tbody>
-  </table>
 </div>
 
 <script>
@@ -235,7 +259,6 @@ const FORMAT_SHAPE = {"Novel":"square","Short story":"triangle","Short story col
 
 const state = {
   filters:{ protagonist:new Set(), region:new Set(), format:new Set() },
-  yearMin:null, yearMax:null,
   selectedId:null, sortKey:"yr", sortDir:1
 };
 const YEAR_BOUNDS = [1920, 1997];
@@ -250,16 +273,14 @@ function matches(d){
   if(f.protagonist.size && !d.p.some(x=>f.protagonist.has(x))) return false;
   if(f.region.size && !f.region.has(d.region)) return false;
   if(f.format.size && !f.format.has(d.f)) return false;
-  if(state.yearMin!==null && d.yr < state.yearMin) return false;
-  if(state.yearMax!==null && d.yr > state.yearMax) return false;
   return true;
 }
 
 /* =====================================================================
-   FILTER BAR (left) + LEGEND/YEAR (right)
+   FILTER SIDEBAR (left) + LEGEND STRIP (above chart)
    ===================================================================== */
 function renderFilterBar(){
-  const container = document.getElementById("filterbar");
+  const container = document.getElementById("sidebar");
   container.innerHTML = "";
   const groups = [
     {key:"protagonist", label:"Protagonist", opts:uniqueProtagonists()},
@@ -297,28 +318,18 @@ function renderFilterBar(){
 
 function renderLegend(){
   document.getElementById("legend").innerHTML = `
-    <div>
-      <div class="legend-title">Shape · format</div>
-      <div class="legend-row">
-        <span class="legend-item"><span class="legend-swatch"></span> Novel</span>
-        <span class="legend-item"><span class="legend-swatch tri"></span> Short story</span>
-        <span class="legend-item"><span class="legend-swatch circ"></span> Collection</span>
-      </div>
+    <div class="legend-group">
+      <span class="legend-title">Shape · format</span>
+      <span class="legend-item"><span class="legend-swatch"></span> Novel</span>
+      <span class="legend-item"><span class="legend-swatch tri"></span> Short story</span>
+      <span class="legend-item"><span class="legend-swatch circ"></span> Collection</span>
     </div>
-    <div>
-      <div class="legend-title">Colour · location</div>
-      <div class="legend-row">
-        <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-london)"></span> London</span>
-        <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-uk)"></span> UK</span>
-        <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-europe)"></span> Europe/Orient</span>
-        <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-elsewhere)"></span> Elsewhere</span>
-      </div>
-    </div>
-    <div>
-      <div class="legend-title">Structure</div>
-      <div class="legend-row">
-        <span class="legend-item"><span style="width:16px;height:3px;background:var(--gold-bright);display:inline-block;"></span> Christie's lifetime</span>
-      </div>
+    <div class="legend-group">
+      <span class="legend-title">Colour · location</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-london)"></span> London</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-uk)"></span> UK</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-europe)"></span> Europe/Orient</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-elsewhere)"></span> Elsewhere</span>
     </div>
   `;
 }
@@ -343,6 +354,30 @@ function shapeEl(shape, cx, cy, r, cls){
   const el = document.createElementNS(ns,"circle");
   el.setAttribute("cx",cx); el.setAttribute("cy",cy); el.setAttribute("r",r);
   el.setAttribute("class",cls); return el;
+}
+
+// Decluttering the Poirot 1933-38 run: assign a vertical zigzag offset
+// (0, +s, -s, +2s, -2s, ...) to points that land within `threshold` px of
+// each other along the year axis, in ascending-x order.
+function computeJitter(laneAll, xFn){
+  const items = [...laneAll].sort((a,b)=> a.yr-b.yr || a.id-b.id);
+  const threshold = 15, step = 5;
+  const offsets = new Map();
+  let cluster = [], lastX = null;
+  const flush = ()=>{
+    cluster.forEach((d,i)=>{
+      const mag = Math.ceil(i/2)*step;
+      offsets.set(d.id, i===0 ? 0 : (i%2===1 ? mag : -mag));
+    });
+    cluster = [];
+  };
+  items.forEach(d=>{
+    const xx = xFn(d.yr);
+    if(lastX!==null && xx-lastX >= threshold) flush();
+    cluster.push(d); lastX = xx;
+  });
+  flush();
+  return offsets;
 }
 
 let tt;
@@ -416,15 +451,23 @@ function renderTimeline(){
   lifeSub.textContent = `${CHRISTIE_LIFE.bornLabel} – ${CHRISTIE_LIFE.diedLabel}`;
   svg.appendChild(lifeSub);
 
+  // per-lane jitter maps, shared between the connector pass and the dot pass
+  const jitterByLane = new Map();
+  LANES.forEach(lane=>{
+    jitterByLane.set(lane, computeJitter(DATA.filter(d=>d.p.includes(lane)), x));
+  });
+
   // ---- connector threads from the spine down into each lane ----
   LANES.forEach((lane, idx)=>{
     const baseY = top + lifeRowH + idx*rowH + rowH/2;
+    const jitter = jitterByLane.get(lane);
     DATA.filter(d=>d.p.includes(lane)).forEach(d=>{
       const xx = x(d.yr);
+      const dy = baseY + (jitter.get(d.id)||0);
       const conn = document.createElementNS(svgNS,"line");
       conn.setAttribute("class","connector"+(matches(d)?"":" dim"));
       conn.setAttribute("x1",xx); conn.setAttribute("x2",xx);
-      conn.setAttribute("y1",lifeY+9); conn.setAttribute("y2",baseY-14);
+      conn.setAttribute("y1",lifeY+9); conn.setAttribute("y2",dy-14);
       if(!matches(d)) conn.style.opacity = 0.08;
       svg.appendChild(conn);
     });
@@ -433,6 +476,7 @@ function renderTimeline(){
   // ---- protagonist lanes ----
   LANES.forEach((lane, idx)=>{
     const baseY = top + lifeRowH + idx*rowH + rowH/2;
+    const jitter = jitterByLane.get(lane);
     const laneAll = DATA.filter(d=>d.p.includes(lane));
     const laneVisible = laneAll.filter(matches);
 
@@ -461,9 +505,10 @@ function renderTimeline(){
 
     laneAll.forEach(d=>{
       const xx = x(d.yr);
+      const dy = baseY + (jitter.get(d.id)||0);
       const shape = FORMAT_SHAPE[d.f] || "circle";
       const dim = !matches(d);
-      const g = shapeEl(shape, xx, baseY, 6, "dot-mark"+(dim?" dim":"")+(d.id===state.selectedId?" selected":""));
+      const g = shapeEl(shape, xx, dy, 6, "dot-mark"+(dim?" dim":"")+(d.id===state.selectedId?" selected":""));
       g.style.fill = LOC_COLOR[d.panel];
       g.onmousemove = (e)=> tip(e, `<b>${d.t.replace(/^"|"$/g,"")}</b><span class="tt-meta">${d.p.join(", ")} · ${d.f} · ${d.yr}<br>${d.region}<br>${d.loc}</span>`);
       g.onmouseleave = untip;
@@ -522,23 +567,35 @@ function renderTable(){
 }
 
 /* =====================================================================
+   THEME TOGGLE (dark lacquer ⇄ cream paper, both same Deco palette)
+   ===================================================================== */
+(function initTheme(){
+  const root = document.documentElement;
+  const btn = document.getElementById("themeToggle");
+  const apply = (theme)=>{
+    if(theme==="light") root.setAttribute("data-theme","light");
+    else root.removeAttribute("data-theme");
+    btn.textContent = theme==="light" ? "Dark" : "Light";
+  };
+  let saved = "dark";
+  try{ saved = localStorage.getItem("christie-timeline-theme") || "dark"; }catch(e){}
+  apply(saved);
+  btn.onclick = ()=>{
+    const next = root.getAttribute("data-theme")==="light" ? "dark" : "light";
+    apply(next);
+    try{ localStorage.setItem("christie-timeline-theme", next); }catch(e){}
+  };
+})();
+
+/* =====================================================================
    INIT + CONTROLS
    ===================================================================== */
-function syncYearInputs(){
-  document.getElementById("yearMin").value = state.yearMin ?? YEAR_BOUNDS[0];
-  document.getElementById("yearMax").value = state.yearMax ?? YEAR_BOUNDS[1];
-}
-document.getElementById("yearMin").onchange = (e)=>{ state.yearMin = e.target.value===""?null:parseInt(e.target.value,10); renderAll(); };
-document.getElementById("yearMax").onchange = (e)=>{ state.yearMax = e.target.value===""?null:parseInt(e.target.value,10); renderAll(); };
-document.getElementById("resetYears").onclick = ()=>{ state.yearMin=null; state.yearMax=null; syncYearInputs(); renderAll(); };
-
 function renderAll(){
   renderFilterBar();
   renderLegend();
   renderTimeline();
   renderTable();
 }
-syncYearInputs();
 renderAll();
 </script>
 </body>
