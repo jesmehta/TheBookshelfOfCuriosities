@@ -116,6 +116,27 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.13** — Added Agatha Christie as the third standalone static project
+  (`projects/christie/`: an Art Deco-styled timeline + table +
+  bibliography-completeness Short Stories tab, plus the pre-existing map
+  atlas), which fired the "root clutter threshold" plan from V4.11's
+  entry below: `scifi/` and `asimov/` moved to `projects/scifi/` and
+  `projects/asimov/` alongside it, `deploy.yml`'s copy step switched from
+  an explicit name list to iterating `projects/*/`, and `mkdocs.yml`'s
+  Christie nav entry switched from the `docs/agatha.md` placeholder stub
+  (removed) to an absolute URL matching how `scifi`/`asimov` are linked.
+  Christie's entire build history — a prior conversation's bibliography
+  research and three Atlas/Timeline revisions each, then this repo's own
+  Art Deco redesign, font iteration, and Short Stories pass — was
+  replayed as 20 separate commits instead of landing as one, verified
+  byte-for-byte identical to the source file at the end; see
+  `documentation/christie/conversation-christie.md`. Recovered
+  `christie-project-history.md`/`christie-timeline-changelog.md` (the
+  pre-repo conversation's own summary) and wrote
+  `conversation-christie.md` while its transcript was still available —
+  scifi/asimov don't have that option; their pre-repo history is already
+  lost (see the "recover scifi's/asimov's original conversations"
+  watch-for above).
 - **V4.12** — Replaced doc-page typography: `theme.font.text` (`mkdocs.yml`)
   switched from Libre Baskerville to Spectral, with a new
   `bookshelf-material.css` rule retargeting `.md-typeset h1`-`h3` to

@@ -60,6 +60,14 @@ recovery; not yet attempted here.
 | `BOOKSHELF-EDITOR.md` | Design decisions and as-built record for `tools/bookshelf-editor.js` (mirrors Cabinet's `CABINET-EDITOR.md` and fffx's `FFFX-EDITOR.md`) — architecture, routes, files, update workflow, verified checks, todo, changelog. |
 | `conversation-bookshelf-editor.md` | Conversation-log companion, recorded from the same live transcript as fffx's `conversation-fffx-editor.md` — this repo's Admin Dash was planned in one combined conversation covering both fffx and Bookshelf together, then built second. |
 
+### `christie/` — the Agatha Christie standalone project's origin
+
+| File | Role |
+|---|---|
+| `conversation-christie.md` | Conversation-log companion to `projects/christie/documentation.md` — what was asked, what got tried and corrected, across both the pre-repo conversation and this repo's own sessions. Written while the transcript was still available, unlike `scifi`/`asimov` below. |
+| `christie-project-history.md` | The pre-repo conversation's own summary of its build (bibliography research through Atlas v1-v3 and Timeline v1-v3) — recovered from the user's saved files, not authored here. |
+| `christie-timeline-changelog.md` | That same pre-repo conversation's more detailed v1→v2→v3 record specifically for the Timeline tool. |
+
 ### `content/` — editorial documentation (what got written and why)
 
 Umbrella for content-initiative docs, kept separate from the technical
@@ -140,7 +148,7 @@ firing the "root clutter threshold" plan recorded in README.md.
 |---|---|
 | `projects/scifi/` | "The Golden Age of SciFi" interactive timeline — own `README.md`/`ToDo.md`, own `data/` (TSV + generated JSON), own `index.html`/`script.js`/`style.css`. Independent of the Bookshelf TSV/Admin Dash pipeline entirely. |
 | `projects/asimov/` | "Isaac Asimov and the Foundation Series" timeline — own four-file `Readme_N_*.md` doc set (overview, design brief, working context, todo/decisions — an earlier, differently-shaped take on the same four-tier documentation principle), `app.js`, `data.js`, `index.html`, `style.css`. |
-| `projects/christie/` | "Agatha Christie — Murder, She Wrote" — timeline + table (`christie-timeline-v3.html`), plus a separate map atlas (`christie-atlas-v2.html`, not yet wired into the tab UI), own `documentation.md`, `fonts/`, `tests/`. See `documentation/christie/conversation-christie.md` for the origin conversation. |
+| `projects/christie/` | "Agatha Christie — Murder, She Wrote" — timeline + table + Short Stories tab (`christie-timeline-v3.html`), plus a separate map atlas (`christie-atlas-v2.html`, not yet wired into the tab UI), own `documentation.md`, `fonts/`, and the two bibliography research tables (`agatha-christie-location-timeline.md`/`-v2.md`) this project started from. See `documentation/christie/` for the origin conversation. |
 
 ## Archival / not-live
 
