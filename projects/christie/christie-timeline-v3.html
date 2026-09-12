@@ -18,16 +18,20 @@
   --bg-glow-1: rgba(201,162,39,0.07); --bg-glow-2: rgba(31,143,149,0.05);
 }
 html[data-theme="light"]{
-  /* First pass at a light theme — same gold tone used for both frame
-     lines front-to-back, no independent contrast swap yet. */
+  /* Crisp cream card-stock + true black ink, not a muted pastel — the
+     point of Deco linework is hard contrast between paper, ink and gilt.
+     The first pass here shared one gold tone for both frame lines and
+     read as flat SaaS beige rather than Deco; the fix wasn't the base
+     cream colour so much as contrast, so frame-outer/frame-inner now
+     swap roles per theme instead of just changing hue. */
   --ink:#f6efd9; --panel:#fffcf2; --panel-2:#efe1bd;
-  --rule: rgba(169,116,10,0.3); --rule-soft: rgba(169,116,10,0.16);
-  --ivory:#4a3a10; --ivory-dim: rgba(74,58,16,0.7); --ivory-faint: rgba(74,58,16,0.42);
-  --gold:#a9740a; --gold-bright:#c68a0d; --gold-dim: rgba(169,116,10,0.4);
-  --loc-london:#c68a0d; --loc-uk:#3f8f63; --loc-europe:#a3314a; --loc-elsewhere:#1f8f95;
-  --select-stroke:#4a3a10;
-  --frame-outer: var(--gold-dim); --frame-inner: var(--gold-dim);
-  --bg-glow-1: rgba(169,116,10,0.08); --bg-glow-2: rgba(31,143,149,0.05);
+  --rule: rgba(20,14,6,0.42); --rule-soft: rgba(20,14,6,0.2);
+  --ivory:#181209; --ivory-dim: rgba(24,18,9,0.74); --ivory-faint: rgba(24,18,9,0.48);
+  --gold:#a9740a; --gold-bright:#c68a0d; --gold-dim: rgba(169,116,10,0.6);
+  --loc-london:#c68a0d; --loc-uk:#0f6b45; --loc-europe:#85182f; --loc-elsewhere:#0b6870;
+  --select-stroke:#181209;
+  --frame-outer: rgba(20,14,6,0.6); --frame-inner: var(--gold-dim);
+  --bg-glow-1: rgba(169,116,10,0.1); --bg-glow-2: rgba(11,104,112,0.07);
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;background:var(--ink);color:var(--ivory);font-family:'Cormorant Garamond',serif;}
@@ -356,19 +360,44 @@ function shapeEl(shape, cx, cy, r, cls){
   el.setAttribute("class",cls); return el;
 }
 
-// Decluttering the Poirot 1933-38 run: assign a vertical zigzag offset
-// (0, +s, -s, +2s, -2s, ...) to points that land within `threshold` px of
-// each other along the year axis, in ascending-x order.
+// Bisection magnitude ladder over [0, maxMag]: 0, N/2, N, N/4, 3N/4,
+// N/8, 3N/8, 5N/8, 7N/8, ... — each rung sits halfway between rungs
+// already placed, so consecutive draws land far from everything drawn
+// so far instead of marching outward in one direction.
+function bisectionRungs(maxMag, count){
+  const rungs = [maxMag/2, maxMag];
+  let denom = 4;
+  while(rungs.length < count){
+    for(let num=1; num<denom; num+=2) rungs.push(maxMag*num/denom);
+    denom *= 2;
+  }
+  return rungs;
+}
+
+// Decluttering the Poirot 1933-38 run. The first version assigned a
+// vertical zigzag offset (0, +s, -s, +2s, -2s, ...) in ascending-x order
+// — looked wrong in practice: magnitude grows monotonically with index
+// while walking left-to-right, so it draws two diagonal "ramps" (one up,
+// one down), not a scatter. Fixed with a bisection ladder instead: every
+// new point lands as far as possible from every point placed so far,
+// which reads as a genuine scatter regardless of x-order.
 function computeJitter(laneAll, xFn){
   const items = [...laneAll].sort((a,b)=> a.yr-b.yr || a.id-b.id);
-  const threshold = 15, step = 5;
+  const threshold = 15, maxMag = 20;
   const offsets = new Map();
   let cluster = [], lastX = null;
   const flush = ()=>{
-    cluster.forEach((d,i)=>{
-      const mag = Math.ceil(i/2)*step;
-      offsets.set(d.id, i===0 ? 0 : (i%2===1 ? mag : -mag));
-    });
+    const n = cluster.length;
+    if(n===1){ offsets.set(cluster[0].id, 0); }
+    else if(n>1){
+      const seq = [0];
+      for(const m of bisectionRungs(maxMag, Math.ceil((n-1)/2))){
+        if(seq.length>=n) break;
+        seq.push(m);
+        if(seq.length<n) seq.push(-m);
+      }
+      cluster.forEach((d,i)=> offsets.set(d.id, seq[i]));
+    }
     cluster = [];
   };
   items.forEach(d=>{
