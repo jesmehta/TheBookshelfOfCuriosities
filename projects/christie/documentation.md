@@ -350,6 +350,39 @@ four extras are ever reused for something else.
     earlier book appearance — flagged as possibly-incomplete rather than asserted
     complete. "The Strange Case of Sir Arthur Carmichael" — confirmed correct title
     (a source draft had briefly rendered it "Sir Andrew").
+- **Built the Atlas tab for real**, replacing the placeholder. Ported the real-coastline
+  triptych map (London / UK / Europe & the Orient) from `christie-atlas-v3.html`, a
+  standalone atlas revision that was never carried into the maintained
+  `christie-atlas-v2.html` — recovered from this repo's own git history (commit
+  `9744cb0`, from the Christie-project history-reconstruction pass). Confirmed via a
+  title diff that this file's `DATA` and Atlas v3's `DATA` are identical, 78/78 rows
+  (Atlas v3 is `DATA`'s direct ancestor), so the real projected `cx`/`cy` coordinates
+  were merged straight onto the existing `DATA` rows by title-match rather than
+  standing up a second dataset — one array now backs both the Timeline chart and the
+  Atlas map. Restyled the whole thing onto this file's own design tokens (Josefin
+  Sans / Cormorant Garamond, `var(--gold-bright)` etc.) instead of keeping Atlas v3's
+  separate Libre Baskerville/Syne palette, and made it theme-aware (Atlas v3 predates
+  the light/dark toggle).
+  - **London panel stays the symbolic river-sketch**, not a real street map — country
+    coastline data doesn't get you street-level recognizability; that would need a
+    different data source and is left as a follow-up, not attempted here.
+  - **Filter state is independent of the Timeline tab's own filters** — same pattern
+    the Short Stories tab already uses (its own `atlasState`, not the Timeline's
+    `state`). Cross-tab filter syncing was considered and set aside: the tabs' filter
+    axes don't line up 1:1 (Atlas needs Story type as its own axis; Timeline doesn't),
+    so unifying them would be a real state-architecture change for limited payoff.
+  - **Inline map labels reuse the Timeline chart's `LANDMARK_IDS`** rather than
+    labeling every dot — the first pass (labeling every entry in the zoomed/focused
+    panel, as Atlas v3 originally did) reproduced the exact same illegible-crowding
+    problem already solved once for the chart itself, so the fix was to reuse that
+    existing curation instead of re-solving it. No 2D collision-avoidance layout was
+    built for the map (unlike the chart's `computeLabelLayout()`) — with only ~4
+    landmarks per panel this hasn't needed one, but two labels can still sit close
+    together in a dense corner; revisit if more landmarks are added later.
+  - Added a second tooltip element (`#atlasTooltip` / `atlasTip()` / `atlasUntip()`),
+    scoped to the Atlas tab — the Timeline tab's `#tooltip` lives inside `#tab-timeline`,
+    which is `display:none` while another tab is active, so a `position:fixed` element
+    inside it still doesn't render; sharing it wasn't an option.
 
 ---
 
@@ -400,9 +433,15 @@ four extras are ever reused for something else.
   label outright if no side/track combination fits near its mark, rather than forcing
   an overlap or pushing it further away. Its mark, tooltip, and table row are always
   unaffected; only the inline chart label can go missing under real crowding.
-- **`christie-atlas-v2.html`'s triptych maps are still placeholder outlines**, not
-  real coastlines — see the changelog entry above. Whenever that gets picked up, it's
-  a separate, larger pass (geodata + per-entry lat/long), not a quick tweak.
+- **`christie-atlas-v2.html` and `christie-atlas-v3.html` are now both superseded**,
+  not maintained. The Atlas tab inside `christie-timeline-v3.html` is the live map —
+  see the changelog entry above. v2's triptych is still the old placeholder-outline
+  geometry (never real coastlines); v3 (recovered from git history) is where the real
+  coastlines actually came from, but that file itself isn't touched going forward.
+- **The Atlas map's real coastline data covers only UK and Europe & the Orient** —
+  hand-simplified from a GeoJSON source during the original Atlas v3 pass, not
+  re-derived here. If a location needs correcting or a new region gets added later,
+  that's fresh geodata work, not a tweak to the existing paths.
 - **Filesystem-access scope**: an unrelated but consequential episode mid-conversation
   — a font search briefly used unscoped `find` across entire drives rather than the
   session's declared working directories. Corrected, and a standing rule is now in
