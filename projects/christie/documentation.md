@@ -428,6 +428,38 @@ four extras are ever reused for something else.
     `projects/christie/` as a superseded artifact per the earlier changelog entry)
     still has the fabricated geometry — it was not corrected, since the file itself
     isn't live. Don't mistake it for a source of real coordinates if referenced later.
+- **Refined the map further**: smoothed coastlines, added Isle of Wight, and built a
+  real London panel — user asked "can the maps be better refined? esp the UK? do
+  London as well?" after the previous real-coastline pass.
+  - **Smoothing**: the UK/Europe coastlines were real but visibly polygonal (straight
+    line segments between vertices, since that's what the source GeoJSON is). Added a
+    Catmull-Rom-to-cubic-Bezier conversion (`smoothPath()`, tension 1/6 — the standard
+    factor) applied to every ring after projection, so the same real vertices now draw
+    as a smooth curve instead of a faceted outline. This is display smoothing only —
+    it doesn't add or move data, just interpolates a curve through the existing real
+    points.
+  - **Isle of Wight added to the UK panel** — hand-traced (8 points, from memory of its
+    real rough shape/extent), the same way Mallorca was added to the Europe panel,
+    since `johan/world.geo.json`'s GBR file doesn't include it either.
+  - **Built a real London panel**, replacing the fake sine-wave river. Sourced the
+    Thames' actual course from Natural Earth's `ne_10m_rivers_lake_centerlines`
+    dataset (found by fetching it directly and searching for a feature named
+    "Thames" — the smaller `ne_10m_rivers_europe` regional file doesn't include it,
+    the global one does), filtered to the ~44-point stretch running through Greater
+    London, and smoothed the same way as the coastlines. All 14 London-panel
+    locations got real lat/long (Mayfair, Westminster, Bloomsbury, Chelsea, Croydon
+    Airport, etc.) projected the same way as UK/Europe, replacing the old hand-guessed
+    0–100 square placement. No landmass shape is drawn for London (unlike UK/Europe) —
+    just the river on the panel's own dark background, matching the original
+    symbolic version's convention of "river only." Updated the on-page hint text,
+    which still called London "a symbolic river-sketch" — that's no longer accurate;
+    it's real data now, just without a street grid.
+  - At this generalization level the Thames' famous tight loop around the Isle of
+    Dogs reads as a gentler S-curve rather than the sharp meander a Londoner would
+    recognize up close — that's Natural Earth's own simplification at this scale,
+    not something to "fix" by hand-editing points to look more dramatic; the real
+    data is more trustworthy than a hand-tuned approximation, even if slightly less
+    dramatic-looking.
 
 ---
 
@@ -483,19 +515,27 @@ four extras are ever reused for something else.
   see the changelog entry above. v2's triptych is still the old placeholder-outline
   geometry (never real coastlines); v3 (recovered from git history) is where the real
   coastlines actually came from, but that file itself isn't touched going forward.
-- **The Atlas map's real coastline data covers only UK and Europe & the Orient**,
-  sourced from `johan/world.geo.json` (public-domain, per-country GeoJSON) via direct
-  `curl` fetch — see the changelog entry above for the full country list and the
-  projection formula. If a location needs correcting or a new country/region gets
-  added later, that means re-fetching that country's file and re-running the same
-  equirectangular-projection script (not preserved as a repo file — was a scratchpad
-  script; reconstructing it means: fetch `<ISO3>.geo.json` from that source, project
-  with `x=(lon-lon0)*cos(lat0), y=(lat0-lat)`, scale so viewBox width = 100), not a
-  manual tweak to the existing SVG path strings.
-- **Mallorca's outline is hand-approximated** (8 points, traced from memory of its
-  real shape), not sourced — the Balearic Islands aren't in the Spain file from
-  `johan/world.geo.json` (mainland-only polygon). Good enough to recognize at this
-  map's scale, but don't treat it as precise.
+- **All three Atlas panels now use real geographic data** — UK and Europe & the
+  Orient from `johan/world.geo.json` (public-domain, per-country GeoJSON) via direct
+  `curl` fetch; London's river from Natural Earth's `ne_10m_rivers_lake_centerlines`.
+  See the changelog entries above for the full country list and the projection
+  formula. None of this is preserved as a repo file — it was scratchpad build
+  scripts, run once and discarded. If a location needs correcting, a new
+  country/region gets added, or the smoothing/Isle-of-Wight approach needs revisiting,
+  that means re-fetching the relevant source file and re-running the same pipeline
+  (not a manual tweak to the existing SVG path strings): fetch `<ISO3>.geo.json` (or
+  the rivers file for London), project with `x=(lon-lon0)*cos(lat0), y=(lat0-lat)`,
+  scale so viewBox width = 100, then run every ring/line through the Catmull-Rom
+  smoothing step (tension 1/6) before emitting the path.
+- **Mallorca and Isle of Wight are both hand-approximated** (8 points each, traced
+  from memory of their real rough shape), not sourced — neither is in `johan/
+  world.geo.json`'s mainland-only Spain/GBR files. Good enough to recognize at this
+  map's scale, but don't treat either as precise.
+- **The Thames' course through London is real but generalized** — Natural Earth's
+  10m-scale rivers dataset doesn't preserve the tight meander around the Isle of
+  Dogs; it reads as a gentler S-curve instead. That's the source data's own
+  simplification, not a placeholder to eventually replace — a tighter, more dramatic
+  bend would have to come from higher-resolution river data, not hand-editing.
 - **Per-location coordinates for "Unconfirmed"/fictional settings are plausible
   placeholders, not researched positions** — e.g. "Woodleigh Common," "Broadhinny,"
   "Gipsy's Acre" get a reasonable representative point in roughly the right part of

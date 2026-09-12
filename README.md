@@ -116,6 +116,15 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.16** — Refined the Christie Atlas map further: smoothed the UK/Europe
+  coastlines (Catmull-Rom-to-Bezier curve fitting through the same real
+  vertices, replacing the faceted straight-line look), added a hand-traced
+  Isle of Wight, and built a real London panel — the Thames' actual course
+  (Natural Earth's `ne_10m_rivers_lake_centerlines`, filtered to the
+  Greater London stretch) replacing the old fake sine-wave river, with all
+  14 London-panel locations re-projected from real lat/long instead of a
+  hand-guessed 0–100 square. See `projects/christie/documentation.md`'s
+  changelog for the smoothing formula and sourcing detail.
 - **V4.15** — Replaced the Christie Atlas map's coastlines with genuinely real
   boundary data — V4.14's "real coastline" port from `christie-atlas-v3.html`
   turned out not to be real at all (the user asked "why are the maps crap?"
