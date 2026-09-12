@@ -32,11 +32,7 @@
 }
 html[data-theme="light"]{
   /* Crisp cream card-stock + true black ink, not a muted pastel — the
-     point of Deco linework is hard contrast between paper, ink and gilt.
-     The first pass here shared one gold tone for both frame lines and
-     read as flat SaaS beige rather than Deco; the fix wasn't the base
-     cream colour so much as contrast, so frame-outer/frame-inner now
-     swap roles per theme instead of just changing hue. */
+     point of Deco linework is hard contrast between paper, ink and gilt. */
   --ink:#f6efd9; --panel:#fffcf2; --panel-2:#efe1bd;
   --rule: rgba(20,14,6,0.42); --rule-soft: rgba(20,14,6,0.2);
   --ivory:#181209; --ivory-dim: rgba(24,18,9,0.74); --ivory-faint: rgba(24,18,9,0.48);
@@ -55,9 +51,6 @@ body{background-image:
 
 .deco-frame{position:relative; border:1px solid var(--frame-outer);}
 .deco-frame::before{content:""; position:absolute; inset:5px; border:1px solid var(--frame-inner); pointer-events:none;}
-
-.theme-toggle{position:absolute; z-index:5; top:36px; right:28px; font-family:'Josefin Sans', sans-serif; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-faint); background:transparent; border:1px solid var(--rule); padding:6px 12px; cursor:pointer;}
-.theme-toggle:hover{border-color:var(--gold-dim); color:var(--ivory);}
 
 .masthead{position:relative; padding-bottom:16px; margin-bottom:26px; text-align:center;}
 .masthead::before{
@@ -79,6 +72,13 @@ body{background-image:
     linear-gradient(135deg, var(--gold-bright) 25%, transparent 25.5%),
     linear-gradient(225deg, var(--gold-bright) 25%, transparent 25.5%);
   background-size: 18px 9px; background-position: 0 0; background-repeat:repeat-x;}
+
+.tab-bar{display:flex; gap:28px; margin-bottom:22px; border-bottom:1px solid var(--rule); padding-bottom:0;}
+.tab-btn{font-family:'Josefin Sans', sans-serif; font-weight:600; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; background:none; border:none; color:var(--ivory-faint); cursor:pointer; padding:0 2px 12px; position:relative;}
+.tab-btn:hover{color:var(--ivory);}
+.tab-btn.active{color:var(--gold-bright);}
+.tab-btn.active::after{content:''; position:absolute; left:0; right:0; bottom:-1px; height:2px; background:var(--gold-bright);}
+.tab-placeholder{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; color:var(--ivory-faint); padding:60px 20px; text-align:center;}
 
 .layout{display:flex; align-items:flex-start; gap:22px;}
 .sidebar{flex:0 0 232px; display:flex; flex-direction:column; gap:20px; background:var(--panel); padding:18px 18px 20px; position:sticky; top:20px;}
@@ -123,6 +123,9 @@ svg#timeline{display:block;}
 .leader-line{stroke:var(--gold-dim); stroke-width:0.8; stroke-dasharray:1.5 2.5; opacity:0.5; pointer-events:none;}
 .leader-line.dim{opacity:0.1;}
 
+.theme-toggle{position:absolute; z-index:5; top:36px; right:28px; font-family:'Josefin Sans', sans-serif; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-faint); background:transparent; border:1px solid var(--rule); padding:6px 12px; cursor:pointer;}
+.theme-toggle:hover{border-color:var(--gold-dim); color:var(--ivory);}
+
 .tooltip{position:fixed; z-index:40; pointer-events:none; opacity:0; transition:opacity .1s; max-width:280px; background:var(--ink); border:1px solid var(--gold-dim); padding:10px 12px; font-size:13px; line-height:1.5; font-family:'Cormorant Garamond',serif; box-shadow:0 12px 30px rgba(0,0,0,.5);}
 .tooltip b{display:block; font-style:italic; color:var(--gold-bright); margin-bottom:3px; font-size:14.5px;}
 .tooltip .tt-meta{font-family:'Josefin Sans', sans-serif; font-size:10.5px; letter-spacing:0.02em; color:var(--ivory-dim);}
@@ -138,6 +141,7 @@ tbody td{padding:10px 12px; vertical-align:top; color:var(--ivory-dim);}
 tbody td.title-cell{color:var(--ivory); font-style:italic; font-family:'Cormorant Garamond',serif; font-size:16.5px;}
 tbody tr.dim{opacity:0.28;}
 
+[hidden]{display:none !important;}
 @media (max-width:900px){ .layout{flex-direction:column;} .sidebar{flex:1 1 auto; position:static; width:100%;} }
 </style>
 </head>
@@ -150,31 +154,58 @@ tbody tr.dim{opacity:0.28;}
     <div class="chevron-rule"></div>
   </div>
 
-  <div class="layout">
-    <aside class="sidebar deco-frame" id="sidebar"></aside>
-    <div class="content">
-      <div class="legend-strip deco-frame" id="legend"></div>
-      <div class="chart-wrap deco-frame"><svg id="timeline"></svg></div>
-      <div id="tooltip" class="tooltip"></div>
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="timeline">Timeline</button>
+    <button class="tab-btn" data-tab="atlas">Atlas</button>
+    <button class="tab-btn" data-tab="shortstories">Short Stories</button>
+  </div>
 
-      <table id="tl-table">
-        <thead>
-          <tr>
-            <th data-key="title">Title</th>
-            <th data-key="protagonist">Protagonist</th>
-            <th data-key="type">Type</th>
-            <th data-key="format">Format</th>
-            <th data-key="year">Published</th>
-            <th data-key="region">Location</th>
-            <th data-key="loc">In‑universe location</th>
-            <th data-key="time">In‑universe time</th>
-            <th data-key="realWorld">Closest real place</th>
-            <th data-key="coll">First collected in</th>
-          </tr>
-        </thead>
-        <tbody id="tl-tbody"></tbody>
-      </table>
+  <div id="tab-timeline">
+    <div class="layout">
+      <aside class="sidebar deco-frame" id="sidebar"></aside>
+      <div class="content">
+        <div class="legend-strip deco-frame" id="legend"></div>
+        <div class="chart-wrap deco-frame"><svg id="timeline"></svg></div>
+        <div id="tooltip" class="tooltip"></div>
+
+        <table id="tl-table">
+          <thead>
+            <tr>
+              <th data-key="title">Title</th>
+              <th data-key="protagonist">Protagonist</th>
+              <th data-key="type">Type</th>
+              <th data-key="format">Format</th>
+              <th data-key="year">Published</th>
+              <th data-key="region">Location</th>
+              <th data-key="loc">In‑universe location</th>
+              <th data-key="time">In‑universe time</th>
+              <th data-key="realWorld">Closest real place</th>
+              <th data-key="coll">First collected in</th>
+            </tr>
+          </thead>
+          <tbody id="tl-tbody"></tbody>
+        </table>
+      </div>
     </div>
+  </div>
+
+  <div id="tab-atlas" hidden>
+    <div class="tab-placeholder">The map atlas is being rebuilt with real coastline data — coming soon.</div>
+  </div>
+
+  <div id="tab-shortstories" hidden>
+    <table id="ss-table">
+      <thead>
+        <tr>
+          <th data-key="title">Title</th>
+          <th data-key="protagonist">Protagonist</th>
+          <th data-key="year">Year</th>
+          <th data-key="firstColl">First collected in</th>
+          <th data-key="otherColl">Other collections</th>
+        </tr>
+      </thead>
+      <tbody id="ss-tbody"></tbody>
+    </table>
   </div>
 </div>
 
@@ -799,6 +830,190 @@ function renderTable(){
 })();
 
 /* =====================================================================
+   SHORT STORIES TAB — bibliographic completeness, not geography.
+   Every individual Christie short story, including the ones the main
+   timeline above deliberately leaves bundled inside a single collection
+   row (see documentation.md — that bundling is intentional there, kept
+   for map-plotting reasons). This dataset is separate on purpose so
+   filling it in doesn't touch the timeline's own DATA array.
+   ===================================================================== */
+const SHORT_STORIES = [
+// ---- Poirot Investigates (1924) ----
+{title:"The Adventure of the Western Star", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+{title:"The Tragedy at Marsdon Manor", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+{title:"The Adventure of the Cheap Flat", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+{title:"The Mystery of Hunter's Lodge", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+{title:"The Million Dollar Bond Robbery", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+{title:"The Adventure of the Egyptian Tomb", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+{title:"The Jewel Robbery at the Grand Metropolitan", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+{title:"The Kidnapped Prime Minister", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+{title:"The Disappearance of Mr Davenheim", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+{title:"The Adventure of the Italian Nobleman", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+{title:"The Case of the Missing Will", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1924)"},
+
+// ---- The Listerdale Mystery (1934, UK) ----
+{title:"The Listerdale Mystery", protagonist:"Standalone", year:1925, firstColl:"The Listerdale Mystery (1934)", otherColl:"The Golden Ball and Other Stories (1971, US)"},
+{title:"Philomel Cottage", protagonist:"Standalone", year:1924, firstColl:"The Listerdale Mystery (1934)"},
+{title:"The Girl in the Train", protagonist:"Standalone", year:1924, firstColl:"The Listerdale Mystery (1934)", otherColl:"The Golden Ball and Other Stories (1971)"},
+{title:"Sing a Song of Sixpence", protagonist:"Standalone", year:1929, firstColl:"The Listerdale Mystery (1934)"},
+{title:"The Manhood of Edward Robinson", protagonist:"Standalone", year:1924, firstColl:"The Listerdale Mystery (1934)", otherColl:"The Golden Ball and Other Stories (1971)"},
+{title:"Accident", protagonist:"Standalone", year:1929, firstColl:"The Listerdale Mystery (1934)"},
+{title:"Jane in Search of a Job", protagonist:"Standalone", year:1924, firstColl:"The Listerdale Mystery (1934)", otherColl:"The Golden Ball and Other Stories (1971)"},
+{title:"A Fruitful Sunday", protagonist:"Standalone", year:1928, firstColl:"The Listerdale Mystery (1934)", otherColl:"The Golden Ball (1971); Problem at Pollensa Bay (1991, UK)"},
+{title:"Mr Eastwood's Adventure", protagonist:"Standalone", year:1924, firstColl:"The Listerdale Mystery (1934)"},
+{title:"The Golden Ball", protagonist:"Standalone", year:1929, firstColl:"The Listerdale Mystery (1934)", otherColl:"The Golden Ball and Other Stories (1971, title story); Problem at Pollensa Bay (1991)"},
+{title:"The Rajah's Emerald", protagonist:"Standalone", year:1926, firstColl:"The Listerdale Mystery (1934)", otherColl:"The Golden Ball (1971); Problem at Pollensa Bay (1991)"},
+{title:"Swan Song", protagonist:"Standalone", year:1926, firstColl:"The Listerdale Mystery (1934)", otherColl:"The Golden Ball and Other Stories (1971)"},
+
+// ---- The Labours of Hercules (1947) ----
+{title:"The Nemean Lion", protagonist:"Hercule Poirot", year:1939, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Lernaean Hydra", protagonist:"Hercule Poirot", year:1939, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Arcadian Deer", protagonist:"Hercule Poirot", year:1940, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Erymanthian Boar", protagonist:"Hercule Poirot", year:1940, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Augean Stables", protagonist:"Hercule Poirot", year:1940, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Stymphalean Birds", protagonist:"Hercule Poirot", year:1940, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Cretan Bull", protagonist:"Hercule Poirot", year:1940, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Horses of Diomedes", protagonist:"Hercule Poirot", year:1940, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Girdle of Hippolyta", protagonist:"Hercule Poirot", year:1940, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Flock of Geryon", protagonist:"Hercule Poirot", year:1940, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Apples of the Hesperides", protagonist:"Hercule Poirot", year:1940, firstColl:"The Labours of Hercules (1947)"},
+{title:"The Capture of Cerberus", protagonist:"Hercule Poirot", year:1947, firstColl:"The Labours of Hercules (1947)", otherColl:"Rewritten from a 1939 draft rejected by the Strand; unpublished until 2009"},
+
+// ---- The Adventure of the Christmas Pudding (1960, UK) ----
+{title:"The Adventure of the Christmas Pudding", protagonist:"Hercule Poirot", year:1960, firstColl:"The Adventure of the Christmas Pudding (1960)", otherColl:"Expanded from \"Christmas Adventure\" (1923); US title \"The Theft of the Royal Ruby\" in Double Sin and Other Stories (1961, US)"},
+{title:"The Mystery of the Spanish Chest", protagonist:"Hercule Poirot", year:1960, firstColl:"The Adventure of the Christmas Pudding (1960)", otherColl:"Expanded from \"The Mystery of the Baghdad Chest\" (1932)"},
+{title:"The Under Dog", protagonist:"Hercule Poirot", year:1926, firstColl:"The Under Dog and Other Stories (1951, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"Four and Twenty Blackbirds", protagonist:"Hercule Poirot", year:1941, firstColl:"Three Blind Mice and Other Stories (1950, US)", otherColl:"The Adventure of the Christmas Pudding (1960, UK)"},
+{title:"The Dream", protagonist:"Hercule Poirot", year:1938, firstColl:"The Regatta Mystery and Other Stories (1939, US)", otherColl:"The Adventure of the Christmas Pudding (1960, UK)"},
+{title:"Greenshaw's Folly", protagonist:"Miss Marple", year:1956, firstColl:"The Adventure of the Christmas Pudding (1960, UK)", otherColl:"Double Sin and Other Stories (1961, US); Miss Marple's Final Cases (1979, UK)"},
+
+// ---- Double Sin and Other Stories (1961, US) ----
+{title:"Double Sin", protagonist:"Hercule Poirot", year:1923, firstColl:"Double Sin and Other Stories (1961, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"Wasp's Nest", protagonist:"Hercule Poirot", year:1928, firstColl:"Double Sin and Other Stories (1961, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"The Dressmaker's Doll", protagonist:"Standalone", year:1958, firstColl:"Double Sin and Other Stories (1961, US)", otherColl:"Miss Marple's Final Cases (1979, UK)"},
+{title:"The Double Clue", protagonist:"Hercule Poirot", year:1923, firstColl:"Double Sin and Other Stories (1961, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"The Last Seance", protagonist:"Standalone", year:1926, firstColl:"The Hound of Death and Other Stories (1933, UK)", otherColl:"Double Sin and Other Stories (1961, US)"},
+{title:"Sanctuary", protagonist:"Miss Marple", year:1954, firstColl:"Double Sin and Other Stories (1961, US)", otherColl:"Miss Marple's Final Cases (1979, UK)"},
+
+// ---- The Golden Ball and Other Stories (1971, US) — new stories only; ----
+// ---- 8 of its 15 are reprints of Listerdale Mystery stories, noted above ----
+{title:"The Hound of Death", protagonist:"Standalone", year:1933, firstColl:"The Hound of Death and Other Stories (1933, UK)", otherColl:"The Golden Ball and Other Stories (1971, US)"},
+{title:"The Gypsy", protagonist:"Standalone", year:1933, firstColl:"The Hound of Death and Other Stories (1933, UK)", otherColl:"The Golden Ball and Other Stories (1971, US)"},
+{title:"The Lamp", protagonist:"Standalone", year:1933, firstColl:"The Hound of Death and Other Stories (1933, UK)", otherColl:"The Golden Ball and Other Stories (1971, US)"},
+{title:"The Strange Case of Sir Arthur Carmichael", protagonist:"Standalone", year:1933, firstColl:"The Hound of Death and Other Stories (1933, UK)", otherColl:"The Golden Ball and Other Stories (1971, US)"},
+{title:"The Call of Wings", protagonist:"Standalone", year:1933, firstColl:"The Hound of Death and Other Stories (1933, UK)", otherColl:"The Golden Ball and Other Stories (1971, US)"},
+{title:"Magnolia Blossom", protagonist:"Standalone", year:1926, firstColl:"The Golden Ball and Other Stories (1971, US)", otherColl:"Problem at Pollensa Bay (1991, UK)"},
+{title:"Next to a Dog", protagonist:"Standalone", year:1929, firstColl:"The Golden Ball and Other Stories (1971, US)", otherColl:"Problem at Pollensa Bay (1991, UK)"},
+
+// ---- Poirot's Early Cases (1974) — new stories only; 3 of its 18 are ----
+// ---- reprints (Double Clue, Double Sin, Wasp's Nest) noted above ----
+{title:"The Affair at the Victory Ball", protagonist:"Hercule Poirot", year:1923, firstColl:"The Under Dog and Other Stories (1951, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"The King of Clubs", protagonist:"Hercule Poirot", year:1923, firstColl:"The Under Dog and Other Stories (1951, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"The Plymouth Express", protagonist:"Hercule Poirot", year:1923, firstColl:"The Under Dog and Other Stories (1951, US)", otherColl:"Poirot's Early Cases (1974, UK); plot basis for the novel The Mystery of the Blue Train (1928)"},
+{title:"The Chocolate Box", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1925, US edition)", otherColl:"Poirot's Early Cases (1974, first UK book)"},
+{title:"The Veiled Lady", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1925, US edition)", otherColl:"Poirot's Early Cases (1974, first UK book)"},
+{title:"The Adventure of Johnnie Waverly", protagonist:"Hercule Poirot", year:1923, firstColl:"Three Blind Mice and Other Stories (1950, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"The Market Basing Mystery", protagonist:"Hercule Poirot", year:1923, firstColl:"The Under Dog and Other Stories (1951, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"The Submarine Plans", protagonist:"Hercule Poirot", year:1923, firstColl:"The Under Dog and Other Stories (1951, US)", otherColl:"Poirot's Early Cases (1974, UK); rewritten as \"The Incredible Theft\" in Murder in the Mews (1937)"},
+{title:"The Adventure of the Clapham Cook", protagonist:"Hercule Poirot", year:1923, firstColl:"The Under Dog and Other Stories (1951, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"The Lost Mine", protagonist:"Hercule Poirot", year:1923, firstColl:"Poirot Investigates (1925, US edition)", otherColl:"Poirot's Early Cases (1974, first UK book)"},
+{title:"The Cornish Mystery", protagonist:"Hercule Poirot", year:1923, firstColl:"The Under Dog and Other Stories (1951, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"The Lemesurier Inheritance", protagonist:"Hercule Poirot", year:1923, firstColl:"The Under Dog and Other Stories (1951, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"The Third Floor Flat", protagonist:"Hercule Poirot", year:1929, firstColl:"Three Blind Mice and Other Stories (1950, US)", otherColl:"Poirot's Early Cases (1974, UK)"},
+{title:"How Does Your Garden Grow?", protagonist:"Hercule Poirot", year:1935, firstColl:"The Regatta Mystery and Other Stories (1939, US)", otherColl:"Poirot's Early Cases (1974, first UK book)"},
+{title:"Problem at Sea", protagonist:"Hercule Poirot", year:1936, firstColl:"The Regatta Mystery and Other Stories (1939, US)", otherColl:"Poirot's Early Cases (1974, first UK book)"},
+
+// ---- Miss Marple's Final Cases and Two Other Stories (1979, UK) — new ----
+// ---- stories only; Sanctuary and The Dressmaker's Doll noted above ----
+{title:"Strange Jest", protagonist:"Miss Marple", year:1941, firstColl:"Miss Marple's Final Cases (1979)"},
+{title:"Tape-Measure Murder", protagonist:"Miss Marple", year:1941, firstColl:"Miss Marple's Final Cases (1979)"},
+{title:"The Case of the Caretaker", protagonist:"Miss Marple", year:1942, firstColl:"Miss Marple's Final Cases (1979)"},
+{title:"The Case of the Perfect Maid", protagonist:"Miss Marple", year:1942, firstColl:"Miss Marple's Final Cases (1979)"},
+{title:"Miss Marple Tells a Story", protagonist:"Miss Marple", year:1934, firstColl:"Miss Marple's Final Cases (1979)"},
+{title:"In a Glass Darkly", protagonist:"Standalone", year:1934, firstColl:"Miss Marple's Final Cases (1979)"},
+
+// ---- While the Light Lasts and Other Stories (1997, UK) ----
+{title:"The House of Dreams", protagonist:"Standalone", year:1926, firstColl:"While the Light Lasts and Other Stories (1997)"},
+{title:"The Actress", protagonist:"Standalone", year:1923, firstColl:"While the Light Lasts and Other Stories (1997)"},
+{title:"The Edge", protagonist:"Standalone", year:1927, firstColl:"While the Light Lasts and Other Stories (1997)"},
+{title:"Christmas Adventure", protagonist:"Hercule Poirot", year:1923, firstColl:"While the Light Lasts and Other Stories (1997)", otherColl:"Expanded into \"The Adventure of the Christmas Pudding\" (1960)"},
+{title:"The Lonely God", protagonist:"Standalone", year:1926, firstColl:"While the Light Lasts and Other Stories (1997)"},
+{title:"Manx Gold", protagonist:"Standalone", year:1930, firstColl:"While the Light Lasts and Other Stories (1997)"},
+{title:"Within a Wall", protagonist:"Standalone", year:1925, firstColl:"While the Light Lasts and Other Stories (1997)"},
+{title:"The Mystery of the Baghdad Chest", protagonist:"Hercule Poirot", year:1932, firstColl:"While the Light Lasts and Other Stories (1997)", otherColl:"Expanded into \"The Mystery of the Spanish Chest\" (1960)"},
+{title:"While the Light Lasts", protagonist:"Standalone", year:1924, firstColl:"While the Light Lasts and Other Stories (1997)"},
+
+// ---- The Mysterious Mr Quin (1930) — remaining 10 stories ----
+{title:"The Coming of Mr Quin", protagonist:"Mr Satterthwaite", year:1924, firstColl:"The Mysterious Mr Quin (1930)"},
+{title:"The Shadow on the Glass", protagonist:"Mr Satterthwaite", year:1924, firstColl:"The Mysterious Mr Quin (1930)"},
+{title:"At the \"Bells and Motley\"", protagonist:"Mr Satterthwaite", year:1925, firstColl:"The Mysterious Mr Quin (1930)"},
+{title:"The Sign in the Sky", protagonist:"Mr Satterthwaite", year:1925, firstColl:"The Mysterious Mr Quin (1930)"},
+{title:"The Man from the Sea", protagonist:"Mr Satterthwaite", year:1929, firstColl:"The Mysterious Mr Quin (1930)"},
+{title:"The Voice in the Dark", protagonist:"Mr Satterthwaite", year:1927, firstColl:"The Mysterious Mr Quin (1930)"},
+{title:"The Face of Helen", protagonist:"Mr Satterthwaite", year:1927, firstColl:"The Mysterious Mr Quin (1930)"},
+{title:"The Dead Harlequin", protagonist:"Mr Satterthwaite", year:1929, firstColl:"The Mysterious Mr Quin (1930)"},
+{title:"The Bird with the Broken Wing", protagonist:"Mr Satterthwaite", year:1930, firstColl:"The Mysterious Mr Quin (1930)"},
+{title:"Harlequin's Lane", protagonist:"Mr Satterthwaite", year:1927, firstColl:"The Mysterious Mr Quin (1930)"},
+
+// ---- Parker Pyne Investigates (1934) — remaining 6 "domestic" cases ----
+{title:"The Case of the Middle-Aged Wife", protagonist:"Parker Pyne", year:1932, firstColl:"Parker Pyne Investigates (1934)"},
+{title:"The Case of the Discontented Soldier", protagonist:"Parker Pyne", year:1932, firstColl:"Parker Pyne Investigates (1934)"},
+{title:"The Case of the Distressed Lady", protagonist:"Parker Pyne", year:1932, firstColl:"Parker Pyne Investigates (1934)"},
+{title:"The Case of the Discontented Husband", protagonist:"Parker Pyne", year:1932, firstColl:"Parker Pyne Investigates (1934)"},
+{title:"The Case of the City Clerk", protagonist:"Parker Pyne", year:1932, firstColl:"Parker Pyne Investigates (1934)"},
+{title:"The Case of the Rich Woman", protagonist:"Parker Pyne", year:1932, firstColl:"Parker Pyne Investigates (1934)"},
+];
+const ssState = { sortKey:"year", sortDir:1 };
+const SS_COLS = [
+  {key:"title", get:d=>d.title}, {key:"protagonist", get:d=>d.protagonist},
+  {key:"year", get:d=>d.year}, {key:"firstColl", get:d=>d.firstColl},
+  {key:"otherColl", get:d=>d.otherColl||""},
+];
+function renderShortStoriesTable(){
+  const thead = document.querySelector("#ss-table thead tr");
+  thead.querySelectorAll("th").forEach(th=>{
+    th.classList.toggle("sorted", th.dataset.key === ssState.sortKey);
+    th.onclick = ()=>{
+      if(ssState.sortKey === th.dataset.key) ssState.sortDir *= -1;
+      else { ssState.sortKey = th.dataset.key; ssState.sortDir = 1; }
+      renderShortStoriesTable();
+    };
+  });
+  const rows = [...SHORT_STORIES];
+  const col = SS_COLS.find(c=>c.key===ssState.sortKey) || SS_COLS[2];
+  rows.sort((a,b)=>{
+    const va=col.get(a), vb=col.get(b);
+    if(typeof va==="number") return (va-vb)*ssState.sortDir;
+    return String(va).localeCompare(String(vb))*ssState.sortDir;
+  });
+  const tbody = document.getElementById("ss-tbody");
+  tbody.innerHTML = "";
+  rows.forEach(d=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="title-cell">${d.title}</td>
+      <td>${d.protagonist}</td><td>${d.year}</td>
+      <td>${d.firstColl}</td><td>${d.otherColl || "—"}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* =====================================================================
+   TAB SWITCHING
+   ===================================================================== */
+document.querySelectorAll("#tabBar .tab-btn").forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll("#tabBar .tab-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const tab = btn.dataset.tab;
+    document.getElementById("tab-timeline").hidden = tab !== "timeline";
+    document.getElementById("tab-atlas").hidden = tab !== "atlas";
+    document.getElementById("tab-shortstories").hidden = tab !== "shortstories";
+  };
+});
+
+/* =====================================================================
    INIT + CONTROLS
    ===================================================================== */
 function renderAll(){
@@ -806,6 +1021,7 @@ function renderAll(){
   renderLegend();
   renderTimeline();
   renderTable();
+  renderShortStoriesTable();
 }
 renderAll();
 </script>
