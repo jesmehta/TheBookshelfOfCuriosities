@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christie Timeline — Bookshelf of Curiosities</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Syne:wght@500;700;800&family=Syne+Mono&display=swap');
+
+:root{
+  --ink:#100e0b; --panel:#171310; --panel-2:#1d1811;
+  --rule: rgba(238,227,196,0.16); --rule-soft: rgba(238,227,196,0.08);
+  --ivory:#ece2c6; --ivory-dim: rgba(236,226,198,0.58); --ivory-faint: rgba(236,226,198,0.32);
+  --gold:#c9a227; --gold-bright:#e0bd45; --gold-dim: rgba(201,162,39,0.4);
+  /* location colour encoding */
+  --loc-london:#e0bd45;
+  --loc-uk:#7fae8e;
+  --loc-europe:#c1653b;
+  --loc-elsewhere:#8d8577;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--ink);color:var(--ivory);font-family:'Libre Baskerville',serif;}
+body{background-image:
+    radial-gradient(ellipse at 20% -10%, rgba(201,162,39,0.06), transparent 40%),
+    radial-gradient(ellipse at 90% 110%, rgba(201,162,39,0.05), transparent 45%);}
+.wrap{max-width:1400px;margin:0 auto;padding:36px 28px 80px;}
+
+.masthead{border-bottom:1px solid var(--rule); padding-bottom:22px; margin-bottom:24px;}
+.masthead-title{font-family:'Instrument Serif', serif; font-style:italic; font-size:46px; line-height:1; color:var(--ivory);}
+.masthead-title em{font-style:normal; color:var(--gold-bright);}
+.masthead-sub{font-family:'Syne Mono', monospace; font-size:11.5px; letter-spacing:0.04em; color:var(--ivory-dim); margin-top:8px; max-width:640px;}
+
+.filterbar{display:flex; flex-wrap:wrap; gap:26px; padding:18px 20px; margin-bottom:18px; background:var(--panel); border:1px solid var(--rule); align-items:flex-end;}
+.filter-group{min-width:150px;}
+.filter-label{font-family:'Syne Mono', monospace; font-size:10.5px; letter-spacing:0.08em; color:var(--gold-dim); display:block; margin-bottom:8px;}
+.chip-row{display:flex; flex-wrap:wrap; gap:6px;}
+.chip{font-family:'Syne Mono', monospace; font-size:11px; padding:5px 10px; border:1px solid var(--rule); color:var(--ivory-dim); cursor:pointer; background:transparent; user-select:none; transition:border-color .15s, color .15s, background .15s;}
+.chip:hover{border-color:var(--gold-dim); color:var(--ivory);}
+.chip.on{background:rgba(201,162,39,0.14); border-color:var(--gold); color:var(--gold-bright);}
+.filter-clear{font-family:'Syne Mono', monospace; font-size:11px; color:var(--ivory-faint); background:none; border:none; cursor:pointer; text-decoration:underline; text-decoration-color:var(--rule);}
+.filter-clear:hover{color:var(--gold-bright);}
+.result-count{font-family:'Syne Mono', monospace; font-size:11px; color:var(--ivory-faint); margin-left:auto; white-space:nowrap;}
+.year-range{display:flex; align-items:center; gap:8px; font-family:'Syne Mono', monospace; font-size:11px; color:var(--ivory-dim);}
+.year-range input[type=number]{width:64px; background:var(--panel-2); border:1px solid var(--rule); color:var(--ivory); font-family:'Syne Mono', monospace; font-size:11px; padding:5px 6px;}
+.axis-toggle{display:flex; gap:6px;}
+.axis-toggle .chip{min-width:auto;}
+
+.legend{display:flex; gap:28px; flex-wrap:wrap; align-items:center; font-family:'Syne Mono', monospace; font-size:10.5px; color:var(--ivory-faint); margin: 0 4px 14px;}
+.legend-block{display:flex; gap:14px; align-items:center; flex-wrap:wrap;}
+.legend-title{color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.06em; font-size:9.5px;}
+.legend-item{display:flex; align-items:center; gap:6px;}
+.legend-swatch{width:11px; height:11px; display:inline-block; background:var(--ivory-faint); border:1px solid var(--ink);}
+.legend-swatch.tri{background:transparent; width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:10px solid var(--ivory-faint);}
+.legend-swatch.circ{border-radius:50%;}
+
+.chart-wrap{background:var(--panel); border:1px solid var(--rule); padding:10px 4px 4px; margin-bottom:8px; overflow-x:auto;}
+svg#timeline{display:block;}
+.lane-band{fill:rgba(236,226,198,0.02);}
+.lane-band.alt{fill:rgba(236,226,198,0.045);}
+.lane-label{font-family:'Syne', sans-serif; font-weight:700; font-size:12px; fill:var(--ivory);}
+.lane-count{font-family:'Syne Mono', monospace; font-size:9.5px; fill:var(--ivory-faint);}
+.span-bar{stroke:var(--gold-dim); stroke-width:2; stroke-linecap:round; opacity:0.55;}
+.grid-line{stroke:var(--rule-soft); stroke-width:1;}
+.grid-label{font-family:'Syne Mono', monospace; font-size:10px; fill:var(--ivory-faint);}
+.dot-mark{cursor:pointer; stroke:var(--ink); stroke-width:0.8; transition:opacity .15s;}
+.dot-mark.dim{opacity:0.15;}
+.dot-mark.selected{stroke:#fff; stroke-width:1.6;}
+.approx-ring{fill:none; stroke-dasharray:1.4 1.6; stroke-width:0.9; opacity:0.6; pointer-events:none;}
+
+.tooltip{position:fixed; z-index:40; pointer-events:none; opacity:0; transition:opacity .1s; max-width:280px; background:var(--ink); border:1px solid var(--gold-dim); padding:10px 12px; font-size:12px; line-height:1.5; font-family:'Libre Baskerville',serif; box-shadow:0 12px 30px rgba(0,0,0,.5);}
+.tooltip b{display:block; font-style:italic; color:var(--gold-bright); margin-bottom:3px; font-size:13px;}
+.tooltip .tt-meta{font-family:'Syne Mono', monospace; font-size:10.5px; color:var(--ivory-dim);}
+
+.hint{font-family:'Syne Mono', monospace; font-size:11px; color:var(--ivory-faint); margin: 6px 4px 22px;}
+
+table{width:100%; border-collapse:collapse; font-size:13.5px;}
+thead th{text-align:left; font-family:'Syne Mono', monospace; font-size:10.5px; letter-spacing:0.06em; color:var(--gold-dim); border-bottom:1px solid var(--rule); padding:10px 12px; cursor:pointer; white-space:nowrap;}
+thead th:hover{color:var(--gold-bright);}
+thead th.sorted::after{content:' ▾'; color:var(--gold-bright);}
+tbody tr{border-bottom:1px solid var(--rule-soft); cursor:pointer; transition:background .12s;}
+tbody tr:hover{background:rgba(236,226,198,0.03);}
+tbody tr.selected{background:rgba(201,162,39,0.09);}
+tbody td{padding:11px 12px; vertical-align:top; color:var(--ivory-dim);}
+tbody td.title-cell{color:var(--ivory); font-style:italic;}
+tbody tr.dim{opacity:0.28;}
+.region-note{font-size:11.5px; color:var(--ivory-faint); font-style:normal;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="masthead-title">Christie <em>Timeline</em></div>
+    <div class="masthead-sub">Every case on one axis of time, laid out by protagonist — modelled on the Bookshelf's Asimov and Golden Age Sci-Fi author-timelines. Marker shape = format, marker colour = location.</div>
+  </div>
+
+  <div class="filterbar" id="filterbar"></div>
+
+  <div class="filterbar" style="margin-top:-10px;">
+    <div class="filter-group">
+      <span class="filter-label">X-axis</span>
+      <div class="chip-row axis-toggle" id="axisToggle">
+        <button class="chip on" data-axis="pub">Publication year</button>
+        <button class="chip" data-axis="iu">In-universe year (best-effort)</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Year range</span>
+      <div class="year-range">
+        <input type="number" id="yearMin" /> – <input type="number" id="yearMax" />
+        <button class="filter-clear" id="resetYears">reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="chart-wrap"><svg id="timeline"></svg></div>
+  <div id="tooltip" class="tooltip"></div>
+  <div class="hint" id="iuHint"></div>
+
+  <table id="tl-table">
+    <thead>
+      <tr>
+        <th data-key="title">Title</th>
+        <th data-key="protagonist">Protagonist</th>
+        <th data-key="type">Type</th>
+        <th data-key="format">Format</th>
+        <th data-key="year">Published</th>
+        <th data-key="loc">In‑universe location</th>
+        <th data-key="time">In‑universe time</th>
+        <th data-key="realWorld">Closest real place</th>
+      </tr>
+    </thead>
+    <tbody id="tl-tbody"></tbody>
+  </table>
+</div>
+
+<script>
+/* =====================================================================
+   DATA — same underlying entries as the Christie Atlas.
+   p: protagonist tags (array) | ty: consolidated type | f: format
+   panel: london | uk | europe | elsewhere  → drives marker COLOUR
+   f: Novel | Short story | Short story collection → drives marker SHAPE
+   ===================================================================== */
+const DATA = [
+{t:"The Mysterious Affair at Styles", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1920, loc:"Styles Court, Essex", time:"WWI, contemporary", panel:"uk", rw:"Abney Hall, Cheshire (interior model)"},
+{t:"The Murder on the Links", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1923, loc:"Merlinville-sur-Mer, France", time:"Early 1920s", panel:"europe", rw:"Normandy coast, France (generic)"},
+{t:"The Murder of Roger Ackroyd", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1926, loc:"King's Abbot (fictional)", time:"Mid-1920s", panel:"uk", rw:"Unconfirmed, Berkshire/Oxfordshire guess"},
+{t:"The Big Four", p:["Poirot"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1927, loc:"London + global", time:"Late 1920s", panel:"elsewhere", rw:"N/A — deliberately global"},
+{t:"The Mystery of the Blue Train", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1928, loc:"Calais–Nice train; French Riviera", time:"Late 1920s", panel:"europe", rw:"Nice / Antibes, France"},
+{t:"Peril at End House", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1932, loc:"St Loo (fictional)", time:"Early 1930s", panel:"uk", rw:"Torquay / Dartmouth, Devon"},
+{t:"Lord Edgware Dies", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1933, loc:"Regent Gate, London (fictional)", time:"Early 1930s", panel:"london", rw:"Mayfair / Marylebone, London"},
+{t:"Murder on the Orient Express", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1934, loc:"Istanbul–Calais train, nr. Vinkovci", time:"Winter, explicit snowdrift", panel:"europe", rw:"Vinkovci, Croatia (then Yugoslavia)"},
+{t:"Three Act Tragedy", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1934, loc:"Loomouth, Cornwall; London", time:"Mid-1930s", panel:"uk", rw:"Looe, Cornwall (name similarity)"},
+{t:"Death in the Clouds", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1935, loc:"Paris–Croydon flight", time:"Mid-1930s", panel:"london", rw:"Croydon Airport, London"},
+{t:"The ABC Murders", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Andover, Bexhill, Churston, Doncaster", time:"Mid-1930s", panel:"uk", rw:"Same, real named towns"},
+{t:"Murder in Mesopotamia", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Dig site nr. Hassanieh, Iraq", time:"Mid-1930s", panel:"europe", rw:"Nimrud / Ur region, Iraq"},
+{t:"Cards on the Table", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Park Lane flat, London", time:"Autumn (implied Nov.)", panel:"london", rw:"Park Lane, Mayfair"},
+{t:"Dumb Witness", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1937, loc:"Market Basing (fictional)", time:"Spring 1936", panel:"uk", rw:"Wallingford, Oxfordshire"},
+{t:"Death on the Nile", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1937, loc:"Nile steamer (Aswan–Wadi Halfa)", time:"Winter tourist season", panel:"europe", rw:"Aswan / Abu Simbel, Egypt"},
+{t:"Appointment with Death", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1938, loc:"Petra, Jordan", time:"Spring", panel:"europe", rw:"Petra, Jordan"},
+{t:"Hercule Poirot's Christmas", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1938, loc:"Gorston Hall (fictional)", time:"Christmas", panel:"uk", rw:"Abney Hall, Cheshire"},
+{t:"Sad Cypress", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1940, loc:"Hunterbury (fictional)", time:"Late 1930s", panel:"uk", rw:"Unconfirmed, Home Counties"},
+{t:"One, Two, Buckle My Shoe", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1940, loc:"Queen Charlotte St, London", time:"1940, wartime", panel:"london", rw:"Westminster, London"},
+{t:"Evil Under the Sun", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1941, loc:"Smugglers' Island (fictional)", time:"Summer", panel:"uk", rw:"Burgh Island, South Devon"},
+{t:"Five Little Pigs", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"Unnamed English country house", time:"Present-day probe of old murder", panel:"uk", rw:"Unconfirmed"},
+{t:"The Hollow", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1946, loc:"\"The Hollow\", nr. London", time:"Mid-1940s", panel:"uk", rw:"A real house w/ pool (Christie's dedication; unnamed)"},
+{t:"Taken at the Flood", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1948, loc:"Warmsley Vale (fictional)", time:"Just after WWII", panel:"uk", rw:"Unconfirmed, Home Counties"},
+{t:"Mrs McGinty's Dead", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1952, loc:"Broadhinny (fictional)", time:"Early 1950s", panel:"uk", rw:"Unconfirmed"},
+{t:"After the Funeral", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1953, loc:"Enderby Hall (fictional)", time:"Early 1950s", panel:"uk", rw:"Abney Hall, Cheshire"},
+{t:"Hickory Dickory Dock", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1955, loc:"Hostel nr. British Museum, London", time:"Mid-1950s", panel:"london", rw:"Bloomsbury, London"},
+{t:"Dead Man's Folly", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1956, loc:"Nassecombe, Devon (fictional)", time:"Summer fête", panel:"uk", rw:"Greenway, nr. Dartmouth, Devon"},
+{t:"Cat Among the Pigeons", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1959, loc:"Meadowbank School (fictional)", time:"Autumn term", panel:"uk", rw:"Unconfirmed"},
+{t:"The Clocks", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1963, loc:"Crowdean (fictional)", time:"Early 1960s", panel:"uk", rw:"Nr. Brighton / Worthing, Sussex"},
+{t:"Third Girl", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1966, loc:"Borodene Mansions, London", time:"Mid-1960s", panel:"london", rw:"Chelsea / Kensington, London"},
+{t:"Hallowe'en Party", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1969, loc:"Woodleigh Common (fictional)", time:"Hallowe'en, contemporary", panel:"uk", rw:"Unconfirmed"},
+{t:"Elephants Can Remember", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1972, loc:"Chelsea, London", time:"Early 1970s", panel:"london", rw:"Chelsea, London"},
+{t:"Curtain", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1975, loc:"Styles Court, Essex", time:"Ambiguous — chronology paradox", panel:"uk", rw:"Essex (as Book 1)"},
+{t:"The Murder at the Vicarage", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1930, loc:"St Mary Mead", time:"1930", panel:"uk", rw:"Contested: Wallingford, Oxon / Hampshire"},
+{t:"The Body in the Library", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"St Mary Mead + Gossington Hall", time:"Wartime", panel:"uk", rw:"Same St Mary Mead question"},
+{t:"The Moving Finger", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"Lymstock (fictional)", time:"Wartime", panel:"uk", rw:"Unconfirmed, Devon/Somerset-coded"},
+{t:"A Murder Is Announced", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1950, loc:"Chipping Cleghorn (fictional)", time:"1950", panel:"uk", rw:"Cotswolds (Oxon / Glos)"},
+{t:"They Do It with Mirrors", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1952, loc:"Stonygates (fictional)", time:"Early 1950s", panel:"uk", rw:"Abney Hall, Cheshire"},
+{t:"A Pocket Full of Rye", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1953, loc:"Yewtree Lodge, nr. London", time:"Early 1950s", panel:"uk", rw:"Unconfirmed, Home Counties"},
+{t:"4.50 from Paddington", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1957, loc:"Rutherford Hall, nr. Brackhampton", time:"Mid-1950s", panel:"uk", rw:"Abney Hall (house) + real Paddington line"},
+{t:"The Mirror Crack'd from Side to Side", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1962, loc:"St Mary Mead", time:"Early 1960s", panel:"uk", rw:"See St Mary Mead above"},
+{t:"A Caribbean Mystery", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1964, loc:"St Honoré (fictional island)", time:"Mid-1960s", panel:"elsewhere", rw:"Barbados"},
+{t:"At Bertram's Hotel", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1965, loc:"Pond St, nr. Piccadilly, London", time:"Mid-1960s", panel:"london", rw:"Brown's Hotel, Mayfair"},
+{t:"Nemesis", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1971, loc:"Coach tour + fictional village", time:"Early 1970s", panel:"uk", rw:"Southern England, nr. Alton, Hampshire"},
+{t:"Sleeping Murder", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1976, loc:"Dillmouth (fictional)", time:"Written 1940s, pub. posthumously", panel:"uk", rw:"Torquay / Dawlish, Devon"},
+{t:"The Sittaford Mystery", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1931, loc:"Dartmoor, England", time:"Winter, snowbound", panel:"uk", rw:"Dartmoor, Devon"},
+{t:"Why Didn't They Ask Evans?", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1934, loc:"Wales (Marchbolt) + England", time:"Mid-1930s", panel:"uk", rw:"Welsh coast, poss. nr. Barmouth"},
+{t:"Murder Is Easy", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1939, loc:"Wychwood-under-Ashe (fictional)", time:"Late 1930s", panel:"uk", rw:"Oxfordshire (real Wychwood Forest)"},
+{t:"And Then There Were None", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1939, loc:"Soldier Island (fictional)", time:"Late 1930s", panel:"uk", rw:"Burgh Island, South Devon"},
+{t:"Towards Zero", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1944, loc:"Saltcreek (fictional)", time:"Wartime", panel:"uk", rw:"Salcombe / Kingsbridge, Devon"},
+{t:"Death Comes as the End", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1944, loc:"Thebes, Egypt", time:"c. 2000 BC", panel:"europe", rw:"Thebes (modern Luxor), Egypt"},
+{t:"Sparkling Cyanide", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1945, loc:"Luxembourg restaurant, London", time:"Wartime-adjacent", panel:"london", rw:"West End, London"},
+{t:"Crooked House", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1949, loc:"Swinly Dean, nr. London", time:"Late 1940s", panel:"uk", rw:"Surrey / Kent commuter belt"},
+{t:"Ordeal by Innocence", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1958, loc:"Drymouth (fictional)", time:"Late 1950s", panel:"uk", rw:"Devon coast (Plymouth-coded)"},
+{t:"The Pale Horse", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1961, loc:"Much Deeping (fictional)", time:"Early 1960s", panel:"uk", rw:"Berkshire / Surrey border"},
+{t:"Endless Night", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1967, loc:"Gipsy's Acre (fictional)", time:"Mid-1960s", panel:"uk", rw:"Unconfirmed"},
+{t:"The Secret Adversary", p:["Tommy & Tuppence"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1922, loc:"London (Ritz, Whitehall)", time:"Just after WWI", panel:"london", rw:"Piccadilly / Whitehall, London"},
+{t:"Partners in Crime", p:["Tommy & Tuppence"], ty:"Crime / Espionage / Adventure", f:"Short story collection", yr:1929, loc:"Intl. Detective Agency, London", time:"Late 1920s", panel:"london", rw:"Bloomsbury / central London"},
+{t:"N or M?", p:["Tommy & Tuppence"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1941, loc:"Leahampton (fictional)", time:"WWII, explicit", panel:"uk", rw:"South coast, poss. Bournemouth"},
+{t:"By the Pricking of My Thumbs", p:["Tommy & Tuppence"], ty:"Murder Mystery", f:"Novel", yr:1968, loc:"English village + nursing home", time:"Late 1960s", panel:"uk", rw:"Unconfirmed"},
+{t:"Postern of Fate", p:["Tommy & Tuppence"], ty:"Murder Mystery", f:"Novel", yr:1973, loc:"Hollowquay (fictional)", time:"Early 1970s", panel:"uk", rw:"Devon / Cornwall coast (generic)"},
+{t:"The Man in the Brown Suit", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1924, loc:"London; South Africa", time:"Early 1920s", panel:"elsewhere", rw:"Cape Town / Kimberley, South Africa"},
+{t:"The Secret of Chimneys", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1925, loc:"Chimneys (fictional)", time:"Mid-1920s", panel:"uk", rw:"Abney Hall, Cheshire"},
+{t:"The Seven Dials Mystery", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1929, loc:"Chimneys (sequel)", time:"Late 1920s", panel:"uk", rw:"Abney Hall, Cheshire"},
+{t:"Destination Unknown", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1954, loc:"Morocco", time:"Cold War era", panel:"europe", rw:"Casablanca / Fez, Morocco"},
+{t:"Passenger to Frankfurt", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1970, loc:"Frankfurt + multiple capitals", time:"1970, Cold War", panel:"europe", rw:"Frankfurt, Germany"},
+{t:"The Mysterious Mr Quin (English tales)", p:["Quin & Satterthwaite"], ty:"Mystery (light)", f:"Short story collection", yr:1930, loc:"Various English country houses", time:"1920s", panel:"uk", rw:"Composite — not specifically located"},
+{t:"\"The Soul of the Croupier\"", p:["Quin & Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Monte Carlo", time:"1920s", panel:"europe", rw:"Monaco"},
+{t:"\"The World's End\"", p:["Quin & Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Corsica", time:"1920s", panel:"europe", rw:"Corsica"},
+{t:"Parker Pyne Investigates (client cases)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story collection", yr:1934, loc:"London office, Richmond Street", time:"Early 1930s", panel:"london", rw:"Central London"},
+{t:"\"Have You Got Everything You Want?\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Orient Express train", time:"1933", panel:"europe", rw:"Simplon-Orient-Express route, Europe"},
+{t:"\"The Gate of Baghdad\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Baghdad, Iraq", time:"1933", panel:"europe", rw:"Baghdad, Iraq"},
+{t:"\"The House at Shiraz\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Shiraz / Teheran, Persia", time:"1933", panel:"europe", rw:"Shiraz, Iran"},
+{t:"\"The Pearl of Price\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Petra, Jordan", time:"1933", panel:"europe", rw:"Petra, Jordan"},
+{t:"\"Death on the Nile\" (short story)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Nile cruise, Egypt", time:"1933", panel:"europe", rw:"Nile River, Egypt"},
+{t:"\"The Oracle at Delphi\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Delphi, Greece", time:"1933", panel:"europe", rw:"Delphi, Greece"},
+{t:"\"The Regatta Mystery\" (Parker Pyne)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1936, loc:"Dartmouth Harbour, Devon", time:"Mid-1930s", panel:"uk", rw:"Dartmouth, Devon"},
+{t:"\"Problem at Pollensa Bay\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1935, loc:"Pollença Bay, Mallorca", time:"Mid-1930s", panel:"europe", rw:"Pollença, Mallorca, Spain"},
+{t:"Poirot Investigates", p:["Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1924, loc:"Mostly London, some international", time:"Early 1920s", panel:"london", rw:"Central London (Poirot's early flat)"},
+{t:"The Listerdale Mystery", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1934, loc:"Various English settings", time:"Early 1930s", panel:"uk", rw:"Unconfirmed"},
+{t:"The Labours of Hercules", p:["Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1947, loc:"Various, London + Europe (myth-themed)", time:"Mid-1940s", panel:"europe", rw:"Mixed — several explicitly European"},
+{t:"The Adventure of the Christmas Pudding", p:["Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1960, loc:"English country house (title story)", time:"Christmas", panel:"uk", rw:"Abney Hall, Cheshire"},
+{t:"Double Sin and Other Stories", p:["Poirot","Marple","Various"], ty:"Anthology / Various", f:"Short story collection", yr:1961, loc:"Various", time:"Mixed decades", panel:"elsewhere", rw:"Unconfirmed"},
+{t:"The Golden Ball and Other Stories", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1971, loc:"Various English settings", time:"Mixed", panel:"uk", rw:"Unconfirmed"},
+{t:"Poirot's Early Cases", p:["Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1974, loc:"Mostly London", time:"1920s (written retrospectively)", panel:"london", rw:"Central London"},
+{t:"Miss Marple's Final Cases", p:["Marple"], ty:"Murder Mystery", f:"Short story collection", yr:1979, loc:"St Mary Mead + various", time:"Mixed decades", panel:"uk", rw:"See St Mary Mead entries"},
+{t:"While the Light Lasts", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1997, loc:"Various early settings", time:"1920s–30s", panel:"elsewhere", rw:"Unconfirmed"},
+];
+
+/* Best-effort in-universe year: exact when the "time" text states one
+   (a 4-digit year, or an explicit BC date); otherwise falls back to the
+   publication year as a "contemporary" estimate, flagged approximate. */
+function extractIUYear(d){
+  let m = d.time.match(/(\d{3,4})\s*BC/i);
+  if(m) return { year: -parseInt(m[1],10), approx:false };
+  m = d.time.match(/\b(1[5-9]\d{2}|20\d{2})\b/);
+  if(m) return { year: parseInt(m[1],10), approx:false };
+  return { year: d.yr, approx:true };
+}
+DATA.forEach((d,i)=>{
+  d.id = i;
+  const iu = extractIUYear(d);
+  d.iuYear = iu.year; d.iuApprox = iu.approx;
+});
+
+const LANES = ["Poirot","Marple","Parker Pyne","Quin & Satterthwaite","Tommy & Tuppence","Standalone","Various"];
+const LOC_COLOR = {london:"var(--loc-london)", uk:"var(--loc-uk)", europe:"var(--loc-europe)", elsewhere:"var(--loc-elsewhere)"};
+const LOC_LABEL = {london:"London", uk:"UK", europe:"Europe & the Orient", elsewhere:"Elsewhere"};
+const FORMAT_SHAPE = {"Novel":"square","Short story":"triangle","Short story collection":"circle"};
+
+const state = {
+  filters:{ protagonist:new Set(), location:new Set(), format:new Set() },
+  axis:"pub",
+  yearMin:null, yearMax:null,
+  selectedId:null, sortKey:"yr", sortDir:1
+};
+const YEAR_BOUNDS = { pub:[1920,1997], iu:[Math.min(...DATA.map(d=>d.iuYear)), Math.max(...DATA.map(d=>d.iuYear))] };
+
+function uniqueProtagonists(){ return [...new Set(DATA.flatMap(d=>d.p))].sort((a,b)=>{
+  const ia=LANES.indexOf(a), ib=LANES.indexOf(b);
+  return (ia<0?99:ia)-(ib<0?99:ib);
+}); }
+
+function xOf(d){ return state.axis==="pub" ? d.yr : d.iuYear; }
+
+function matches(d){
+  const f = state.filters;
+  if(f.protagonist.size && !d.p.some(x=>f.protagonist.has(x))) return false;
+  if(f.location.size && !f.location.has(d.panel)) return false;
+  if(f.format.size && !f.format.has(d.f)) return false;
+  const x = xOf(d);
+  if(state.yearMin!==null && x < state.yearMin) return false;
+  if(state.yearMax!==null && x > state.yearMax) return false;
+  return true;
+}
+
+/* =====================================================================
+   FILTER BAR
+   ===================================================================== */
+function renderFilterBar(){
+  const container = document.getElementById("filterbar");
+  container.innerHTML = "";
+  const groups = [
+    {key:"protagonist", label:"Protagonist", opts:uniqueProtagonists()},
+    {key:"location", label:"Location", opts:["london","uk","europe","elsewhere"], display:LOC_LABEL},
+    {key:"format", label:"Format", opts:["Novel","Short story","Short story collection"]},
+  ];
+  groups.forEach(g=>{
+    const wrap = document.createElement("div"); wrap.className = "filter-group";
+    const lbl = document.createElement("span"); lbl.className = "filter-label"; lbl.textContent = g.label;
+    wrap.appendChild(lbl);
+    const row = document.createElement("div"); row.className = "chip-row";
+    g.opts.forEach(opt=>{
+      const chip = document.createElement("button");
+      chip.className = "chip" + (state.filters[g.key].has(opt) ? " on" : "");
+      chip.textContent = g.display ? g.display[opt] : opt;
+      chip.onclick = ()=>{
+        if(state.filters[g.key].has(opt)) state.filters[g.key].delete(opt);
+        else state.filters[g.key].add(opt);
+        renderAll();
+      };
+      row.appendChild(chip);
+    });
+    wrap.appendChild(row);
+    container.appendChild(wrap);
+  });
+  const clear = document.createElement("button");
+  clear.className = "filter-clear"; clear.textContent = "Clear filters";
+  clear.onclick = ()=>{ Object.values(state.filters).forEach(s=>s.clear()); renderAll(); };
+  container.appendChild(clear);
+  const count = document.createElement("div");
+  count.className = "result-count";
+  count.textContent = DATA.filter(matches).length + " / " + DATA.length + " entries";
+  container.appendChild(count);
+}
+
+function renderLegend(){
+  document.getElementById("legend").innerHTML = `
+    <div class="legend-block"><span class="legend-title">Shape · format</span>
+      <span class="legend-item"><span class="legend-swatch"></span> Novel</span>
+      <span class="legend-item"><span class="legend-swatch tri"></span> Short story</span>
+      <span class="legend-item"><span class="legend-swatch circ"></span> Collection</span>
+    </div>
+    <div class="legend-block"><span class="legend-title">Colour · location</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-london)"></span> London</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-uk)"></span> UK</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-europe)"></span> Europe &amp; the Orient</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-elsewhere)"></span> Elsewhere</span>
+    </div>
+    <div class="legend-block"><span class="legend-item"><span style="width:14px;height:0;border-top:2px dashed var(--gold-dim);display:inline-block;"></span> protagonist's publishing span</span></div>
+  `;
+}
+
+/* =====================================================================
+   TIMELINE CHART
+   ===================================================================== */
+function shapeEl(shape, cx, cy, r, cls){
+  const ns = "http://www.w3.org/2000/svg";
+  if(shape==="square"){
+    const el = document.createElementNS(ns,"rect");
+    const s = r*1.8;
+    el.setAttribute("x",cx-s/2); el.setAttribute("y",cy-s/2); el.setAttribute("width",s); el.setAttribute("height",s);
+    el.setAttribute("class",cls); return el;
+  }
+  if(shape==="triangle"){
+    const el = document.createElementNS(ns,"polygon");
+    const s = r*2.3;
+    el.setAttribute("points", `${cx},${cy-s*0.62} ${cx-s*0.55},${cy+s*0.42} ${cx+s*0.55},${cy+s*0.42}`);
+    el.setAttribute("class",cls); return el;
+  }
+  const el = document.createElementNS(ns,"circle");
+  el.setAttribute("cx",cx); el.setAttribute("cy",cy); el.setAttribute("r",r);
+  el.setAttribute("class",cls); return el;
+}
+
+let tt;
+function tip(evt, html){
+  if(!tt) tt = document.getElementById("tooltip");
+  tt.innerHTML = html;
+  tt.style.left = (evt.clientX+14)+"px";
+  tt.style.top = (evt.clientY+14)+"px";
+  tt.style.opacity = 1;
+}
+function untip(){ if(tt) tt.style.opacity = 0; }
+
+function renderTimeline(){
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById("timeline");
+  svg.innerHTML = "";
+
+  const bounds = YEAR_BOUNDS[state.axis];
+  const padYears = state.axis==="pub" ? 3 : Math.max(5, Math.round((bounds[1]-bounds[0])*0.03));
+  const start = bounds[0]-padYears, end = bounds[1]+padYears;
+
+  const left = 168, right = 40, top = 30, rowH = 58;
+  const plotW = Math.max(900, (end-start)*7);
+  const w = left+plotW+right;
+  const h = top + LANES.length*rowH + 30;
+  svg.setAttribute("width", w); svg.setAttribute("height", h);
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+
+  const x = yr => left + ((yr-start)/(end-start))*plotW;
+
+  // decade gridlines
+  const step = state.axis==="pub" ? 10 : (end-start > 500 ? 500 : 10);
+  let gStart = Math.ceil(start/step)*step;
+  for(let yr=gStart; yr<=end; yr+=step){
+    const xx = x(yr);
+    const line = document.createElementNS(svgNS,"line");
+    line.setAttribute("class","grid-line");
+    line.setAttribute("x1",xx); line.setAttribute("x2",xx); line.setAttribute("y1",top-6); line.setAttribute("y2",h-16);
+    svg.appendChild(line);
+    const label = document.createElementNS(svgNS,"text");
+    label.setAttribute("class","grid-label"); label.setAttribute("x",xx); label.setAttribute("y",top-12); label.setAttribute("text-anchor","middle");
+    label.textContent = yr < 0 ? Math.abs(yr)+" BC" : yr;
+    svg.appendChild(label);
+  }
+
+  LANES.forEach((lane, idx)=>{
+    const baseY = top + idx*rowH + rowH/2;
+    const laneAll = DATA.filter(d=>d.p.includes(lane));
+    const laneVisible = laneAll.filter(matches);
+
+    const band = document.createElementNS(svgNS,"rect");
+    band.setAttribute("class","lane-band"+(idx%2?" alt":""));
+    band.setAttribute("x",0); band.setAttribute("y", top+idx*rowH); band.setAttribute("width", w); band.setAttribute("height", rowH);
+    svg.appendChild(band);
+
+    if(laneAll.length){
+      const years = laneAll.map(xOf);
+      const spanBar = document.createElementNS(svgNS,"line");
+      spanBar.setAttribute("class","span-bar");
+      spanBar.setAttribute("x1", x(Math.min(...years))); spanBar.setAttribute("x2", x(Math.max(...years)));
+      spanBar.setAttribute("y1", baseY); spanBar.setAttribute("y2", baseY);
+      svg.appendChild(spanBar);
+    }
+
+    const laneLabel = document.createElementNS(svgNS,"text");
+    laneLabel.setAttribute("class","lane-label"); laneLabel.setAttribute("x",10); laneLabel.setAttribute("y",baseY-4);
+    laneLabel.textContent = lane;
+    svg.appendChild(laneLabel);
+    const laneCount = document.createElementNS(svgNS,"text");
+    laneCount.setAttribute("class","lane-count"); laneCount.setAttribute("x",10); laneCount.setAttribute("y",baseY+11);
+    laneCount.textContent = `${laneVisible.length}/${laneAll.length} shown`;
+    svg.appendChild(laneCount);
+
+    laneAll.forEach(d=>{
+      const xx = x(xOf(d));
+      const shape = FORMAT_SHAPE[d.f] || "circle";
+      const dim = !matches(d);
+      const g = shapeEl(shape, xx, baseY, 6, "dot-mark"+(dim?" dim":"")+(d.id===state.selectedId?" selected":""));
+      g.style.fill = LOC_COLOR[d.panel];
+      g.onmousemove = (e)=> tip(e, `<b>${d.t.replace(/^"|"$/g,"")}</b><span class="tt-meta">${d.p.join(", ")} · ${d.f} · ${d.yr}<br>${d.loc}<br>${d.time}</span>`);
+      g.onmouseleave = untip;
+      g.onclick = ()=> selectBook(d.id);
+      svg.appendChild(g);
+      if(d.iuApprox && state.axis==="iu"){
+        const ring = shapeEl("circle", xx, baseY, 9, "approx-ring");
+        ring.style.stroke = LOC_COLOR[d.panel];
+        svg.appendChild(ring);
+      }
+    });
+  });
+}
+
+function selectBook(id){
+  state.selectedId = id;
+  renderTimeline(); renderTable();
+  const row = document.querySelector(`#tl-tbody tr[data-id="${id}"]`);
+  if(row) row.scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+/* =====================================================================
+   TABLE
+   ===================================================================== */
+const COLS = [
+  {key:"title", get:d=>d.t}, {key:"protagonist", get:d=>d.p.join(", ")}, {key:"type", get:d=>d.ty},
+  {key:"format", get:d=>d.f}, {key:"year", get:d=>d.yr}, {key:"loc", get:d=>d.loc},
+  {key:"time", get:d=>d.time}, {key:"realWorld", get:d=>d.rw},
+];
+function renderTable(){
+  const thead = document.querySelector("#tl-table thead tr");
+  thead.querySelectorAll("th").forEach(th=>{
+    th.classList.toggle("sorted", th.dataset.key === state.sortKey);
+    th.onclick = ()=>{
+      if(state.sortKey === th.dataset.key) state.sortDir *= -1;
+      else { state.sortKey = th.dataset.key; state.sortDir = 1; }
+      renderTable();
+    };
+  });
+  const rows = [...DATA];
+  const col = COLS.find(c=>c.key===state.sortKey) || COLS[4];
+  rows.sort((a,b)=>{
+    const va=col.get(a), vb=col.get(b);
+    if(typeof va==="number") return (va-vb)*state.sortDir;
+    return String(va).localeCompare(String(vb))*state.sortDir;
+  });
+  const tbody = document.getElementById("tl-tbody");
+  tbody.innerHTML = "";
+  rows.forEach(d=>{
+    const tr = document.createElement("tr");
+    tr.className = (matches(d)?"":"dim") + (d.id===state.selectedId?" selected":"");
+    tr.dataset.id = d.id;
+    tr.innerHTML = `
+      <td class="title-cell">${d.t}</td>
+      <td>${d.p.join(", ")}</td><td>${d.ty}</td><td>${d.f}</td><td>${d.yr}</td>
+      <td>${d.loc}</td><td>${d.time}</td><td>${d.rw}</td>
+    `;
+    tr.onclick = ()=> selectBook(d.id);
+    tbody.appendChild(tr);
+  });
+}
+
+/* =====================================================================
+   INIT + CONTROLS
+   ===================================================================== */
+function syncYearInputs(){
+  const b = YEAR_BOUNDS[state.axis];
+  document.getElementById("yearMin").value = state.yearMin ?? b[0];
+  document.getElementById("yearMax").value = state.yearMax ?? b[1];
+}
+document.getElementById("yearMin").onchange = (e)=>{ state.yearMin = e.target.value===""?null:parseInt(e.target.value,10); renderAll(); };
+document.getElementById("yearMax").onchange = (e)=>{ state.yearMax = e.target.value===""?null:parseInt(e.target.value,10); renderAll(); };
+document.getElementById("resetYears").onclick = ()=>{ state.yearMin=null; state.yearMax=null; syncYearInputs(); renderAll(); };
+document.querySelectorAll("#axisToggle .chip").forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll("#axisToggle .chip").forEach(b=>b.classList.remove("on"));
+    btn.classList.add("on");
+    state.axis = btn.dataset.axis;
+    state.yearMin=null; state.yearMax=null;
+    syncYearInputs(); renderAll();
+  };
+});
+
+function renderIuHint(){
+  const exact = DATA.filter(d=>!d.iuApprox).length;
+  document.getElementById("iuHint").textContent =
+    `In-universe year is exact for ${exact} of ${DATA.length} entries (a year is explicitly stated in the text). The rest fall back to their publication year as a "contemporary" estimate — shown with a dashed ring when that axis is active.`;
+}
+
+function renderAll(){
+  renderFilterBar();
+  renderLegend();
+  renderTimeline();
+  renderTable();
+}
+syncYearInputs();
+renderIuHint();
+renderAll();
+</script>
+</body>
+</html>
