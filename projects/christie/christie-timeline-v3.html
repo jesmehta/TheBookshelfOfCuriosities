@@ -141,8 +141,43 @@ tbody td{padding:10px 12px; vertical-align:top; color:var(--ivory-dim);}
 tbody td.title-cell{color:var(--ivory); font-style:italic; font-family:'Cormorant Garamond',serif; font-size:16.5px;}
 tbody tr.dim{opacity:0.28;}
 
+.triptych{display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:var(--rule); border:1px solid var(--rule); margin-bottom:8px;}
+.triptych.focused{display:flex; align-items:stretch; gap:1px; height:520px;}
+.map-panel{position:relative; background:var(--panel); aspect-ratio:1/1.02; overflow:hidden; cursor:zoom-in;}
+.triptych.focused .map-panel{aspect-ratio:auto;}
+.map-panel-big{flex:2.3 1 0; cursor:default;}
+.map-panel-thumbs{flex:1 1 0; display:flex; flex-direction:column; gap:1px;}
+.map-panel-thumbs .map-panel{flex:1 1 0; cursor:zoom-in;}
+.map-watermark{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:52px; color:var(--rule-soft); pointer-events:none; text-align:center; line-height:1; letter-spacing:0.02em; z-index:0;}
+.triptych.focused .map-panel-thumbs .map-watermark{font-size:22px;}
+.map-panel-label{position:absolute; top:14px; left:16px; font-family:'Josefin Sans', sans-serif; font-weight:700; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-bright); z-index:3;}
+.map-panel-count{position:absolute; top:14px; right:16px; font-family:'Josefin Sans', sans-serif; font-size:11px; color:var(--ivory-faint); z-index:3;}
+.map-panel-exit{position:absolute; top:14px; right:16px; font-family:'Josefin Sans', sans-serif; font-size:11px; color:var(--gold-dim); z-index:4; cursor:pointer; background:none; border:none; text-decoration:underline;}
+.map-panel-exit:hover{color:var(--gold-bright);}
+.map-panel svg{position:absolute; inset:0; width:100%; height:100%; z-index:1;}
+.landmass{fill:rgba(240,230,207,0.06); stroke:var(--gold-dim); stroke-width:0.35;}
+.map-dot{cursor:pointer; transition:opacity .18s;}
+.map-shape{fill:var(--gold-bright); stroke:var(--ink); stroke-width:0.5;}
+.map-dot.dim .map-shape{fill:var(--ivory-faint); opacity:0.35;}
+.map-dot.selected .map-shape{fill:var(--select-stroke);}
+.map-dot.pulse .map-shape{animation:map-pulse 0.9s ease-out;}
+@keyframes map-pulse{0%{r:8; opacity:1;} 100%{r:2.6; opacity:1;}}
+.map-tip{font-family:'Josefin Sans', sans-serif; font-size:2.4px; fill:var(--ivory-dim); pointer-events:none;}
+.map-dot.dim .map-tip{opacity:0.3;}
+
+.elsewhere-strip{font-family:'Josefin Sans', sans-serif; font-size:11.5px; color:var(--ivory-faint); background:var(--panel); padding:12px 18px; margin-bottom:10px;}
+.elsewhere-strip strong{color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.08em; font-size:10px;}
+.map-hint{font-family:'Josefin Sans', sans-serif; font-size:11px; color:var(--ivory-faint); margin:0 0 16px; line-height:1.6;}
+.region-note{font-size:11px; color:var(--ivory-faint); font-style:normal;}
+
 [hidden]{display:none !important;}
-@media (max-width:900px){ .layout{flex-direction:column;} .sidebar{flex:1 1 auto; position:static; width:100%;} }
+@media (max-width:900px){
+  .layout{flex-direction:column;} .sidebar{flex:1 1 auto; position:static; width:100%;}
+  .triptych{grid-template-columns:1fr;}
+  .triptych.focused{flex-direction:column; height:auto;}
+  .map-panel-thumbs{flex-direction:row;}
+  .map-panel-thumbs .map-panel{aspect-ratio:1/1;}
+}
 </style>
 </head>
 <body>
@@ -190,7 +225,32 @@ tbody tr.dim{opacity:0.28;}
   </div>
 
   <div id="tab-atlas" hidden>
-    <div class="tab-placeholder">The map atlas is being rebuilt with real coastline data — coming soon.</div>
+    <div class="layout">
+      <aside class="sidebar deco-frame" id="atlasSidebar"></aside>
+      <div class="content">
+        <div class="legend-strip deco-frame" id="atlasLegend"></div>
+        <div class="triptych" id="triptych"></div>
+        <div id="atlasTooltip" class="tooltip"></div>
+        <div class="elsewhere-strip" id="elsewhereStrip"></div>
+        <p class="map-hint">Click open water on a panel to zoom in — click a thumbnail to switch focus. UK and Europe &amp; the Orient are drawn from real coastline data at true relative scale, with every location re-projected from its actual latitude/longitude. London stays a symbolic river-sketch until street-level data replaces it. Marker shape = format (as in the legend above).</p>
+
+        <table id="atlas-table">
+          <thead>
+            <tr>
+              <th data-key="title">Title</th>
+              <th data-key="protagonist">Protagonist</th>
+              <th data-key="type">Type</th>
+              <th data-key="format">Format</th>
+              <th data-key="year">Published</th>
+              <th data-key="loc">In‑universe location</th>
+              <th data-key="time">In‑universe time</th>
+              <th data-key="realWorld">Closest real place</th>
+            </tr>
+          </thead>
+          <tbody id="atlas-tbody"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <div id="tab-shortstories" hidden>
@@ -212,98 +272,103 @@ tbody tr.dim{opacity:0.28;}
 <script>
 /* =====================================================================
    DATA
-   panel: london | uk | europe | elsewhere  → marker COLOUR (broad, 4-way)
+   panel: london | uk | europe | elsewhere  → marker COLOUR (broad, 4-way);
+          also which Atlas-tab triptych panel a dot is drawn on
    region: London | UK | The Continent and the Orient | South Africa | Caribbean |
            Global / Unconfirmed  → LOCATION FILTER (Elsewhere expanded, rest broad)
    f: Novel | Short story | Short story collection → marker SHAPE
+   cx/cy: Atlas-tab map coordinates for uk/europe/london entries — real
+          lat/long re-projected (equirectangular + cos(lat) correction),
+          ported from christie-atlas-v3.html. Absent on "elsewhere" rows,
+          which have no basemap to place them on.
    ===================================================================== */
 const DATA = [
-{t:"The Mysterious Affair at Styles", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1920, loc:"Styles Court, Essex", time:"WWI, contemporary", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire (interior model)"},
-{t:"The Murder on the Links", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1923, loc:"Merlinville-sur-Mer, France", time:"Early 1920s", panel:"europe", region:"The Continent and the Orient", rw:"Normandy coast, France (generic)"},
-{t:"The Murder of Roger Ackroyd", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1926, loc:"King's Abbot (fictional)", time:"Mid-1920s", panel:"uk", region:"UK", rw:"Unconfirmed, Berkshire/Oxfordshire guess"},
+{t:"The Mysterious Affair at Styles", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1920, loc:"Styles Court, Essex", time:"WWI, contemporary", panel:"uk", region:"UK", cx:87.06, cy:78.12, rw:"Abney Hall, Cheshire (interior model)"},
+{t:"The Murder on the Links", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1923, loc:"Merlinville-sur-Mer, France", time:"Early 1920s", panel:"europe", region:"The Continent and the Orient", cx:14.84, cy:4.09, rw:"Normandy coast, France (generic)"},
+{t:"The Murder of Roger Ackroyd", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1926, loc:"King's Abbot (fictional)", time:"Mid-1920s", panel:"uk", region:"UK", cx:62.35, cy:84.74, rw:"Unconfirmed, Berkshire/Oxfordshire guess"},
 {t:"The Big Four", p:["Hercule Poirot"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1927, loc:"London + global", time:"Late 1920s", panel:"elsewhere", region:"Global / Unconfirmed", rw:"N/A — deliberately global"},
-{t:"The Mystery of the Blue Train", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1928, loc:"Calais–Nice train; French Riviera", time:"Late 1920s", panel:"europe", region:"The Continent and the Orient", rw:"Nice / Antibes, France"},
-{t:"Peril at End House", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1932, loc:"St Loo (fictional)", time:"Early 1930s", panel:"uk", region:"UK", rw:"Torquay / Dartmouth, Devon"},
-{t:"Lord Edgware Dies", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1933, loc:"Regent Gate, London (fictional)", time:"Early 1930s", panel:"london", region:"London", rw:"Mayfair / Marylebone, London"},
-{t:"Murder on the Orient Express", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1934, loc:"Istanbul–Calais train, nr. Vinkovci", time:"Winter, explicit snowdrift", panel:"europe", region:"The Continent and the Orient", rw:"Vinkovci, Croatia (then Yugoslavia)"},
-{t:"Three Act Tragedy", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1934, loc:"Loomouth, Cornwall; London", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Looe, Cornwall (name similarity)"},
-{t:"Death in the Clouds", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1935, loc:"Paris–Croydon flight", time:"Mid-1930s", panel:"london", region:"London", rw:"Croydon Airport, London"},
-{t:"The ABC Murders", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Andover, Bexhill, Churston, Doncaster", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Same, real named towns"},
-{t:"Murder in Mesopotamia", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Dig site nr. Hassanieh, Iraq", time:"Mid-1930s", panel:"europe", region:"The Continent and the Orient", rw:"Nimrud / Ur region, Iraq"},
-{t:"Cards on the Table", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Park Lane flat, London", time:"Autumn (implied Nov.)", panel:"london", region:"London", rw:"Park Lane, Mayfair"},
-{t:"Dumb Witness", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1937, loc:"Market Basing (fictional)", time:"Spring 1936", panel:"uk", region:"UK", rw:"Wallingford, Oxfordshire"},
-{t:"Death on the Nile", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1937, loc:"Nile steamer (Aswan–Wadi Halfa)", time:"Winter tourist season", panel:"europe", region:"The Continent and the Orient", rw:"Aswan / Abu Simbel, Egypt"},
-{t:"Appointment with Death", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1938, loc:"Petra, Jordan", time:"Spring", panel:"europe", region:"The Continent and the Orient", rw:"Petra, Jordan"},
-{t:"Hercule Poirot's Christmas", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1938, loc:"Gorston Hall (fictional)", time:"Christmas", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
-{t:"Sad Cypress", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1940, loc:"Hunterbury (fictional)", time:"Late 1930s", panel:"uk", region:"UK", rw:"Unconfirmed, Home Counties"},
-{t:"One, Two, Buckle My Shoe", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1940, loc:"Queen Charlotte St, London", time:"1940, wartime", panel:"london", region:"London", rw:"Westminster, London"},
-{t:"Evil Under the Sun", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1941, loc:"Smugglers' Island (fictional)", time:"Summer", panel:"uk", region:"UK", rw:"Burgh Island, South Devon"},
-{t:"Five Little Pigs", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"Unnamed English country house", time:"Present-day probe of old murder", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"The Hollow", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1946, loc:"\"The Hollow\", nr. London", time:"Mid-1940s", panel:"uk", region:"UK", rw:"A real house w/ pool (Christie's dedication; unnamed)"},
-{t:"Taken at the Flood", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1948, loc:"Warmsley Vale (fictional)", time:"Just after WWII", panel:"uk", region:"UK", rw:"Unconfirmed, Home Counties"},
-{t:"Mrs McGinty's Dead", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1952, loc:"Broadhinny (fictional)", time:"Early 1950s", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"After the Funeral", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1953, loc:"Enderby Hall (fictional)", time:"Early 1950s", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
-{t:"Hickory Dickory Dock", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1955, loc:"Hostel nr. British Museum, London", time:"Mid-1950s", panel:"london", region:"London", rw:"Bloomsbury, London"},
-{t:"Dead Man's Folly", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1956, loc:"Nassecombe, Devon (fictional)", time:"Summer fête", panel:"uk", region:"UK", rw:"Greenway, nr. Dartmouth, Devon"},
-{t:"Cat Among the Pigeons", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1959, loc:"Meadowbank School (fictional)", time:"Autumn term", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"The Clocks", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1963, loc:"Crowdean (fictional)", time:"Early 1960s", panel:"uk", region:"UK", rw:"Nr. Brighton / Worthing, Sussex"},
-{t:"Third Girl", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1966, loc:"Borodene Mansions, London", time:"Mid-1960s", panel:"london", region:"London", rw:"Chelsea / Kensington, London"},
-{t:"Hallowe'en Party", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1969, loc:"Woodleigh Common (fictional)", time:"Hallowe'en, contemporary", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"Elephants Can Remember", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1972, loc:"Chelsea, London", time:"Early 1970s", panel:"london", region:"London", rw:"Chelsea, London"},
-{t:"Curtain", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1975, loc:"Styles Court, Essex", time:"Ambiguous — chronology paradox", panel:"uk", region:"UK", rw:"Essex (as Book 1)"},
-{t:"The Murder at the Vicarage", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1930, loc:"St Mary Mead", time:"1930", panel:"uk", region:"UK", rw:"Contested: Wallingford, Oxon / Hampshire"},
-{t:"The Body in the Library", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"St Mary Mead + Gossington Hall", time:"Wartime", panel:"uk", region:"UK", rw:"Same St Mary Mead question"},
-{t:"The Moving Finger", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"Lymstock (fictional)", time:"Wartime", panel:"uk", region:"UK", rw:"Unconfirmed, Devon/Somerset-coded"},
-{t:"A Murder Is Announced", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1950, loc:"Chipping Cleghorn (fictional)", time:"1950", panel:"uk", region:"UK", rw:"Cotswolds (Oxon / Glos)"},
-{t:"They Do It with Mirrors", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1952, loc:"Stonygates (fictional)", time:"Early 1950s", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
-{t:"A Pocket Full of Rye", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1953, loc:"Yewtree Lodge, nr. London", time:"Early 1950s", panel:"uk", region:"UK", rw:"Unconfirmed, Home Counties"},
-{t:"4.50 from Paddington", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1957, loc:"Rutherford Hall, nr. Brackhampton", time:"Mid-1950s", panel:"uk", region:"UK", rw:"Abney Hall (house) + real Paddington line"},
-{t:"The Mirror Crack'd from Side to Side", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1962, loc:"St Mary Mead", time:"Early 1960s", panel:"uk", region:"UK", rw:"See St Mary Mead above"},
+{t:"The Mystery of the Blue Train", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1928, loc:"Calais–Nice train; French Riviera", time:"Late 1920s", panel:"europe", region:"The Continent and the Orient", cx:26.0, cy:14.9, rw:"Nice / Antibes, France"},
+{t:"Peril at End House", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1932, loc:"St Loo (fictional)", time:"Early 1930s", panel:"uk", region:"UK", cx:34.94, cy:105.98, rw:"Torquay / Dartmouth, Devon"},
+{t:"Lord Edgware Dies", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1933, loc:"Regent Gate, London (fictional)", time:"Early 1930s", panel:"london", region:"London", cx:45, cy:38, rw:"Mayfair / Marylebone, London"},
+{t:"Murder on the Orient Express", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1934, loc:"Istanbul–Calais train, nr. Vinkovci", time:"Winter, explicit snowdrift", panel:"europe", region:"The Continent and the Orient", cx:43.88, cy:11.86, rw:"Vinkovci, Croatia (then Yugoslavia)"},
+{t:"Three Act Tragedy", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1934, loc:"Loomouth, Cornwall; London", time:"Mid-1930s", panel:"uk", region:"UK", cx:24.12, cy:108.12, rw:"Looe, Cornwall (name similarity)"},
+{t:"Death in the Clouds", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1935, loc:"Paris–Croydon flight", time:"Mid-1930s", panel:"london", region:"London", cx:55, cy:92, rw:"Croydon Airport, London"},
+{t:"The ABC Murders", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Andover, Bexhill, Churston, Doncaster", time:"Mid-1930s", panel:"uk", region:"UK", cx:63.18, cy:46.37, rw:"Same, real named towns"},
+{t:"Murder in Mesopotamia", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Dig site nr. Hassanieh, Iraq", time:"Mid-1930s", panel:"europe", region:"The Continent and the Orient", cx:81.91, cy:29.42, rw:"Nimrud / Ur region, Iraq"},
+{t:"Cards on the Table", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Park Lane flat, London", time:"Autumn (implied Nov.)", panel:"london", region:"London", cx:44, cy:42, rw:"Park Lane, Mayfair"},
+{t:"Dumb Witness", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1937, loc:"Market Basing (fictional)", time:"Spring 1936", panel:"uk", region:"UK", cx:63.18, cy:83.77, rw:"Wallingford, Oxfordshire"},
+{t:"Death on the Nile", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1937, loc:"Nile steamer (Aswan–Wadi Halfa)", time:"Winter tourist season", panel:"europe", region:"The Continent and the Orient", cx:65.74, cy:52.36, rw:"Aswan / Abu Simbel, Egypt"},
+{t:"Appointment with Death", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1938, loc:"Petra, Jordan", time:"Spring", panel:"europe", region:"The Continent and the Orient", cx:69.67, cy:40.44, rw:"Petra, Jordan"},
+{t:"Hercule Poirot's Christmas", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1938, loc:"Gorston Hall (fictional)", time:"Christmas", panel:"uk", region:"UK", cx:50.47, cy:49.09, rw:"Abney Hall, Cheshire"},
+{t:"Sad Cypress", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1940, loc:"Hunterbury (fictional)", time:"Late 1930s", panel:"uk", region:"UK", cx:69.76, cy:90.78, rw:"Unconfirmed, Home Counties"},
+{t:"One, Two, Buckle My Shoe", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1940, loc:"Queen Charlotte St, London", time:"1940, wartime", panel:"london", region:"London", cx:50, cy:55, rw:"Westminster, London"},
+{t:"Evil Under the Sun", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1941, loc:"Smugglers' Island (fictional)", time:"Summer", panel:"uk", region:"UK", cx:30.71, cy:109.48, rw:"Burgh Island, South Devon"},
+{t:"Five Little Pigs", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"Unnamed English country house", time:"Present-day probe of old murder", panel:"uk", region:"UK", cx:65.88, cy:84.94, rw:"Unconfirmed"},
+{t:"The Hollow", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1946, loc:"\"The Hollow\", nr. London", time:"Mid-1940s", panel:"uk", region:"UK", cx:69.88, cy:83.18, rw:"A real house w/ pool (Christie's dedication; unnamed)"},
+{t:"Taken at the Flood", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1948, loc:"Warmsley Vale (fictional)", time:"Just after WWII", panel:"uk", region:"UK", cx:78.71, cy:90.2, rw:"Unconfirmed, Home Counties"},
+{t:"Mrs McGinty's Dead", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1952, loc:"Broadhinny (fictional)", time:"Early 1950s", panel:"uk", region:"UK", cx:69.88, cy:89.22, rw:"Unconfirmed"},
+{t:"After the Funeral", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1953, loc:"Enderby Hall (fictional)", time:"Early 1950s", panel:"uk", region:"UK", cx:50.47, cy:49.09, rw:"Abney Hall, Cheshire"},
+{t:"Hickory Dickory Dock", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1955, loc:"Hostel nr. British Museum, London", time:"Mid-1950s", panel:"london", region:"London", cx:60, cy:33, rw:"Bloomsbury, London"},
+{t:"Dead Man's Folly", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1956, loc:"Nassecombe, Devon (fictional)", time:"Summer fête", panel:"uk", region:"UK", cx:34.32, cy:107.26, rw:"Greenway, nr. Dartmouth, Devon"},
+{t:"Cat Among the Pigeons", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1959, loc:"Meadowbank School (fictional)", time:"Autumn term", panel:"uk", region:"UK", cx:69.29, cy:82.41, rw:"Unconfirmed"},
+{t:"The Clocks", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1963, loc:"Crowdean (fictional)", time:"Early 1960s", panel:"uk", region:"UK", cx:72.12, cy:98.96, rw:"Nr. Brighton / Worthing, Sussex"},
+{t:"Third Girl", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1966, loc:"Borodene Mansions, London", time:"Mid-1960s", panel:"london", region:"London", cx:16, cy:56, rw:"Chelsea / Kensington, London"},
+{t:"Hallowe'en Party", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1969, loc:"Woodleigh Common (fictional)", time:"Hallowe'en, contemporary", panel:"uk", region:"UK", cx:63.65, cy:90.2, rw:"Unconfirmed"},
+{t:"Elephants Can Remember", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1972, loc:"Chelsea, London", time:"Early 1970s", panel:"london", region:"London", cx:14, cy:58, rw:"Chelsea, London"},
+{t:"Curtain", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1975, loc:"Styles Court, Essex", time:"Ambiguous — chronology paradox", panel:"uk", region:"UK", cx:87.06, cy:78.12, rw:"Essex (as Book 1)"},
+{t:"The Murder at the Vicarage", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1930, loc:"St Mary Mead", time:"1930", panel:"uk", region:"UK", cx:63.18, cy:83.77, rw:"Contested: Wallingford, Oxon / Hampshire"},
+{t:"The Body in the Library", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"St Mary Mead + Gossington Hall", time:"Wartime", panel:"uk", region:"UK", cx:63.18, cy:83.77, rw:"Same St Mary Mead question"},
+{t:"The Moving Finger", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"Lymstock (fictional)", time:"Wartime", panel:"uk", region:"UK", cx:40.0, cy:95.07, rw:"Unconfirmed, Devon/Somerset-coded"},
+{t:"A Murder Is Announced", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1950, loc:"Chipping Cleghorn (fictional)", time:"1950", panel:"uk", region:"UK", cx:58.35, cy:77.15, rw:"Cotswolds (Oxon / Glos)"},
+{t:"They Do It with Mirrors", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1952, loc:"Stonygates (fictional)", time:"Early 1950s", panel:"uk", region:"UK", cx:50.47, cy:49.09, rw:"Abney Hall, Cheshire"},
+{t:"A Pocket Full of Rye", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1953, loc:"Yewtree Lodge, nr. London", time:"Early 1950s", panel:"uk", region:"UK", cx:77.29, cy:87.28, rw:"Unconfirmed, Home Counties"},
+{t:"4.50 from Paddington", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1957, loc:"Rutherford Hall, nr. Brackhampton", time:"Mid-1950s", panel:"uk", region:"UK", cx:50.47, cy:49.09, rw:"Abney Hall (house) + real Paddington line"},
+{t:"The Mirror Crack'd from Side to Side", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1962, loc:"St Mary Mead", time:"Early 1960s", panel:"uk", region:"UK", cx:63.18, cy:83.77, rw:"See St Mary Mead above"},
 {t:"A Caribbean Mystery", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1964, loc:"St Honoré (fictional island)", time:"Mid-1960s", panel:"elsewhere", region:"Caribbean", rw:"Barbados"},
-{t:"At Bertram's Hotel", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1965, loc:"Pond St, nr. Piccadilly, London", time:"Mid-1960s", panel:"london", region:"London", rw:"Brown's Hotel, Mayfair"},
-{t:"Nemesis", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1971, loc:"Coach tour + fictional village", time:"Early 1970s", panel:"uk", region:"UK", rw:"Southern England, nr. Alton, Hampshire"},
-{t:"Sleeping Murder", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1976, loc:"Dillmouth (fictional)", time:"Written 1940s, pub. posthumously", panel:"uk", region:"UK", rw:"Torquay / Dawlish, Devon"},
-{t:"The Sittaford Mystery", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1931, loc:"Dartmoor, England", time:"Winter, snowbound", panel:"uk", region:"UK", rw:"Dartmoor, Devon"},
-{t:"Why Didn't They Ask Evans?", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1934, loc:"Wales (Marchbolt) + England", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Welsh coast, poss. nr. Barmouth"},
-{t:"Murder Is Easy", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1939, loc:"Wychwood-under-Ashe (fictional)", time:"Late 1930s", panel:"uk", region:"UK", rw:"Oxfordshire (real Wychwood Forest)"},
-{t:"And Then There Were None", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1939, loc:"Soldier Island (fictional)", time:"Late 1930s", panel:"uk", region:"UK", rw:"Burgh Island, South Devon"},
-{t:"Towards Zero", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1944, loc:"Saltcreek (fictional)", time:"Wartime", panel:"uk", region:"UK", rw:"Salcombe / Kingsbridge, Devon"},
-{t:"Death Comes as the End", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1944, loc:"Thebes, Egypt", time:"c. 2000 BC", panel:"europe", region:"The Continent and the Orient", rw:"Thebes (modern Luxor), Egypt"},
-{t:"Sparkling Cyanide", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1945, loc:"Luxembourg restaurant, London", time:"Wartime-adjacent", panel:"london", region:"London", rw:"West End, London"},
-{t:"Crooked House", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1949, loc:"Swinly Dean, nr. London", time:"Late 1940s", panel:"uk", region:"UK", rw:"Surrey / Kent commuter belt"},
-{t:"Ordeal by Innocence", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1958, loc:"Drymouth (fictional)", time:"Late 1950s", panel:"uk", region:"UK", rw:"Devon coast (Plymouth-coded)"},
-{t:"The Pale Horse", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1961, loc:"Much Deeping (fictional)", time:"Early 1960s", panel:"uk", region:"UK", rw:"Berkshire / Surrey border"},
-{t:"Endless Night", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1967, loc:"Gipsy's Acre (fictional)", time:"Mid-1960s", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"The Secret Adversary", p:["Tommy and Tuppence"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1922, loc:"London (Ritz, Whitehall)", time:"Just after WWI", panel:"london", region:"London", rw:"Piccadilly / Whitehall, London"},
-{t:"Partners in Crime", p:["Tommy and Tuppence"], ty:"Crime / Espionage / Adventure", f:"Short story collection", yr:1929, loc:"Intl. Detective Agency, London", time:"Late 1920s", panel:"london", region:"London", rw:"Bloomsbury / central London"},
-{t:"N or M?", p:["Tommy and Tuppence"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1941, loc:"Leahampton (fictional)", time:"WWII, explicit", panel:"uk", region:"UK", rw:"South coast, poss. Bournemouth"},
-{t:"By the Pricking of My Thumbs", p:["Tommy and Tuppence"], ty:"Murder Mystery", f:"Novel", yr:1968, loc:"English village + nursing home", time:"Late 1960s", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"Postern of Fate", p:["Tommy and Tuppence"], ty:"Murder Mystery", f:"Novel", yr:1973, loc:"Hollowquay (fictional)", time:"Early 1970s", panel:"uk", region:"UK", rw:"Devon / Cornwall coast (generic)"},
+{t:"At Bertram's Hotel", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1965, loc:"Pond St, nr. Piccadilly, London", time:"Mid-1960s", panel:"london", region:"London", cx:44, cy:41, rw:"Brown's Hotel, Mayfair"},
+{t:"Nemesis", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1971, loc:"Coach tour + fictional village", time:"Early 1970s", panel:"uk", region:"UK", cx:64.94, cy:92.54, rw:"Southern England, nr. Alton, Hampshire"},
+{t:"Sleeping Murder", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1976, loc:"Dillmouth (fictional)", time:"Written 1940s, pub. posthumously", panel:"uk", region:"UK", cx:35.65, cy:103.64, rw:"Torquay / Dawlish, Devon"},
+{t:"The Sittaford Mystery", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1931, loc:"Dartmoor, England", time:"Winter, snowbound", panel:"uk", region:"UK", cx:30.47, cy:103.64, rw:"Dartmoor, Devon"},
+{t:"Why Didn't They Ask Evans?", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1934, loc:"Wales (Marchbolt) + England", time:"Mid-1930s", panel:"uk", region:"UK", cx:28.82, cy:61.95, rw:"Welsh coast, poss. nr. Barmouth"},
+{t:"Murder Is Easy", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1939, loc:"Wychwood-under-Ashe (fictional)", time:"Late 1930s", panel:"uk", region:"UK", cx:58.0, cy:78.7, rw:"Oxfordshire (real Wychwood Forest)"},
+{t:"And Then There Were None", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1939, loc:"Soldier Island (fictional)", time:"Late 1930s", panel:"uk", region:"UK", cx:30.59, cy:109.68, rw:"Burgh Island, South Devon"},
+{t:"Towards Zero", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1944, loc:"Saltcreek (fictional)", time:"Wartime", panel:"uk", region:"UK", cx:32.12, cy:110.46, rw:"Salcombe / Kingsbridge, Devon"},
+{t:"Death Comes as the End", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1944, loc:"Thebes, Egypt", time:"c. 2000 BC", panel:"europe", region:"The Continent and the Orient", cx:65.33, cy:49.29, rw:"Thebes (modern Luxor), Egypt"},
+{t:"Sparkling Cyanide", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1945, loc:"Luxembourg restaurant, London", time:"Wartime-adjacent", panel:"london", region:"London", cx:47, cy:44, rw:"West End, London"},
+{t:"Crooked House", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1949, loc:"Swinly Dean, nr. London", time:"Late 1940s", panel:"uk", region:"UK", cx:71.06, cy:88.25, rw:"Surrey / Kent commuter belt"},
+{t:"Ordeal by Innocence", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1958, loc:"Drymouth (fictional)", time:"Late 1950s", panel:"uk", region:"UK", cx:27.76, cy:107.73, rw:"Devon coast (Plymouth-coded)"},
+{t:"The Pale Horse", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1961, loc:"Much Deeping (fictional)", time:"Early 1960s", panel:"uk", region:"UK", cx:67.65, cy:87.28, rw:"Berkshire / Surrey border"},
+{t:"Endless Night", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1967, loc:"Gipsy's Acre (fictional)", time:"Mid-1960s", panel:"uk", region:"UK", cx:69.29, cy:81.63, rw:"Unconfirmed"},
+{t:"The Secret Adversary", p:["Tommy and Tuppence"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1922, loc:"London (Ritz, Whitehall)", time:"Just after WWI", panel:"london", region:"London", cx:48, cy:46, rw:"Piccadilly / Whitehall, London"},
+{t:"Partners in Crime", p:["Tommy and Tuppence"], ty:"Crime / Espionage / Adventure", f:"Short story collection", yr:1929, loc:"Intl. Detective Agency, London", time:"Late 1920s", panel:"london", region:"London", cx:52, cy:44, rw:"Bloomsbury / central London"},
+{t:"N or M?", p:["Tommy and Tuppence"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1941, loc:"Leahampton (fictional)", time:"WWII, explicit", panel:"uk", region:"UK", cx:54.35, cy:100.91, rw:"South coast, poss. Bournemouth"},
+{t:"By the Pricking of My Thumbs", p:["Tommy and Tuppence"], ty:"Murder Mystery", f:"Novel", yr:1968, loc:"English village + nursing home", time:"Late 1960s", panel:"uk", region:"UK", cx:65.88, cy:84.94, rw:"Unconfirmed"},
+{t:"Postern of Fate", p:["Tommy and Tuppence"], ty:"Murder Mystery", f:"Novel", yr:1973, loc:"Hollowquay (fictional)", time:"Early 1970s", panel:"uk", region:"UK", cx:21.88, cy:108.31, rw:"Devon / Cornwall coast (generic)"},
 {t:"The Man in the Brown Suit", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1924, loc:"London; South Africa", time:"Early 1920s", panel:"elsewhere", region:"South Africa", rw:"Cape Town / Kimberley, South Africa"},
-{t:"The Secret of Chimneys", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1925, loc:"Chimneys (fictional)", time:"Mid-1920s", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
-{t:"The Seven Dials Mystery", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1929, loc:"Chimneys (sequel)", time:"Late 1920s", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
-{t:"Destination Unknown", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1954, loc:"Morocco", time:"Cold War era", panel:"europe", region:"The Continent and the Orient", rw:"Casablanca / Fez, Morocco"},
-{t:"Passenger to Frankfurt", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1970, loc:"Frankfurt + multiple capitals", time:"1970, Cold War", panel:"europe", region:"The Continent and the Orient", rw:"Frankfurt, Germany"},
-{t:"The Mysterious Mr Quin (English tales)", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story collection", yr:1930, loc:"Various English country houses", time:"1920s", panel:"uk", region:"UK", rw:"Composite — not specifically located"},
-{t:"\"The Soul of the Croupier\"", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Monte Carlo", time:"1920s", panel:"europe", region:"The Continent and the Orient", rw:"Monaco", coll:"The Mysterious Mr Quin (1930)"},
-{t:"\"The World's End\"", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Corsica", time:"1920s", panel:"europe", region:"The Continent and the Orient", rw:"Corsica", coll:"The Mysterious Mr Quin (1930)"},
-{t:"Parker Pyne Investigates (client cases)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story collection", yr:1934, loc:"London office, Richmond Street", time:"Early 1930s", panel:"london", region:"London", rw:"Central London"},
-{t:"\"Have You Got Everything You Want?\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Orient Express train", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Simplon-Orient-Express route, Europe", coll:"Parker Pyne Investigates (1934)"},
-{t:"\"The Gate of Baghdad\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Baghdad, Iraq", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Baghdad, Iraq", coll:"Parker Pyne Investigates (1934)"},
-{t:"\"The House at Shiraz\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Shiraz / Teheran, Persia", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Shiraz, Iran", coll:"Parker Pyne Investigates (1934)"},
-{t:"\"The Pearl of Price\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Petra, Jordan", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Petra, Jordan", coll:"Parker Pyne Investigates (1934)"},
-{t:"\"Death on the Nile\" (short story)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Nile cruise, Egypt", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Nile River, Egypt", coll:"Parker Pyne Investigates (1934)"},
-{t:"\"The Oracle at Delphi\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Delphi, Greece", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Delphi, Greece", coll:"Parker Pyne Investigates (1934)"},
-{t:"\"The Regatta Mystery\" (Parker Pyne)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1936, loc:"Dartmouth Harbour, Devon", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Dartmouth, Devon", coll:"The Regatta Mystery and Other Stories (1939, US)"},
-{t:"\"Problem at Pollensa Bay\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1935, loc:"Pollença Bay, Mallorca", time:"Mid-1930s", panel:"europe", region:"The Continent and the Orient", rw:"Pollença, Mallorca, Spain", coll:"The Regatta Mystery and Other Stories (1939, US)"},
-{t:"Poirot Investigates", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1924, loc:"Mostly London, some international", time:"Early 1920s", panel:"london", region:"London", rw:"Central London (Poirot's early flat)"},
-{t:"The Listerdale Mystery", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1934, loc:"Various English settings", time:"Early 1930s", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"The Labours of Hercules", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1947, loc:"Various, London + Europe (myth-themed)", time:"Mid-1940s", panel:"europe", region:"The Continent and the Orient", rw:"Mixed — several explicitly European"},
-{t:"The Adventure of the Christmas Pudding", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1960, loc:"English country house (title story)", time:"Christmas", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
+{t:"The Secret of Chimneys", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1925, loc:"Chimneys (fictional)", time:"Mid-1920s", panel:"uk", region:"UK", cx:50.47, cy:49.09, rw:"Abney Hall, Cheshire"},
+{t:"The Seven Dials Mystery", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1929, loc:"Chimneys (sequel)", time:"Late 1920s", panel:"uk", region:"UK", cx:50.47, cy:49.09, rw:"Abney Hall, Cheshire"},
+{t:"Destination Unknown", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1954, loc:"Morocco", time:"Cold War era", panel:"europe", region:"The Continent and the Orient", cx:2.96, cy:34.25, rw:"Casablanca / Fez, Morocco"},
+{t:"Passenger to Frankfurt", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1970, loc:"Frankfurt + multiple capitals", time:"1970, Cold War", panel:"europe", region:"The Continent and the Orient", cx:28.19, cy:2.66, rw:"Frankfurt, Germany"},
+{t:"The Mysterious Mr Quin (English tales)", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story collection", yr:1930, loc:"Various English country houses", time:"1920s", panel:"uk", region:"UK", cx:65.88, cy:84.94, rw:"Composite — not specifically located"},
+{t:"\"The Soul of the Croupier\"", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Monte Carlo", time:"1920s", panel:"europe", region:"The Continent and the Orient", cx:26.23, cy:14.84, rw:"Monaco", coll:"The Mysterious Mr Quin (1930)"},
+{t:"\"The World's End\"", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Corsica", time:"1920s", panel:"europe", region:"The Continent and the Orient", cx:28.28, cy:18.28, rw:"Corsica", coll:"The Mysterious Mr Quin (1930)"},
+{t:"Parker Pyne Investigates (client cases)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story collection", yr:1934, loc:"London office, Richmond Street", time:"Early 1930s", panel:"london", region:"London", cx:50, cy:47, rw:"Central London"},
+{t:"\"Have You Got Everything You Want?\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Orient Express train", time:"1933", panel:"europe", region:"The Continent and the Orient", cx:46.43, cy:12.82, rw:"Simplon-Orient-Express route, Europe", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"The Gate of Baghdad\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Baghdad, Iraq", time:"1933", panel:"europe", region:"The Continent and the Orient", cx:83.5, cy:34.75, rw:"Baghdad, Iraq", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"The House at Shiraz\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Shiraz / Teheran, Persia", time:"1933", panel:"europe", region:"The Continent and the Orient", cx:96.17, cy:41.84, rw:"Shiraz, Iran", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"The Pearl of Price\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Petra, Jordan", time:"1933", panel:"europe", region:"The Continent and the Orient", cx:69.72, cy:40.5, rw:"Petra, Jordan", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"Death on the Nile\" (short story)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Nile cruise, Egypt", time:"1933", panel:"europe", region:"The Continent and the Orient", cx:65.69, cy:52.15, rw:"Nile River, Egypt", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"The Oracle at Delphi\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Delphi, Greece", time:"1933", panel:"europe", region:"The Continent and the Orient", cx:49.61, cy:24.87, rw:"Delphi, Greece", coll:"Parker Pyne Investigates (1934)"},
+{t:"\"The Regatta Mystery\" (Parker Pyne)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1936, loc:"Dartmouth Harbour, Devon", time:"Mid-1930s", panel:"uk", region:"UK", cx:34.35, cy:108.12, rw:"Dartmouth, Devon", coll:"The Regatta Mystery and Other Stories (1939, US)"},
+{t:"\"Problem at Pollensa Bay\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1935, loc:"Pollença Bay, Mallorca", time:"Mid-1930s", panel:"europe", region:"The Continent and the Orient", cx:19.41, cy:22.2, rw:"Pollença, Mallorca, Spain", coll:"The Regatta Mystery and Other Stories (1939, US)"},
+{t:"Poirot Investigates", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1924, loc:"Mostly London, some international", time:"Early 1920s", panel:"london", region:"London", cx:58, cy:34, rw:"Central London (Poirot's early flat)"},
+{t:"The Listerdale Mystery", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1934, loc:"Various English settings", time:"Early 1930s", panel:"uk", region:"UK", cx:65.06, cy:86.69, rw:"Unconfirmed"},
+{t:"The Labours of Hercules", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1947, loc:"Various, London + Europe (myth-themed)", time:"Mid-1940s", panel:"europe", region:"The Continent and the Orient", cx:24.26, cy:10.12, rw:"Mixed — several explicitly European"},
+{t:"The Adventure of the Christmas Pudding", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1960, loc:"English country house (title story)", time:"Christmas", panel:"uk", region:"UK", cx:50.47, cy:49.09, rw:"Abney Hall, Cheshire"},
 {t:"Double Sin and Other Stories", p:["Hercule Poirot","Miss Marple","Various"], ty:"Anthology / Various", f:"Short story collection", yr:1961, loc:"Various", time:"Mixed decades", panel:"elsewhere", region:"Global / Unconfirmed", rw:"Unconfirmed"},
-{t:"The Golden Ball and Other Stories", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1971, loc:"Various English settings", time:"Mixed", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"Poirot's Early Cases", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1974, loc:"Mostly London", time:"1920s (written retrospectively)", panel:"london", region:"London", rw:"Central London"},
-{t:"Miss Marple's Final Cases", p:["Miss Marple"], ty:"Murder Mystery", f:"Short story collection", yr:1979, loc:"St Mary Mead + various", time:"Mixed decades", panel:"uk", region:"UK", rw:"See St Mary Mead entries"},
+{t:"The Golden Ball and Other Stories", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1971, loc:"Various English settings", time:"Mixed", panel:"uk", region:"UK", cx:60.94, cy:87.66, rw:"Unconfirmed"},
+{t:"Poirot's Early Cases", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1974, loc:"Mostly London", time:"1920s (written retrospectively)", panel:"london", region:"London", cx:57, cy:36, rw:"Central London"},
+{t:"Miss Marple's Final Cases", p:["Miss Marple"], ty:"Murder Mystery", f:"Short story collection", yr:1979, loc:"St Mary Mead + various", time:"Mixed decades", panel:"uk", region:"UK", cx:63.18, cy:83.77, rw:"See St Mary Mead entries"},
 {t:"While the Light Lasts", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1997, loc:"Various early settings", time:"1920s–30s", panel:"elsewhere", region:"Global / Unconfirmed", rw:"Unconfirmed"},
 ];
 DATA.forEach((d,i)=>{ d.id = i; });
@@ -1000,6 +1065,296 @@ function renderShortStoriesTable(){
 }
 
 /* =====================================================================
+   ATLAS TAB — real-coastline triptych map, ported from the standalone
+   christie-atlas-v3.html (recovered from git history, commit 9744cb0:
+   "Add Christie Atlas v3 — real coastlines, fix filter bug, tag arrays").
+   Coastline paths, panel geometry and every dot's cx/cy below are that
+   file's, unchanged — they were pre-projected from real lat/long through
+   an equirectangular + cos(lat) correction, and were merged onto this
+   file's own DATA rows by matching on title (78/78 matched exactly, since
+   Atlas v3 is DATA's direct ancestor). London has no real basemap yet —
+   it stays the same symbolic river-sketch Atlas v3 used, since a
+   street-level map needs a different data source than country coastlines.
+
+   Filter state here (atlasState) is deliberately independent of the
+   Timeline tab's own `state` — same pattern the Short Stories tab already
+   uses. Syncing filters across tabs would need a shared-state rework for
+   limited benefit, since each tab's filter dimensions don't line up 1:1
+   (this tab needs Story type as its own axis; the Timeline tab doesn't).
+   ===================================================================== */
+const PANELS = {
+  london: {
+    label:"London ++", watermark:"the\ncity",
+    viewBox:"0 0 100 100", fit:"none",
+    draw:`<path class="landmass" d="M0,0 H100 V100 H0 Z" />
+          <path d="M0,52 C20,48 30,58 45,54 C60,50 70,60 100,55" fill="none" stroke="var(--gold-dim)" stroke-width="0.8" />`
+  },
+  uk: {
+    label:"UK ++", watermark:"britain",
+    viewBox:"0 0 100 118.83", fit:"xMidYMid meet",
+    draw:`<path class="landmass" d="M9.86,22.06 L3.55,33.32 L-5.34,29.94 L-12.61,30.16 L-10.19,21.38 L-12.61,12.60 L-2.75,11.92 L9.86,22.06 Z" />
+          <path class="landmass" d="M41.12,-44.84 L28.54,-27.10 L40.53,-29.34 L53.42,-29.26 L50.35,-15.90 L39.78,-1.21 L51.94,-0.16 L63.35,20.90 L71.41,23.53 L78.65,42.21 L82.00,48.69 L96.25,51.81 L94.82,62.30 L88.83,67.10 L93.53,75.58 L82.95,84.17 L67.21,84.02 L47.18,88.52 L41.69,85.30 L33.91,92.98 L23.03,91.12 L14.76,97.38 L8.51,94.10 L25.76,76.89 L36.30,73.34 L17.83,70.60 L14.50,64.08 L26.80,58.99 L20.35,50.16 L22.59,39.43 L40.09,40.91 L41.82,31.39 L33.76,21.07 L19.48,18.18 L16.68,13.74 L20.95,6.42 L17.08,1.90 L10.75,9.65 L10.06,-6.15 L4.12,-14.51 L8.39,-31.46 L17.53,-44.75 L26.92,-43.46 L41.12,-44.84 Z" />`
+  },
+  europe: {
+    label:"Europe & the Orient", watermark:"europe\n&\nthe orient",
+    viewBox:"0 0 100 60.18", fit:"xMidYMid meet",
+    draw:`<path class="landmass" d="M6.53,3.27 L4.58,10.17 L11.31,13.86 L14.30,10.66 L17.75,17.94 L14.99,24.85 L18.10,29.49 L14.02,32.70 L10.63,29.70 L8.51,32.88 L2.72,29.52 L0.69,25.33 L0.00,19.33 L6.53,3.27 Z" />
+          <path class="landmass" d="M23.14,15.26 L20.14,25.28 L23.47,26.68 L26.06,24.97 L29.50,27.09 L34.25,26.72 L30.79,17.09 L26.10,17.32 L23.14,15.26 Z" />
+          <path class="landmass" d="M27.94,1.79 L31.15,9.56 L28.86,13.77 L23.99,10.71 L23.87,4.83 L27.94,1.79 Z" />
+          <path class="landmass" d="M38.85,7.83 L42.85,7.44 L46.42,10.83 L49.66,10.06 L50.99,15.19 L44.98,18.79 L40.17,16.49 L38.85,7.83 Z" />
+          <path class="landmass" d="M43.68,21.52 L47.90,20.36 L52.35,26.61 L49.11,29.53 L44.30,27.16 L43.68,21.52 Z" />
+          <path class="landmass" d="M56.28,7.55 L64.63,8.96 L67.84,15.32 L61.77,20.36 L55.79,16.45 L56.28,7.55 Z" />
+          <path class="landmass" d="M2.09,32.72 L0.70,38.58 L5.21,39.51 L6.53,34.66 L2.09,32.72 Z" />
+          <path class="landmass" d="M62.55,32.40 L67.42,32.02 L71.79,42.87 L67.10,55.87 L60.94,55.35 L59.15,44.79 L62.55,32.40 Z" />
+          <path class="landmass" d="M66.42,26.55 L72.49,26.30 L74.29,32.83 L67.85,32.48 L66.42,26.55 Z" />
+          <path class="landmass" d="M75.32,26.61 L85.98,26.36 L88.06,37.27 L79.49,41.33 L75.19,34.69 L75.32,26.61 Z" />
+          <path class="landmass" d="M85.98,26.36 L100,25.06 L98.86,49.97 L91.03,46.36 L86.58,39.27 L88.06,37.27 L85.98,26.36 Z" />`
+  }
+};
+const PANEL_ORDER = ["london","uk","europe"];
+
+const atlasState = {
+  filters:{ protagonist:new Set(), type:new Set(), format:new Set(), decade:new Set() },
+  selectedId:null, focusPanel:null
+};
+
+let atlasTt;
+function atlasTip(evt, html){
+  if(!atlasTt) atlasTt = document.getElementById("atlasTooltip");
+  atlasTt.innerHTML = html;
+  atlasTt.style.left = (evt.clientX+14)+"px";
+  atlasTt.style.top = (evt.clientY+14)+"px";
+  atlasTt.style.opacity = 1;
+}
+function atlasUntip(){ if(atlasTt) atlasTt.style.opacity = 0; }
+
+function decadeOf(d){ return Math.floor(d.yr/10)*10 + "s"; }
+function atlasMatches(d){
+  const f = atlasState.filters;
+  if(f.protagonist.size && !d.p.some(x=>f.protagonist.has(x))) return false;
+  if(f.type.size && !f.type.has(d.ty)) return false;
+  if(f.format.size && !f.format.has(d.f)) return false;
+  if(f.decade.size && !f.decade.has(decadeOf(d))) return false;
+  return true;
+}
+
+function renderAtlasFilterBar(){
+  const container = document.getElementById("atlasSidebar");
+  container.innerHTML = "";
+  const groups = [
+    {key:"protagonist", label:"Protagonist", opts:uniqueProtagonists()},
+    {key:"type", label:"Story type", opts:[...new Set(DATA.map(d=>d.ty))].sort()},
+    {key:"format", label:"Format", opts:["Novel","Short story","Short story collection"]},
+    {key:"decade", label:"Decade published", opts:[...new Set(DATA.map(decadeOf))].sort()},
+  ];
+  groups.forEach(g=>{
+    const wrap = document.createElement("div"); wrap.className = "filter-group";
+    const lbl = document.createElement("span"); lbl.className = "filter-label"; lbl.textContent = g.label;
+    wrap.appendChild(lbl);
+    const row = document.createElement("div"); row.className = "chip-row";
+    g.opts.forEach(opt=>{
+      const chip = document.createElement("button");
+      chip.className = "chip" + (atlasState.filters[g.key].has(opt) ? " on" : "");
+      chip.textContent = opt;
+      chip.onclick = ()=>{
+        if(atlasState.filters[g.key].has(opt)) atlasState.filters[g.key].delete(opt);
+        else atlasState.filters[g.key].add(opt);
+        renderAtlasAll();
+      };
+      row.appendChild(chip);
+    });
+    wrap.appendChild(row);
+    container.appendChild(wrap);
+  });
+  const clear = document.createElement("button");
+  clear.className = "filter-clear"; clear.textContent = "Clear filters";
+  clear.onclick = ()=>{ Object.values(atlasState.filters).forEach(s=>s.clear()); renderAtlasAll(); };
+  container.appendChild(clear);
+  const count = document.createElement("div");
+  count.className = "result-count";
+  count.textContent = DATA.filter(atlasMatches).length + " / " + DATA.length + " entries";
+  container.appendChild(count);
+}
+
+function renderAtlasLegend(){
+  document.getElementById("atlasLegend").innerHTML = `
+    <div class="legend-group">
+      <span class="legend-title">Format</span>
+      <span class="legend-item"><span class="legend-swatch"></span> Novel</span>
+      <span class="legend-item"><span class="legend-swatch tri"></span> Short story</span>
+      <span class="legend-item"><span class="legend-swatch circ"></span> Collection</span>
+    </div>
+    <div class="legend-group">
+      <span class="legend-title">Note</span>
+      <span class="legend-item">Marker colour here shows selection state only — panel placement already is location.</span>
+    </div>
+  `;
+}
+
+function buildMapPanel(panelKey, big){
+  const conf = PANELS[panelKey];
+  const items = DATA.filter(d=>d.panel===panelKey);
+  const visibleCount = items.filter(atlasMatches).length;
+
+  const panelDiv = document.createElement("div");
+  panelDiv.className = "map-panel";
+
+  const wm = document.createElement("div");
+  wm.className = "map-watermark";
+  wm.innerHTML = conf.watermark.split("\n").join("<br/>");
+  panelDiv.appendChild(wm);
+
+  const label = document.createElement("div");
+  label.className = "map-panel-label"; label.textContent = conf.label;
+  panelDiv.appendChild(label);
+
+  if(big){
+    const exit = document.createElement("button");
+    exit.className = "map-panel-exit"; exit.textContent = "‹ all three";
+    exit.onclick = (e)=>{ e.stopPropagation(); atlasState.focusPanel = null; renderTriptych(); };
+    panelDiv.appendChild(exit);
+  } else {
+    const cnt = document.createElement("div");
+    cnt.className = "map-panel-count"; cnt.textContent = visibleCount + "/" + items.length;
+    panelDiv.appendChild(cnt);
+  }
+
+  const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+  svg.setAttribute("viewBox", conf.viewBox);
+  svg.setAttribute("preserveAspectRatio", conf.fit);
+  svg.innerHTML = conf.draw;
+
+  const r = big ? 0.9 : 1.3;
+  items.forEach(d=>{
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute("class","map-dot" + (atlasMatches(d)?"":" dim") + (d.id===atlasState.selectedId?" selected":""));
+    g.dataset.id = d.id;
+    const shape = FORMAT_SHAPE[d.f] || "circle";
+    g.appendChild(shapeEl(shape, d.cx, d.cy, r, "map-shape"));
+    // Only the curated LANDMARK_IDS (same set the Timeline chart labels)
+    // get an inline title here — with up to 49 dots on one panel, labeling
+    // every one is unreadable regardless of layout; everything else still
+    // has the hover tooltip and the table below.
+    if(big && LANDMARK_IDS.has(d.id)){
+      const txt = document.createElementNS("http://www.w3.org/2000/svg","text");
+      txt.setAttribute("class","map-tip");
+      txt.setAttribute("x", d.cx + r + 0.8); txt.setAttribute("y", d.cy + 0.7);
+      txt.textContent = d.t.replace(/^"|"$/g,"");
+      g.appendChild(txt);
+    }
+    if(big){
+      g.onmousemove = (e)=> atlasTip(e, `<b>${d.t.replace(/^"|"$/g,"")}</b><span class="tt-meta">${d.p.join(", ")} · ${d.yr} · ${d.loc}</span>`);
+      g.onmouseleave = atlasUntip;
+    }
+    g.onclick = (e)=>{ e.stopPropagation(); selectAtlasBook(d.id, true); };
+    svg.appendChild(g);
+  });
+
+  panelDiv.appendChild(svg);
+  if(!big){ panelDiv.onclick = ()=>{ atlasState.focusPanel = panelKey; renderTriptych(); }; }
+  return panelDiv;
+}
+
+function renderTriptych(){
+  const el = document.getElementById("triptych");
+  el.innerHTML = "";
+  if(!atlasState.focusPanel){
+    el.className = "triptych";
+    PANEL_ORDER.forEach(k=> el.appendChild(buildMapPanel(k, false)));
+  } else {
+    el.className = "triptych focused";
+    const bigPanel = buildMapPanel(atlasState.focusPanel, true);
+    bigPanel.classList.add("map-panel-big");
+    el.appendChild(bigPanel);
+    const thumbs = document.createElement("div");
+    thumbs.className = "map-panel-thumbs";
+    PANEL_ORDER.filter(k=>k!==atlasState.focusPanel).forEach(k=>{
+      const p = buildMapPanel(k, false);
+      p.onclick = ()=>{ atlasState.focusPanel = k; renderTriptych(); };
+      thumbs.appendChild(p);
+    });
+    el.appendChild(thumbs);
+  }
+}
+
+function renderElsewhereStrip(){
+  const el = document.getElementById("elsewhereStrip");
+  const items = DATA.filter(d=>d.panel==="elsewhere" && atlasMatches(d));
+  if(items.length===0){ el.innerHTML = "<strong>Elsewhere</strong> — no titles match the current filters."; return; }
+  el.innerHTML = "<strong>Elsewhere</strong> (South Africa, the Caribbean, and cases too diffuse to place): " +
+    items.map(d=>`<span class="tag" data-id="${d.id}" style="cursor:pointer; border-bottom:1px dotted var(--rule);">${d.t}</span>`).join(", ");
+  el.querySelectorAll("[data-id]").forEach(tag=>{ tag.onclick = ()=> selectAtlasBook(parseInt(tag.dataset.id), false); });
+}
+
+const ATLAS_COLS = [
+  {key:"title", get:d=>d.t}, {key:"protagonist", get:d=>d.p.join(", ")}, {key:"type", get:d=>d.ty},
+  {key:"format", get:d=>d.f}, {key:"year", get:d=>d.yr}, {key:"loc", get:d=>d.loc},
+  {key:"time", get:d=>d.time}, {key:"realWorld", get:d=>d.rw},
+];
+atlasState.sortKey = "yr"; atlasState.sortDir = 1;
+
+function renderAtlasTable(){
+  const thead = document.querySelector("#atlas-table thead tr");
+  thead.querySelectorAll("th").forEach(th=>{
+    th.classList.toggle("sorted", th.dataset.key === atlasState.sortKey);
+    th.onclick = ()=>{
+      if(atlasState.sortKey === th.dataset.key) atlasState.sortDir *= -1;
+      else { atlasState.sortKey = th.dataset.key; atlasState.sortDir = 1; }
+      renderAtlasTable();
+    };
+  });
+  const rows = [...DATA];
+  const col = ATLAS_COLS.find(c=>c.key===atlasState.sortKey) || ATLAS_COLS[4];
+  rows.sort((a,b)=>{
+    const va = col.get(a), vb = col.get(b);
+    if(typeof va === "number") return (va-vb)*atlasState.sortDir;
+    return String(va).localeCompare(String(vb)) * atlasState.sortDir;
+  });
+  const tbody = document.getElementById("atlas-tbody");
+  tbody.innerHTML = "";
+  rows.forEach(d=>{
+    const tr = document.createElement("tr");
+    tr.className = (atlasMatches(d)?"":"dim") + (d.id===atlasState.selectedId?" selected":"");
+    tr.dataset.id = d.id;
+    tr.innerHTML = `
+      <td class="title-cell">${d.t}</td>
+      <td>${d.p.join(", ")}</td><td>${d.ty}</td><td>${d.f}</td><td>${d.yr}</td>
+      <td>${d.loc}</td><td>${d.time}</td>
+      <td>${d.rw}${d.panel==="elsewhere" ? ' <span class="region-note">(not on triptych)</span>' : ""}</td>
+    `;
+    tr.onclick = ()=> selectAtlasBook(d.id, false);
+    tbody.appendChild(tr);
+  });
+}
+
+function selectAtlasBook(id, fromMap){
+  atlasState.selectedId = id;
+  const d = DATA[id];
+  if(fromMap === false && d.panel !== "elsewhere") atlasState.focusPanel = d.panel;
+  renderTriptych(); renderAtlasTable();
+  if(fromMap){
+    const row = document.querySelector(`#atlas-tbody tr[data-id="${id}"]`);
+    if(row) row.scrollIntoView({behavior:"smooth", block:"center"});
+  } else {
+    const dot = document.querySelector(`.map-dot[data-id="${id}"] .map-shape`);
+    if(dot){
+      dot.parentElement.classList.add("pulse");
+      setTimeout(()=>dot.parentElement && dot.parentElement.classList.remove("pulse"), 900);
+      const panelEl = dot.closest(".map-panel");
+      if(panelEl) panelEl.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+  }
+}
+
+function renderAtlasAll(){
+  renderAtlasFilterBar();
+  renderAtlasLegend();
+  renderTriptych();
+  renderElsewhereStrip();
+  renderAtlasTable();
+}
+
+/* =====================================================================
    TAB SWITCHING
    ===================================================================== */
 document.querySelectorAll("#tabBar .tab-btn").forEach(btn=>{
@@ -1021,6 +1376,7 @@ function renderAll(){
   renderLegend();
   renderTimeline();
   renderTable();
+  renderAtlasAll();
   renderShortStoriesTable();
 }
 renderAll();
