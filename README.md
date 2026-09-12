@@ -116,6 +116,23 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.14** — Built the Christie Atlas tab for real, replacing the
+  "coming soon" placeholder V4.13 shipped with. Ported the real-coastline
+  triptych map (London / UK / Europe & the Orient) from
+  `christie-atlas-v3.html`, a standalone atlas revision recovered from
+  this repo's own git history (commit `9744cb0`) that was never carried
+  into the maintained `christie-atlas-v2.html`. Confirmed the timeline's
+  `DATA` and Atlas v3's dataset are the same 78 rows title-for-title, so
+  the real projected coordinates were merged onto the existing `DATA`
+  array by title-match rather than standing up a second dataset — one
+  array now backs both the chart and the map. Restyled onto the timeline
+  page's own Art Deco tokens and made theme-aware (Atlas v3 predates the
+  light/dark toggle); inline map labels reuse the chart's existing
+  `LANDMARK_IDS` curation instead of labeling every dot, since labeling
+  everything reproduced the same crowding problem already solved for the
+  chart. London stays a symbolic river-sketch — real street-level data is
+  a separate, larger pass. See `projects/christie/documentation.md`'s
+  changelog for the full detail.
 - **V4.13** — Added Agatha Christie as the third standalone static project
   (`projects/christie/`: an Art Deco-styled timeline + table +
   bibliography-completeness Short Stories tab, plus the pre-existing map
