@@ -36,30 +36,27 @@ This requires one one-time, per-repo manual step that isn't in the YAML: **Setti
 
 ### Adding a new standalone static project
 
-Projects like `scifi/` (plain HTML/CSS/JS, no build step, edited and committed directly, no mkdocs involvement) are published by an explicit allow-list in the `Copy static interactive projects` step in `deploy.yml`:
+Projects like `projects/scifi/` (plain HTML/CSS/JS, no build step, edited and committed directly, no mkdocs involvement) are published by the `Copy static interactive projects` step in `deploy.yml`, which copies every subfolder of `projects/` into the built site:
 
 ```yaml
 - name: Copy static interactive projects
   run: |
-    for proj in scifi asimov; do
-      if [ -d "$proj" ]; then
-        cp -r "$proj" "public/$proj"
-      fi
+    for proj in projects/*/; do
+      name=$(basename "$proj")
+      cp -r "$proj" "public/$name"
     done
 ```
 
-Each name in the list is guarded by `if [ -d "$proj" ]`, so listing a project before it exists is harmless — it's just skipped until the folder shows up. `asimov` is already in the list pre-emptively for this reason (and has since gone live — see below).
-
 To add a new one:
-1. Create the project's folder at the **repo root** (sibling of `docs/`, `scifi/`), self-contained (its own `index.html`, assets, data).
-2. Add its folder name to the `for proj in ...` list in `deploy.yml` (skip this step if it's already pre-listed, e.g. `asimov`).
-3. Push to `main` — it'll be live at `/<folder-name>/`, served standalone (no MkDocs theme/sidebar — mkdocs never processes these folders, they're copied byte-for-byte).
+1. Create the project's folder at **`projects/<name>/`**, self-contained (its own `index.html`, assets, data).
+2. Nothing to add to `deploy.yml` — the loop picks up every folder under `projects/` automatically.
+3. Push to `main` — it'll be live at `/<name>/`, served standalone (no MkDocs theme/sidebar — mkdocs never processes these folders, they're copied byte-for-byte).
 
 This keeps everything under one custom domain with path-based routing (`bookshelf.cabinetofcuriosities.in/scifi/`, etc.) without extra infrastructure. The tradeoff: all these projects live in one repo rather than each having its own. Splitting them into separate repos would mean giving up path-based subpaths for subdomains (or adding a reverse-proxy layer) — not pursued here since subpath routing under one domain was the goal.
 
-**Watch for — root clutter threshold:** discussed 2026-09-05, not acted on yet. Two standalone folders (`scifi/`, `asimov/`) still leaves root scannable alongside the repo's real machinery (`docs/`, `content/`, `tools/`, `documentation/`) — not worth pre-emptively grouping them while that's true. A **third** standalone project is the trigger to introduce a parent folder (e.g. `projects/`) and move all of them into it together in one pass, not before; expected sooner rather than later, so treat this as a ready-to-execute plan rather than a distant maybe. The move should stay URL-preserving — point this step's `cp -r` loop at the new parent folder's subfolders instead of listing names individually, so `/scifi/`, `/asimov/`, etc. don't change.
+**Root clutter threshold — resolved 2026-09-12.** This was flagged 2026-09-05 as a ready-to-execute plan: two standalone folders (`scifi/`, `asimov/`) at repo root was tolerable, but a **third** standalone project (`christie/`) was set as the trigger to introduce a `projects/` parent folder and move all of them into it together in one pass. That trigger fired when Christie was added, so `scifi/` and `asimov/` moved to `projects/scifi/` and `projects/asimov/` alongside the new `projects/christie/`, and the `deploy.yml` loop switched from an explicit name list to iterating `projects/*/` — URL-preserving as planned (`/scifi/`, `/asimov/`, `/christie/` are all unchanged).
 
-**Watch for — recover scifi's/asimov's original conversations:** neither project has a conversation-log doc, unlike the recovered origin conversation now archived for the main landing page (see `documentation/landing-page-notes/`). Both show clear signs of a pre-repo history built elsewhere: `scifi/ToDo.md` describes a "handover" and a stable "v14 baseline" (the versioned `zips/sf_timeline_web_v1`-`v14`/`sf_timeline_data_v16` snapshots in this repo's `zips/` folder are that history, but not the conversation behind it); `asimov/Readme_3_working_context.md`/`Readme_4_todo_decisions.md` reference a "Codex" working context and a missing `readme2.md` last seen at `D:\Projects\AsimovPage\asimov_foundation_prototype_v12_Codex` on the local machine, not in this repo. Worth tracking down and recovering as a conversation-log doc for each (`documentation/scifi/`, `documentation/asimov/`) if the original transcripts can still be found, same as fffx's landing-page origin-conversation recovery — archival value drops the longer this waits.
+**Watch for — recover scifi's/asimov's original conversations:** neither project has a conversation-log doc, unlike the recovered origin conversation now archived for the main landing page (see `documentation/landing-page-notes/`), and unlike Christie's own (see `documentation/christie/conversation-christie.md`, recovered at the time of its addition since that transcript was still available). Both scifi and asimov show clear signs of a pre-repo history built elsewhere: `scifi/ToDo.md` describes a "handover" and a stable "v14 baseline" (the versioned `zips/sf_timeline_web_v1`-`v14`/`sf_timeline_data_v16` snapshots in this repo's `zips/` folder are that history, but not the conversation behind it); `asimov/Readme_3_working_context.md`/`Readme_4_todo_decisions.md` reference a "Codex" working context and a missing `readme2.md` last seen at `D:\Projects\AsimovPage\asimov_foundation_prototype_v12_Codex` on the local machine, not in this repo. Worth tracking down and recovering as a conversation-log doc for each (`documentation/scifi/`, `documentation/asimov/`) if the original transcripts can still be found, same as fffx's landing-page origin-conversation recovery — archival value drops the longer this waits.
 
 ## Landing page
 

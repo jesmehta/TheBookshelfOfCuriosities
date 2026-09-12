@@ -36,10 +36,9 @@ jobs:
 
     - name: Copy static interactive projects
       run: |
-        for proj in scifi asimov; do
-          if [ -d "$proj" ]; then
-            cp -r "$proj" "public/$proj"
-          fi
+        for proj in projects/*/; do
+          name=$(basename "$proj")
+          cp -r "$proj" "public/$name"
         done
 
     - name: Setup Pages
