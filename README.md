@@ -116,6 +116,23 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.15** — Replaced the Christie Atlas map's coastlines with genuinely real
+  boundary data — V4.14's "real coastline" port from `christie-atlas-v3.html`
+  turned out not to be real at all (the user asked "why are the maps crap?"
+  after looking at the shipped result, and was right: ~20-30 vertices of
+  amorphous blob for the UK, a scatter of ~10 disconnected fragments for
+  Europe & the Orient — closer to confetti than a map, despite that file's
+  own commit message claiming it was fetched and simplified from real
+  geodata). Fetched actual per-country GeoJSON (`johan/world.geo.json`,
+  public domain) via direct `curl` for the UK/Ireland and 26 countries across
+  Europe/North Africa/the Middle East, and recomputed every one of the 68
+  UK/Europe location points from real-world lat/long through a fresh
+  equirectangular projection, rather than reusing Atlas v3's fabricated
+  coordinates. Verified visually against a standalone preview before
+  touching the live file this time. See
+  `projects/christie/documentation.md`'s changelog for the full country
+  list, projection formula, and known limitations (Mallorca hand-traced,
+  fictional/"Unconfirmed" settings placed as plausible regional guesses).
 - **V4.14** — Built the Christie Atlas tab for real, replacing the
   "coming soon" placeholder V4.13 shipped with. Ported the real-coastline
   triptych map (London / UK / Europe & the Orient) from

@@ -383,6 +383,51 @@ four extras are ever reused for something else.
     scoped to the Atlas tab — the Timeline tab's `#tooltip` lives inside `#tab-timeline`,
     which is `display:none` while another tab is active, so a `position:fixed` element
     inside it still doesn't render; sharing it wasn't an option.
+- **The "real coastline" data ported from Atlas v3 above was not actually real** —
+  user asked "why are the maps crap?" after looking at the shipped result, and they
+  were right. Atlas v3's commit message claimed the shapes were "fetched and
+  simplified from a GeoJSON source," but the actual path data was ~20-30 vertices of
+  amorphous blob with no recognizable coastline features (no Cornwall peninsula, no
+  Scotland taper on the UK; the Europe/Orient panel was ~10 disconnected polygon
+  fragments scattered across empty space, closer to confetti than a map — exactly the
+  "basic squiggles" rejected once already, earlier in this project's history). It was
+  ported uncritically this session, checked only for "renders without JS errors and
+  filters work," never for "does this look like Britain." That was the actual, literal
+  original ask, and it went unverified.
+  - **Fixed by fetching genuinely real boundary data** — `johan/world.geo.json`
+    (public-domain, Natural Earth-derived per-country GeoJSON), via `curl` directly
+    (not `WebFetch`, which summarizes/processes content through a model rather than
+    returning raw bytes — wrong tool for coordinate data). Pulled GBR, IRL for the UK
+    panel; FRA, ESP, PRT, ITA, SVN, HRV, BIH, MNE, ALB, GRC, TUR, CYP, SYR, LBN, ISR,
+    JOR, IRQ, IRN, EGY, LBY, TUN, DZA, MAR, DEU, CHE, AUT for Europe & the Orient
+    (Mallorca is hand-approximated — an 8-point traced outline — since the Balearics
+    aren't in that source's Spain file, and "Problem at Pollensa Bay" plots directly
+    on the island).
+  - **Every location's `cx`/`cy` was recomputed from real lat/long**, not carried over
+    from Atlas v3's fabricated projection. Assigned by hand from known geography (68
+    locations across both panels) — real places (Petra, Baghdad, Shiraz, Abney Hall,
+    etc.) get their actual coordinates; explicitly fictional/"Unconfirmed" settings
+    (e.g. "Woodleigh Common", "Broadhinny") get a plausible representative point in
+    the right general region rather than false precision, since the data itself
+    already says the real-world location isn't confirmed. All entries pointing at
+    Abney Hall, Cheshire (six of them — Christie's own reused architectural template)
+    now correctly land on the exact same real point, which is accurate, not a bug.
+  - **Projection**: equirectangular with a `cos(lat0)` correction (same technique
+    Atlas v3 claimed to use), `lat0`/`lon0` taken from each panel's own coastline
+    bounding-box center, scaled so viewBox width lands at 100 units — chosen to match
+    the existing dot-radius/label-font-size constants (tuned for a ~100-wide viewBox)
+    without having to retune them. Panel extents are the *full* real bounding box of
+    every fetched country (not cropped to just where data points sit), so islands and
+    silhouette features stay intact — a data point sitting in a corner doesn't need to
+    imply cropping the rest of the landmass away.
+  - Verified visually before touching the live file: built a standalone preview page
+    (coastlines + dots, no app chrome) and looked at a screenshot before merging
+    anything in — the failure mode this entry exists to fix was exactly "ported
+    without looking," so this pass didn't repeat it.
+  - `christie-atlas-v3.html` (the git-history-recovered file, still sitting in
+    `projects/christie/` as a superseded artifact per the earlier changelog entry)
+    still has the fabricated geometry — it was not corrected, since the file itself
+    isn't live. Don't mistake it for a source of real coordinates if referenced later.
 
 ---
 
@@ -438,10 +483,25 @@ four extras are ever reused for something else.
   see the changelog entry above. v2's triptych is still the old placeholder-outline
   geometry (never real coastlines); v3 (recovered from git history) is where the real
   coastlines actually came from, but that file itself isn't touched going forward.
-- **The Atlas map's real coastline data covers only UK and Europe & the Orient** —
-  hand-simplified from a GeoJSON source during the original Atlas v3 pass, not
-  re-derived here. If a location needs correcting or a new region gets added later,
-  that's fresh geodata work, not a tweak to the existing paths.
+- **The Atlas map's real coastline data covers only UK and Europe & the Orient**,
+  sourced from `johan/world.geo.json` (public-domain, per-country GeoJSON) via direct
+  `curl` fetch — see the changelog entry above for the full country list and the
+  projection formula. If a location needs correcting or a new country/region gets
+  added later, that means re-fetching that country's file and re-running the same
+  equirectangular-projection script (not preserved as a repo file — was a scratchpad
+  script; reconstructing it means: fetch `<ISO3>.geo.json` from that source, project
+  with `x=(lon-lon0)*cos(lat0), y=(lat0-lat)`, scale so viewBox width = 100), not a
+  manual tweak to the existing SVG path strings.
+- **Mallorca's outline is hand-approximated** (8 points, traced from memory of its
+  real shape), not sourced — the Balearic Islands aren't in the Spain file from
+  `johan/world.geo.json` (mainland-only polygon). Good enough to recognize at this
+  map's scale, but don't treat it as precise.
+- **Per-location coordinates for "Unconfirmed"/fictional settings are plausible
+  placeholders, not researched positions** — e.g. "Woodleigh Common," "Broadhinny,"
+  "Gipsy's Acre" get a reasonable representative point in roughly the right part of
+  England, spread out so they don't all stack on one pixel, not a claim about where
+  Christie actually meant. This matches what the `rw` field already says ("Unconfirmed")
+  — the map isn't asserting more precision than the table already disclaims.
 - **Filesystem-access scope**: an unrelated but consequential episode mid-conversation
   — a font search briefly used unscoped `find` across entire drives rather than the
   session's declared working directories. Corrected, and a standing rule is now in
