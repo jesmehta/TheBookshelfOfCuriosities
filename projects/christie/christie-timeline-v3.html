@@ -84,7 +84,7 @@ body{background-image:
 
 .filter-label{font-family:'Josefin Sans', sans-serif; font-weight:600; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); display:block; margin-bottom:9px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px;}
-.chip{font-family:'Josefin Sans', sans-serif; font-weight:500; font-size:11px; letter-spacing:0.03em; padding:5px 9px; border:1px solid var(--rule); color:var(--ivory-dim); cursor:pointer; background:transparent; user-select:none; transition:border-color .15s, color .15s, background .15s;}
+.chip{font-family:'Josefin Sans', sans-serif; font-weight:500; font-size:13px; letter-spacing:0.03em; padding:5px 9px; border:1px solid var(--rule); color:var(--ivory-dim); cursor:pointer; background:transparent; user-select:none; transition:border-color .15s, color .15s, background .15s;}
 .chip:hover{border-color:var(--gold-dim); color:var(--ivory);}
 .chip.on{background:rgba(201,162,39,0.16); border-color:var(--gold); color:var(--gold-bright);}
 .filter-clear{font-family:'Josefin Sans', sans-serif; font-size:11px; letter-spacing:0.04em; color:var(--ivory-faint); background:none; border:none; cursor:pointer; text-decoration:underline; text-decoration-color:var(--rule); padding:0; text-align:left;}
@@ -175,105 +175,105 @@ tbody tr.dim{opacity:0.28;}
 /* =====================================================================
    DATA
    panel: london | uk | europe | elsewhere  → marker COLOUR (broad, 4-way)
-   region: London | UK | Europe & the Orient | South Africa | Caribbean |
+   region: London | UK | The Continent and the Orient | South Africa | Caribbean |
            Global / Unconfirmed  → LOCATION FILTER (Elsewhere expanded, rest broad)
    f: Novel | Short story | Short story collection → marker SHAPE
    ===================================================================== */
 const DATA = [
-{t:"The Mysterious Affair at Styles", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1920, loc:"Styles Court, Essex", time:"WWI, contemporary", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire (interior model)"},
-{t:"The Murder on the Links", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1923, loc:"Merlinville-sur-Mer, France", time:"Early 1920s", panel:"europe", region:"Europe & the Orient", rw:"Normandy coast, France (generic)"},
-{t:"The Murder of Roger Ackroyd", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1926, loc:"King's Abbot (fictional)", time:"Mid-1920s", panel:"uk", region:"UK", rw:"Unconfirmed, Berkshire/Oxfordshire guess"},
-{t:"The Big Four", p:["Poirot"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1927, loc:"London + global", time:"Late 1920s", panel:"elsewhere", region:"Global / Unconfirmed", rw:"N/A — deliberately global"},
-{t:"The Mystery of the Blue Train", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1928, loc:"Calais–Nice train; French Riviera", time:"Late 1920s", panel:"europe", region:"Europe & the Orient", rw:"Nice / Antibes, France"},
-{t:"Peril at End House", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1932, loc:"St Loo (fictional)", time:"Early 1930s", panel:"uk", region:"UK", rw:"Torquay / Dartmouth, Devon"},
-{t:"Lord Edgware Dies", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1933, loc:"Regent Gate, London (fictional)", time:"Early 1930s", panel:"london", region:"London", rw:"Mayfair / Marylebone, London"},
-{t:"Murder on the Orient Express", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1934, loc:"Istanbul–Calais train, nr. Vinkovci", time:"Winter, explicit snowdrift", panel:"europe", region:"Europe & the Orient", rw:"Vinkovci, Croatia (then Yugoslavia)"},
-{t:"Three Act Tragedy", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1934, loc:"Loomouth, Cornwall; London", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Looe, Cornwall (name similarity)"},
-{t:"Death in the Clouds", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1935, loc:"Paris–Croydon flight", time:"Mid-1930s", panel:"london", region:"London", rw:"Croydon Airport, London"},
-{t:"The ABC Murders", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Andover, Bexhill, Churston, Doncaster", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Same, real named towns"},
-{t:"Murder in Mesopotamia", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Dig site nr. Hassanieh, Iraq", time:"Mid-1930s", panel:"europe", region:"Europe & the Orient", rw:"Nimrud / Ur region, Iraq"},
-{t:"Cards on the Table", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Park Lane flat, London", time:"Autumn (implied Nov.)", panel:"london", region:"London", rw:"Park Lane, Mayfair"},
-{t:"Dumb Witness", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1937, loc:"Market Basing (fictional)", time:"Spring 1936", panel:"uk", region:"UK", rw:"Wallingford, Oxfordshire"},
-{t:"Death on the Nile", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1937, loc:"Nile steamer (Aswan–Wadi Halfa)", time:"Winter tourist season", panel:"europe", region:"Europe & the Orient", rw:"Aswan / Abu Simbel, Egypt"},
-{t:"Appointment with Death", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1938, loc:"Petra, Jordan", time:"Spring", panel:"europe", region:"Europe & the Orient", rw:"Petra, Jordan"},
-{t:"Hercule Poirot's Christmas", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1938, loc:"Gorston Hall (fictional)", time:"Christmas", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
-{t:"Sad Cypress", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1940, loc:"Hunterbury (fictional)", time:"Late 1930s", panel:"uk", region:"UK", rw:"Unconfirmed, Home Counties"},
-{t:"One, Two, Buckle My Shoe", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1940, loc:"Queen Charlotte St, London", time:"1940, wartime", panel:"london", region:"London", rw:"Westminster, London"},
-{t:"Evil Under the Sun", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1941, loc:"Smugglers' Island (fictional)", time:"Summer", panel:"uk", region:"UK", rw:"Burgh Island, South Devon"},
-{t:"Five Little Pigs", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"Unnamed English country house", time:"Present-day probe of old murder", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"The Hollow", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1946, loc:"\"The Hollow\", nr. London", time:"Mid-1940s", panel:"uk", region:"UK", rw:"A real house w/ pool (Christie's dedication; unnamed)"},
-{t:"Taken at the Flood", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1948, loc:"Warmsley Vale (fictional)", time:"Just after WWII", panel:"uk", region:"UK", rw:"Unconfirmed, Home Counties"},
-{t:"Mrs McGinty's Dead", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1952, loc:"Broadhinny (fictional)", time:"Early 1950s", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"After the Funeral", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1953, loc:"Enderby Hall (fictional)", time:"Early 1950s", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
-{t:"Hickory Dickory Dock", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1955, loc:"Hostel nr. British Museum, London", time:"Mid-1950s", panel:"london", region:"London", rw:"Bloomsbury, London"},
-{t:"Dead Man's Folly", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1956, loc:"Nassecombe, Devon (fictional)", time:"Summer fête", panel:"uk", region:"UK", rw:"Greenway, nr. Dartmouth, Devon"},
-{t:"Cat Among the Pigeons", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1959, loc:"Meadowbank School (fictional)", time:"Autumn term", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"The Clocks", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1963, loc:"Crowdean (fictional)", time:"Early 1960s", panel:"uk", region:"UK", rw:"Nr. Brighton / Worthing, Sussex"},
-{t:"Third Girl", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1966, loc:"Borodene Mansions, London", time:"Mid-1960s", panel:"london", region:"London", rw:"Chelsea / Kensington, London"},
-{t:"Hallowe'en Party", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1969, loc:"Woodleigh Common (fictional)", time:"Hallowe'en, contemporary", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"Elephants Can Remember", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1972, loc:"Chelsea, London", time:"Early 1970s", panel:"london", region:"London", rw:"Chelsea, London"},
-{t:"Curtain", p:["Poirot"], ty:"Murder Mystery", f:"Novel", yr:1975, loc:"Styles Court, Essex", time:"Ambiguous — chronology paradox", panel:"uk", region:"UK", rw:"Essex (as Book 1)"},
-{t:"The Murder at the Vicarage", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1930, loc:"St Mary Mead", time:"1930", panel:"uk", region:"UK", rw:"Contested: Wallingford, Oxon / Hampshire"},
-{t:"The Body in the Library", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"St Mary Mead + Gossington Hall", time:"Wartime", panel:"uk", region:"UK", rw:"Same St Mary Mead question"},
-{t:"The Moving Finger", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"Lymstock (fictional)", time:"Wartime", panel:"uk", region:"UK", rw:"Unconfirmed, Devon/Somerset-coded"},
-{t:"A Murder Is Announced", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1950, loc:"Chipping Cleghorn (fictional)", time:"1950", panel:"uk", region:"UK", rw:"Cotswolds (Oxon / Glos)"},
-{t:"They Do It with Mirrors", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1952, loc:"Stonygates (fictional)", time:"Early 1950s", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
-{t:"A Pocket Full of Rye", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1953, loc:"Yewtree Lodge, nr. London", time:"Early 1950s", panel:"uk", region:"UK", rw:"Unconfirmed, Home Counties"},
-{t:"4.50 from Paddington", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1957, loc:"Rutherford Hall, nr. Brackhampton", time:"Mid-1950s", panel:"uk", region:"UK", rw:"Abney Hall (house) + real Paddington line"},
-{t:"The Mirror Crack'd from Side to Side", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1962, loc:"St Mary Mead", time:"Early 1960s", panel:"uk", region:"UK", rw:"See St Mary Mead above"},
-{t:"A Caribbean Mystery", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1964, loc:"St Honoré (fictional island)", time:"Mid-1960s", panel:"elsewhere", region:"Caribbean", rw:"Barbados"},
-{t:"At Bertram's Hotel", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1965, loc:"Pond St, nr. Piccadilly, London", time:"Mid-1960s", panel:"london", region:"London", rw:"Brown's Hotel, Mayfair"},
-{t:"Nemesis", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1971, loc:"Coach tour + fictional village", time:"Early 1970s", panel:"uk", region:"UK", rw:"Southern England, nr. Alton, Hampshire"},
-{t:"Sleeping Murder", p:["Marple"], ty:"Murder Mystery", f:"Novel", yr:1976, loc:"Dillmouth (fictional)", time:"Written 1940s, pub. posthumously", panel:"uk", region:"UK", rw:"Torquay / Dawlish, Devon"},
+{t:"The Mysterious Affair at Styles", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1920, loc:"Styles Court, Essex", time:"WWI, contemporary", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire (interior model)"},
+{t:"The Murder on the Links", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1923, loc:"Merlinville-sur-Mer, France", time:"Early 1920s", panel:"europe", region:"The Continent and the Orient", rw:"Normandy coast, France (generic)"},
+{t:"The Murder of Roger Ackroyd", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1926, loc:"King's Abbot (fictional)", time:"Mid-1920s", panel:"uk", region:"UK", rw:"Unconfirmed, Berkshire/Oxfordshire guess"},
+{t:"The Big Four", p:["Hercule Poirot"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1927, loc:"London + global", time:"Late 1920s", panel:"elsewhere", region:"Global / Unconfirmed", rw:"N/A — deliberately global"},
+{t:"The Mystery of the Blue Train", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1928, loc:"Calais–Nice train; French Riviera", time:"Late 1920s", panel:"europe", region:"The Continent and the Orient", rw:"Nice / Antibes, France"},
+{t:"Peril at End House", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1932, loc:"St Loo (fictional)", time:"Early 1930s", panel:"uk", region:"UK", rw:"Torquay / Dartmouth, Devon"},
+{t:"Lord Edgware Dies", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1933, loc:"Regent Gate, London (fictional)", time:"Early 1930s", panel:"london", region:"London", rw:"Mayfair / Marylebone, London"},
+{t:"Murder on the Orient Express", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1934, loc:"Istanbul–Calais train, nr. Vinkovci", time:"Winter, explicit snowdrift", panel:"europe", region:"The Continent and the Orient", rw:"Vinkovci, Croatia (then Yugoslavia)"},
+{t:"Three Act Tragedy", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1934, loc:"Loomouth, Cornwall; London", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Looe, Cornwall (name similarity)"},
+{t:"Death in the Clouds", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1935, loc:"Paris–Croydon flight", time:"Mid-1930s", panel:"london", region:"London", rw:"Croydon Airport, London"},
+{t:"The ABC Murders", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Andover, Bexhill, Churston, Doncaster", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Same, real named towns"},
+{t:"Murder in Mesopotamia", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Dig site nr. Hassanieh, Iraq", time:"Mid-1930s", panel:"europe", region:"The Continent and the Orient", rw:"Nimrud / Ur region, Iraq"},
+{t:"Cards on the Table", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1936, loc:"Park Lane flat, London", time:"Autumn (implied Nov.)", panel:"london", region:"London", rw:"Park Lane, Mayfair"},
+{t:"Dumb Witness", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1937, loc:"Market Basing (fictional)", time:"Spring 1936", panel:"uk", region:"UK", rw:"Wallingford, Oxfordshire"},
+{t:"Death on the Nile", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1937, loc:"Nile steamer (Aswan–Wadi Halfa)", time:"Winter tourist season", panel:"europe", region:"The Continent and the Orient", rw:"Aswan / Abu Simbel, Egypt"},
+{t:"Appointment with Death", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1938, loc:"Petra, Jordan", time:"Spring", panel:"europe", region:"The Continent and the Orient", rw:"Petra, Jordan"},
+{t:"Hercule Poirot's Christmas", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1938, loc:"Gorston Hall (fictional)", time:"Christmas", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
+{t:"Sad Cypress", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1940, loc:"Hunterbury (fictional)", time:"Late 1930s", panel:"uk", region:"UK", rw:"Unconfirmed, Home Counties"},
+{t:"One, Two, Buckle My Shoe", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1940, loc:"Queen Charlotte St, London", time:"1940, wartime", panel:"london", region:"London", rw:"Westminster, London"},
+{t:"Evil Under the Sun", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1941, loc:"Smugglers' Island (fictional)", time:"Summer", panel:"uk", region:"UK", rw:"Burgh Island, South Devon"},
+{t:"Five Little Pigs", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"Unnamed English country house", time:"Present-day probe of old murder", panel:"uk", region:"UK", rw:"Unconfirmed"},
+{t:"The Hollow", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1946, loc:"\"The Hollow\", nr. London", time:"Mid-1940s", panel:"uk", region:"UK", rw:"A real house w/ pool (Christie's dedication; unnamed)"},
+{t:"Taken at the Flood", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1948, loc:"Warmsley Vale (fictional)", time:"Just after WWII", panel:"uk", region:"UK", rw:"Unconfirmed, Home Counties"},
+{t:"Mrs McGinty's Dead", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1952, loc:"Broadhinny (fictional)", time:"Early 1950s", panel:"uk", region:"UK", rw:"Unconfirmed"},
+{t:"After the Funeral", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1953, loc:"Enderby Hall (fictional)", time:"Early 1950s", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
+{t:"Hickory Dickory Dock", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1955, loc:"Hostel nr. British Museum, London", time:"Mid-1950s", panel:"london", region:"London", rw:"Bloomsbury, London"},
+{t:"Dead Man's Folly", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1956, loc:"Nassecombe, Devon (fictional)", time:"Summer fête", panel:"uk", region:"UK", rw:"Greenway, nr. Dartmouth, Devon"},
+{t:"Cat Among the Pigeons", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1959, loc:"Meadowbank School (fictional)", time:"Autumn term", panel:"uk", region:"UK", rw:"Unconfirmed"},
+{t:"The Clocks", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1963, loc:"Crowdean (fictional)", time:"Early 1960s", panel:"uk", region:"UK", rw:"Nr. Brighton / Worthing, Sussex"},
+{t:"Third Girl", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1966, loc:"Borodene Mansions, London", time:"Mid-1960s", panel:"london", region:"London", rw:"Chelsea / Kensington, London"},
+{t:"Hallowe'en Party", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1969, loc:"Woodleigh Common (fictional)", time:"Hallowe'en, contemporary", panel:"uk", region:"UK", rw:"Unconfirmed"},
+{t:"Elephants Can Remember", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1972, loc:"Chelsea, London", time:"Early 1970s", panel:"london", region:"London", rw:"Chelsea, London"},
+{t:"Curtain", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Novel", yr:1975, loc:"Styles Court, Essex", time:"Ambiguous — chronology paradox", panel:"uk", region:"UK", rw:"Essex (as Book 1)"},
+{t:"The Murder at the Vicarage", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1930, loc:"St Mary Mead", time:"1930", panel:"uk", region:"UK", rw:"Contested: Wallingford, Oxon / Hampshire"},
+{t:"The Body in the Library", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"St Mary Mead + Gossington Hall", time:"Wartime", panel:"uk", region:"UK", rw:"Same St Mary Mead question"},
+{t:"The Moving Finger", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1942, loc:"Lymstock (fictional)", time:"Wartime", panel:"uk", region:"UK", rw:"Unconfirmed, Devon/Somerset-coded"},
+{t:"A Murder Is Announced", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1950, loc:"Chipping Cleghorn (fictional)", time:"1950", panel:"uk", region:"UK", rw:"Cotswolds (Oxon / Glos)"},
+{t:"They Do It with Mirrors", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1952, loc:"Stonygates (fictional)", time:"Early 1950s", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
+{t:"A Pocket Full of Rye", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1953, loc:"Yewtree Lodge, nr. London", time:"Early 1950s", panel:"uk", region:"UK", rw:"Unconfirmed, Home Counties"},
+{t:"4.50 from Paddington", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1957, loc:"Rutherford Hall, nr. Brackhampton", time:"Mid-1950s", panel:"uk", region:"UK", rw:"Abney Hall (house) + real Paddington line"},
+{t:"The Mirror Crack'd from Side to Side", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1962, loc:"St Mary Mead", time:"Early 1960s", panel:"uk", region:"UK", rw:"See St Mary Mead above"},
+{t:"A Caribbean Mystery", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1964, loc:"St Honoré (fictional island)", time:"Mid-1960s", panel:"elsewhere", region:"Caribbean", rw:"Barbados"},
+{t:"At Bertram's Hotel", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1965, loc:"Pond St, nr. Piccadilly, London", time:"Mid-1960s", panel:"london", region:"London", rw:"Brown's Hotel, Mayfair"},
+{t:"Nemesis", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1971, loc:"Coach tour + fictional village", time:"Early 1970s", panel:"uk", region:"UK", rw:"Southern England, nr. Alton, Hampshire"},
+{t:"Sleeping Murder", p:["Miss Marple"], ty:"Murder Mystery", f:"Novel", yr:1976, loc:"Dillmouth (fictional)", time:"Written 1940s, pub. posthumously", panel:"uk", region:"UK", rw:"Torquay / Dawlish, Devon"},
 {t:"The Sittaford Mystery", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1931, loc:"Dartmoor, England", time:"Winter, snowbound", panel:"uk", region:"UK", rw:"Dartmoor, Devon"},
 {t:"Why Didn't They Ask Evans?", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1934, loc:"Wales (Marchbolt) + England", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Welsh coast, poss. nr. Barmouth"},
 {t:"Murder Is Easy", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1939, loc:"Wychwood-under-Ashe (fictional)", time:"Late 1930s", panel:"uk", region:"UK", rw:"Oxfordshire (real Wychwood Forest)"},
 {t:"And Then There Were None", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1939, loc:"Soldier Island (fictional)", time:"Late 1930s", panel:"uk", region:"UK", rw:"Burgh Island, South Devon"},
 {t:"Towards Zero", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1944, loc:"Saltcreek (fictional)", time:"Wartime", panel:"uk", region:"UK", rw:"Salcombe / Kingsbridge, Devon"},
-{t:"Death Comes as the End", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1944, loc:"Thebes, Egypt", time:"c. 2000 BC", panel:"europe", region:"Europe & the Orient", rw:"Thebes (modern Luxor), Egypt"},
+{t:"Death Comes as the End", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1944, loc:"Thebes, Egypt", time:"c. 2000 BC", panel:"europe", region:"The Continent and the Orient", rw:"Thebes (modern Luxor), Egypt"},
 {t:"Sparkling Cyanide", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1945, loc:"Luxembourg restaurant, London", time:"Wartime-adjacent", panel:"london", region:"London", rw:"West End, London"},
 {t:"Crooked House", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1949, loc:"Swinly Dean, nr. London", time:"Late 1940s", panel:"uk", region:"UK", rw:"Surrey / Kent commuter belt"},
 {t:"Ordeal by Innocence", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1958, loc:"Drymouth (fictional)", time:"Late 1950s", panel:"uk", region:"UK", rw:"Devon coast (Plymouth-coded)"},
 {t:"The Pale Horse", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1961, loc:"Much Deeping (fictional)", time:"Early 1960s", panel:"uk", region:"UK", rw:"Berkshire / Surrey border"},
 {t:"Endless Night", p:["Standalone"], ty:"Murder Mystery", f:"Novel", yr:1967, loc:"Gipsy's Acre (fictional)", time:"Mid-1960s", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"The Secret Adversary", p:["Tommy & Tuppence"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1922, loc:"London (Ritz, Whitehall)", time:"Just after WWI", panel:"london", region:"London", rw:"Piccadilly / Whitehall, London"},
-{t:"Partners in Crime", p:["Tommy & Tuppence"], ty:"Crime / Espionage / Adventure", f:"Short story collection", yr:1929, loc:"Intl. Detective Agency, London", time:"Late 1920s", panel:"london", region:"London", rw:"Bloomsbury / central London"},
-{t:"N or M?", p:["Tommy & Tuppence"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1941, loc:"Leahampton (fictional)", time:"WWII, explicit", panel:"uk", region:"UK", rw:"South coast, poss. Bournemouth"},
-{t:"By the Pricking of My Thumbs", p:["Tommy & Tuppence"], ty:"Murder Mystery", f:"Novel", yr:1968, loc:"English village + nursing home", time:"Late 1960s", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"Postern of Fate", p:["Tommy & Tuppence"], ty:"Murder Mystery", f:"Novel", yr:1973, loc:"Hollowquay (fictional)", time:"Early 1970s", panel:"uk", region:"UK", rw:"Devon / Cornwall coast (generic)"},
+{t:"The Secret Adversary", p:["Tommy and Tuppence"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1922, loc:"London (Ritz, Whitehall)", time:"Just after WWI", panel:"london", region:"London", rw:"Piccadilly / Whitehall, London"},
+{t:"Partners in Crime", p:["Tommy and Tuppence"], ty:"Crime / Espionage / Adventure", f:"Short story collection", yr:1929, loc:"Intl. Detective Agency, London", time:"Late 1920s", panel:"london", region:"London", rw:"Bloomsbury / central London"},
+{t:"N or M?", p:["Tommy and Tuppence"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1941, loc:"Leahampton (fictional)", time:"WWII, explicit", panel:"uk", region:"UK", rw:"South coast, poss. Bournemouth"},
+{t:"By the Pricking of My Thumbs", p:["Tommy and Tuppence"], ty:"Murder Mystery", f:"Novel", yr:1968, loc:"English village + nursing home", time:"Late 1960s", panel:"uk", region:"UK", rw:"Unconfirmed"},
+{t:"Postern of Fate", p:["Tommy and Tuppence"], ty:"Murder Mystery", f:"Novel", yr:1973, loc:"Hollowquay (fictional)", time:"Early 1970s", panel:"uk", region:"UK", rw:"Devon / Cornwall coast (generic)"},
 {t:"The Man in the Brown Suit", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1924, loc:"London; South Africa", time:"Early 1920s", panel:"elsewhere", region:"South Africa", rw:"Cape Town / Kimberley, South Africa"},
 {t:"The Secret of Chimneys", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1925, loc:"Chimneys (fictional)", time:"Mid-1920s", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
 {t:"The Seven Dials Mystery", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1929, loc:"Chimneys (sequel)", time:"Late 1920s", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
-{t:"Destination Unknown", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1954, loc:"Morocco", time:"Cold War era", panel:"europe", region:"Europe & the Orient", rw:"Casablanca / Fez, Morocco"},
-{t:"Passenger to Frankfurt", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1970, loc:"Frankfurt + multiple capitals", time:"1970, Cold War", panel:"europe", region:"Europe & the Orient", rw:"Frankfurt, Germany"},
-{t:"The Mysterious Mr Quin (English tales)", p:["Quin & Satterthwaite"], ty:"Mystery (light)", f:"Short story collection", yr:1930, loc:"Various English country houses", time:"1920s", panel:"uk", region:"UK", rw:"Composite — not specifically located"},
-{t:"\"The Soul of the Croupier\"", p:["Quin & Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Monte Carlo", time:"1920s", panel:"europe", region:"Europe & the Orient", rw:"Monaco"},
-{t:"\"The World's End\"", p:["Quin & Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Corsica", time:"1920s", panel:"europe", region:"Europe & the Orient", rw:"Corsica"},
+{t:"Destination Unknown", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1954, loc:"Morocco", time:"Cold War era", panel:"europe", region:"The Continent and the Orient", rw:"Casablanca / Fez, Morocco"},
+{t:"Passenger to Frankfurt", p:["Standalone"], ty:"Crime / Espionage / Adventure", f:"Novel", yr:1970, loc:"Frankfurt + multiple capitals", time:"1970, Cold War", panel:"europe", region:"The Continent and the Orient", rw:"Frankfurt, Germany"},
+{t:"The Mysterious Mr Quin (English tales)", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story collection", yr:1930, loc:"Various English country houses", time:"1920s", panel:"uk", region:"UK", rw:"Composite — not specifically located"},
+{t:"\"The Soul of the Croupier\"", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Monte Carlo", time:"1920s", panel:"europe", region:"The Continent and the Orient", rw:"Monaco"},
+{t:"\"The World's End\"", p:["Mr Satterthwaite"], ty:"Mystery (light)", f:"Short story", yr:1926, loc:"Corsica", time:"1920s", panel:"europe", region:"The Continent and the Orient", rw:"Corsica"},
 {t:"Parker Pyne Investigates (client cases)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story collection", yr:1934, loc:"London office, Richmond Street", time:"Early 1930s", panel:"london", region:"London", rw:"Central London"},
-{t:"\"Have You Got Everything You Want?\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Orient Express train", time:"1933", panel:"europe", region:"Europe & the Orient", rw:"Simplon-Orient-Express route, Europe"},
-{t:"\"The Gate of Baghdad\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Baghdad, Iraq", time:"1933", panel:"europe", region:"Europe & the Orient", rw:"Baghdad, Iraq"},
-{t:"\"The House at Shiraz\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Shiraz / Teheran, Persia", time:"1933", panel:"europe", region:"Europe & the Orient", rw:"Shiraz, Iran"},
-{t:"\"The Pearl of Price\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Petra, Jordan", time:"1933", panel:"europe", region:"Europe & the Orient", rw:"Petra, Jordan"},
-{t:"\"Death on the Nile\" (short story)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Nile cruise, Egypt", time:"1933", panel:"europe", region:"Europe & the Orient", rw:"Nile River, Egypt"},
-{t:"\"The Oracle at Delphi\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Delphi, Greece", time:"1933", panel:"europe", region:"Europe & the Orient", rw:"Delphi, Greece"},
+{t:"\"Have You Got Everything You Want?\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Orient Express train", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Simplon-Orient-Express route, Europe"},
+{t:"\"The Gate of Baghdad\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Baghdad, Iraq", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Baghdad, Iraq"},
+{t:"\"The House at Shiraz\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Shiraz / Teheran, Persia", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Shiraz, Iran"},
+{t:"\"The Pearl of Price\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Petra, Jordan", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Petra, Jordan"},
+{t:"\"Death on the Nile\" (short story)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Nile cruise, Egypt", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Nile River, Egypt"},
+{t:"\"The Oracle at Delphi\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1933, loc:"Delphi, Greece", time:"1933", panel:"europe", region:"The Continent and the Orient", rw:"Delphi, Greece"},
 {t:"\"The Regatta Mystery\" (Parker Pyne)", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1936, loc:"Dartmouth Harbour, Devon", time:"Mid-1930s", panel:"uk", region:"UK", rw:"Dartmouth, Devon"},
-{t:"\"Problem at Pollensa Bay\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1935, loc:"Pollença Bay, Mallorca", time:"Mid-1930s", panel:"europe", region:"Europe & the Orient", rw:"Pollença, Mallorca, Spain"},
-{t:"Poirot Investigates", p:["Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1924, loc:"Mostly London, some international", time:"Early 1920s", panel:"london", region:"London", rw:"Central London (Poirot's early flat)"},
+{t:"\"Problem at Pollensa Bay\"", p:["Parker Pyne"], ty:"Mystery (light)", f:"Short story", yr:1935, loc:"Pollença Bay, Mallorca", time:"Mid-1930s", panel:"europe", region:"The Continent and the Orient", rw:"Pollença, Mallorca, Spain"},
+{t:"Poirot Investigates", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1924, loc:"Mostly London, some international", time:"Early 1920s", panel:"london", region:"London", rw:"Central London (Poirot's early flat)"},
 {t:"The Listerdale Mystery", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1934, loc:"Various English settings", time:"Early 1930s", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"The Labours of Hercules", p:["Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1947, loc:"Various, London + Europe (myth-themed)", time:"Mid-1940s", panel:"europe", region:"Europe & the Orient", rw:"Mixed — several explicitly European"},
-{t:"The Adventure of the Christmas Pudding", p:["Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1960, loc:"English country house (title story)", time:"Christmas", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
-{t:"Double Sin and Other Stories", p:["Poirot","Marple","Various"], ty:"Anthology / Various", f:"Short story collection", yr:1961, loc:"Various", time:"Mixed decades", panel:"elsewhere", region:"Global / Unconfirmed", rw:"Unconfirmed"},
+{t:"The Labours of Hercules", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1947, loc:"Various, London + Europe (myth-themed)", time:"Mid-1940s", panel:"europe", region:"The Continent and the Orient", rw:"Mixed — several explicitly European"},
+{t:"The Adventure of the Christmas Pudding", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1960, loc:"English country house (title story)", time:"Christmas", panel:"uk", region:"UK", rw:"Abney Hall, Cheshire"},
+{t:"Double Sin and Other Stories", p:["Hercule Poirot","Miss Marple","Various"], ty:"Anthology / Various", f:"Short story collection", yr:1961, loc:"Various", time:"Mixed decades", panel:"elsewhere", region:"Global / Unconfirmed", rw:"Unconfirmed"},
 {t:"The Golden Ball and Other Stories", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1971, loc:"Various English settings", time:"Mixed", panel:"uk", region:"UK", rw:"Unconfirmed"},
-{t:"Poirot's Early Cases", p:["Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1974, loc:"Mostly London", time:"1920s (written retrospectively)", panel:"london", region:"London", rw:"Central London"},
-{t:"Miss Marple's Final Cases", p:["Marple"], ty:"Murder Mystery", f:"Short story collection", yr:1979, loc:"St Mary Mead + various", time:"Mixed decades", panel:"uk", region:"UK", rw:"See St Mary Mead entries"},
+{t:"Poirot's Early Cases", p:["Hercule Poirot"], ty:"Murder Mystery", f:"Short story collection", yr:1974, loc:"Mostly London", time:"1920s (written retrospectively)", panel:"london", region:"London", rw:"Central London"},
+{t:"Miss Marple's Final Cases", p:["Miss Marple"], ty:"Murder Mystery", f:"Short story collection", yr:1979, loc:"St Mary Mead + various", time:"Mixed decades", panel:"uk", region:"UK", rw:"See St Mary Mead entries"},
 {t:"While the Light Lasts", p:["Various"], ty:"Anthology / Various", f:"Short story collection", yr:1997, loc:"Various early settings", time:"1920s–30s", panel:"elsewhere", region:"Global / Unconfirmed", rw:"Unconfirmed"},
 ];
 DATA.forEach((d,i)=>{ d.id = i; });
 
 const CHRISTIE_LIFE = { born:1890, died:1976, bornLabel:"15 Sep 1890", diedLabel:"12 Jan 1976" };
-const LANES = ["Poirot","Marple","Parker Pyne","Quin & Satterthwaite","Tommy & Tuppence","Standalone","Various"];
+const LANES = ["Hercule Poirot","Miss Marple","Parker Pyne","Mr Satterthwaite","Tommy and Tuppence","Standalone","Various"];
 const LOC_COLOR = {london:"var(--loc-london)", uk:"var(--loc-uk)", europe:"var(--loc-europe)", elsewhere:"var(--loc-elsewhere)"};
-const REGIONS = ["London","UK","Europe & the Orient","South Africa","Caribbean","Global / Unconfirmed"];
+const REGIONS = ["London","UK","The Continent and the Orient","South Africa","Caribbean","Global / Unconfirmed"];
 const FORMAT_SHAPE = {"Novel":"square","Short story":"triangle","Short story collection":"circle"};
 
 const state = {
@@ -347,7 +347,7 @@ function renderLegend(){
       <span class="legend-title">Colour · location</span>
       <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-london)"></span> London</span>
       <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-uk)"></span> UK</span>
-      <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-europe)"></span> Europe/Orient</span>
+      <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-europe)"></span> Continent/Orient</span>
       <span class="legend-item"><span class="legend-swatch" style="background:var(--loc-elsewhere)"></span> Elsewhere</span>
     </div>
   `;
