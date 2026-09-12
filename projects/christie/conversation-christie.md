@@ -1,6 +1,6 @@
 # Conversation log: Agatha Christie
 
-Companion to [`projects/christie/documentation.md`](../../projects/christie/documentation.md)
+Companion to [`documentation.md`](documentation.md)
 (design decisions, font passes, and its own changelog/known-considerations)
 — this file is the reasoning behind it: what was asked, what got tried and
 corrected, in the order it actually happened.
