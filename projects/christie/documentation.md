@@ -523,6 +523,47 @@ four extras are ever reused for something else.
   - All 68 UK/Europe + 14 London location points were re-projected under the new
     bboxes/scales (even where the underlying lat/long didn't change, the pixel
     position did, since panel extents shifted with the new source geometry).
+- **Naming, chrome, framing, and a real clutter fix**, from four follow-up requests
+  in one message: rename the Europe panel, drop the watermarks, trim Britain's
+  frame, and explain the London crowding.
+  - **Renamed "Europe & the Orient" → "The Continent and The Orient"** — the Atlas
+    panel's own label, plus every other place the name appears (the Timeline tab's
+    `region` field/filter chip/table column, the `REGIONS` array, the map hint text)
+    for consistency, so the two tabs don't show two different capitalizations of
+    the same region.
+  - **Removed the large decorative watermark text** ("britain" / "the city" /
+    "europe & the orient" looming behind each panel) entirely — both the CSS
+    (`.map-watermark`) and the JS that rendered it (`buildMapPanel()`'s `wm` div).
+    The existing small corner label (top-left, e.g. "UK", "LONDON") was already
+    what was asked for ("at best a label at the top or bottom right") and needed
+    no repositioning, just the watermark stripped out from around it.
+  - **Trimmed Orkney and Shetland off the UK panel** — both sit entirely north of
+    mainland Scotland's own northernmost point (~58.68°N; verified against the
+    Natural Earth data directly rather than guessed) and have zero data points on
+    them. Added a bounding-box cutoff at 58.75°N to `filterByBbox()`'s UK call —
+    high enough to keep the Hebrides (which sit within mainland's own latitude
+    range) but drop Orkney/Shetland's 17 sub-polygons. Panel height dropped from
+    157 to 123 units at the same 100-unit width, i.e. Britain and Ireland now fill
+    visibly more of the frame with the same zoom.
+  - **Answered "why are all the London cases crowded in one place?"** — because
+    it's true: 12 of the 14 London-set books/stories really do sit within about a
+    3km radius (Mayfair, Westminster, Bloomsbury, Chelsea, the West End — Christie's
+    own fashionable interwar London), with only Croydon Airport genuinely far out.
+    Two entries ("Third Girl" and "Elephants Can Remember", both tagged Chelsea)
+    land on the exact same coordinate. That's not a projection bug — but it does
+    mean several real dots were sitting exactly on top of each other,
+    unclickable as separate points, so it was worth fixing anyway.
+  - **Added `declutterPoints()`** — a small anchored force-relaxation pass (50
+    iterations, pairwise repulsion under a minimum distance, each point's total
+    drift from its true position clamped to a max radius) run once per panel at
+    render time. It only nudges points that are genuinely colliding; isolated
+    points don't move. This only affects where a dot is *drawn* — `DATA`'s
+    stored `cx`/`cy` (and everything reading real position: the table, the
+    tooltip, the "closest real place" column) is untouched. Same fix quietly
+    helps the UK panel's Abney Hall cluster (six coincident points) and the
+    Continent/Orient panel's exact-duplicate pairs (Petra ×2, Luxor ×2) too,
+    not just London — the same underlying pattern (a handful of true locations
+    reused across the corpus) shows up on all three panels.
 
 ---
 
@@ -608,3 +649,14 @@ four extras are ever reused for something else.
   session's declared working directories. Corrected, and a standing rule is now in
   place (tracked in this assistant's cross-session memory, not in this repo) against
   open-ended filesystem exploration outside explicitly-named paths.
+- **The UK panel's northern cutoff (58.75°N) is a hardcoded constant**, chosen by
+  checking mainland Scotland's own real northernmost point in the Natural Earth
+  data rather than guessed — if a future data point needs plotting in Orkney,
+  Shetland, or further north, that cutoff has to be raised (and re-run through
+  the same rebuild pipeline) or it'll silently have no landmass to sit on.
+- **`declutterPoints()`'s `minDist`/`maxDrift` (2.6/5 units) are tuned by eye**
+  against this specific data's clusters (London's dozen-strong center, Abney
+  Hall's six coincident points), not derived from panel size or dot radius
+  programmatically. If a panel's data changes substantially (many more entries,
+  or entries much closer/further apart), these two numbers are the first thing
+  to revisit — the function itself doesn't need to change.

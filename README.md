@@ -116,6 +116,19 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.18** — Four Christie Atlas follow-ups in one pass: renamed "Europe & the
+  Orient" to "The Continent and The Orient" everywhere it appears (panel label,
+  Timeline tab's region filter/table, hint text); removed the large decorative
+  watermark text behind each map panel, keeping only the existing small corner
+  label; trimmed Orkney and Shetland off the UK panel (both sit north of
+  mainland Scotland's own northernmost point, with zero data on them), so
+  Britain and Ireland now fill visibly more of the frame at the same zoom; and
+  added a small anchored declutter pass (`declutterPoints()`) that nudges apart
+  points which land on or near the same coordinate — several genuinely do,
+  since Christie reused the same handful of real places (Abney Hall six times;
+  a dozen London settings within a 3km radius of Mayfair/Westminster/Bloomsbury/
+  Chelsea) — without altering the true stored position anywhere else on the
+  page. See `projects/christie/documentation.md`'s changelog for detail.
 - **V4.17** — Corrected V4.16's map-refinement approach after user feedback: "I
   did not need a curvier smoother map of the UK, I needed it to be better
   resolution. Also, the London map is still a squiggle." Removed all curve
