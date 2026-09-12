@@ -7,6 +7,18 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Josefin+Sans:wght@400;500;600;700&display=swap');
 
+/* Monsante — freeware/personal-use display sans (Arterfak Project),
+   confirmed as a genuine period-styled Art Deco font (along with
+   "Marmalade") and supplied directly by the user as monsante-font.zip,
+   self-hosted per its license terms; see fonts/Monsante-license.txt. */
+@font-face{
+  font-family:'Monsante';
+  src:url('fonts/Monsante-Regular.otf') format('opentype');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
 :root{
   --ink:#0a0a07; --panel:#141210; --panel-2:#1a1713;
   --rule: rgba(224,201,138,0.22); --rule-soft: rgba(224,201,138,0.1);
@@ -55,9 +67,9 @@ body{background-image:
   opacity:0.5; pointer-events:none; z-index:0;
 }
 .masthead-title, .masthead-tagline, .chevron-rule{position:relative; z-index:1;}
-.masthead-title{font-family:'Bodoni Moda', serif; font-weight:500; font-size:46px; line-height:1.15; letter-spacing:0.03em; text-transform:uppercase;
+.masthead-title{font-family:'Monsante', 'Bodoni Moda', serif; font-weight:400; font-size:46px; line-height:1.15; letter-spacing:0.03em; text-transform:uppercase;
   color:transparent; -webkit-text-fill-color:transparent; -webkit-text-stroke:1.3px var(--ivory); text-stroke:1.3px var(--ivory);
-  background-image:repeating-linear-gradient(45deg, var(--ivory) 0px 1px, transparent 1px 4px);
+  background-image:repeating-conic-gradient(from -90deg at 50% 160px, var(--ivory) 0deg 0.25deg, transparent 0.25deg 0.9deg);
   -webkit-background-clip:text; background-clip:text;}
 .masthead-tagline{font-family:'Josefin Sans', sans-serif; font-weight:600; font-size:15px; letter-spacing:0.35em; text-transform:uppercase; color:var(--gold-bright); margin:14px 0 0;}
 .chevron-rule{height:9px; margin-top:18px; opacity:0.8;
