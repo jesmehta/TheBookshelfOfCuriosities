@@ -116,6 +116,20 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.17** — Corrected V4.16's map-refinement approach after user feedback: "I
+  did not need a curvier smoother map of the UK, I needed it to be better
+  resolution. Also, the London map is still a squiggle." Removed all curve
+  smoothing (straight-line SVG paths again) and rebuilt UK/Ireland and Europe
+  & the Orient from Natural Earth's 10m admin-0 countries dataset (real
+  islands — Hebrides, Orkney, Isle of Wight, Mallorca — instead of the earlier
+  hand-traced approximations), simplified with `@turf/turf` rather than left
+  at full resolution. Rebuilt London as an actual map rather than a river-only
+  sketch: 33 real London boroughs dissolved into one boundary, plus the
+  Thames' real course pulled from OpenStreetMap via the Overpass API (stitched
+  from 145 separate way segments) — this is high enough resolution to show
+  the actual Isle of Dogs loop, which Natural Earth's continental-scale rivers
+  layer had generalized away. See `projects/christie/documentation.md`'s
+  changelog for exact tolerances, sources, and the Overpass query.
 - **V4.16** — Refined the Christie Atlas map further: smoothed the UK/Europe
   coastlines (Catmull-Rom-to-Bezier curve fitting through the same real
   vertices, replacing the faceted straight-line look), added a hand-traced

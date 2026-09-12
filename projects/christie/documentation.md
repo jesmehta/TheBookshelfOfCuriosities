@@ -460,6 +460,69 @@ four extras are ever reused for something else.
     not something to "fix" by hand-editing points to look more dramatic; the real
     data is more trustworthy than a hand-tuned approximation, even if slightly less
     dramatic-looking.
+- **Corrected course on the above pass** — user came back with "I did not need a
+  curvier smoother map of the UK, I needed it to be better resolution. Also, the
+  London map is still a squiggle." Right on both counts: the Catmull-Rom smoothing
+  was cosmetic, not resolution, and Natural Earth's rivers-only Thames without any
+  surrounding landmass never was going to read as "a map of London" no matter how
+  precisely it was drawn. Also directly answered "do you need better sources? …
+  do you need me to give you a plotted map?" — no: real vector boundary data (paths
+  with actual coordinates) is strictly more useful here than a supplied image or
+  SVG basemap would be, since placing points accurately needs real projectable
+  coordinates, not a picture to eyeball against.
+  - **Removed all curve smoothing** — every ring/line is straight-line SVG path
+    segments again (`M...L...L...Z`), no `smoothPath()`/Catmull-Rom step. What
+    reads as "smooth" now comes entirely from having enough real vertices close
+    together, not from curve-fitting.
+  - **UK/Ireland rebuilt from Natural Earth's 10m admin-0 countries** (`ne_10m_
+    admin_0_countries.geojson`, fetched in full — 13MB, all countries — then
+    filtered to GBR/IRL), not the `johan/world.geo.json` mirror used previously.
+    Raw detail: 7113 points/57 rings for the UK, 2394 points/7 rings for Ireland —
+    every real island (Hebrides, Orkney, Shetland, Isle of Wight, Anglesey) is its
+    own ring already, so the hand-traced Isle of Wight from the previous pass is
+    gone, replaced by the real thing. Simplified with `@turf/turf`'s `simplify`
+    (true Douglas-Peucker, tolerance 0.004° ≈ 400m) rather than left at full
+    resolution — mainland Britain still carries ~2000 points after simplifying,
+    versus the ~56 points the whole UK had before this pass. `npm install
+    @turf/turf` worked fine in the scratchpad for this — first time this
+    project's needed a real npm dependency rather than hand-rolled geometry code.
+  - **Europe & the Orient rebuilt the same way**, from the same `ne_10m_admin_0_
+    countries.geojson` file (all 26 countries were already in it — no separate
+    fetch needed), same 0.01° tolerance. Spain's high-res polygon includes Mallorca
+    for real this time (ring index 15, 154 points) — the hand-traced 8-point
+    approximation from the previous pass is gone. A bounding-box filter
+    (`filterByBbox()`) drops each country's far-flung territories (Canary Islands,
+    Spain's African exclaves, etc.) by sub-polygon centroid, so they don't
+    silently balloon the panel's extent.
+  - **London rebuilt as a real map, not a river-only sketch**: dissolved all 33
+    real London borough polygons (`radoi90/housequest-data`'s `london_boroughs.
+    geojson`) into one outer Greater London boundary via `turf.union`, simplified
+    to 283 points (tolerance 0.0015°) — this is now the panel's landmass, the
+    same visual role UK/Europe's coastlines play, replacing "no landmass, just a
+    line."
+  - **Thames sourced from OpenStreetMap** via the Overpass API (`way[waterway=
+    river][name="River Thames"]` in a Greater London bounding box) instead of
+    Natural Earth's continental-scale rivers layer, which had generalized away
+    the Isle of Dogs loop entirely. OSM returned 145 separate way segments
+    (3601 points total, since a long river is split into many edited-separately
+    segments) that had to be stitched into one ordered line by matching endpoints
+    within ~50m (`stitch_thames.js`) — the main chain came out to 2594 points
+    spanning Richmond to past Dartford; discarded ~30 smaller disconnected
+    fragments (side channels, distributary stubs). Simplified to 228 points
+    (tolerance 0.0002° — much finer than the coastlines, since this river's
+    real shape, not just its general course, was the point). The Isle of Dogs
+    loop (and what looks like the Greenwich peninsula's own loop) are both
+    genuinely visible now, confirmed by rendering a zoomed-in crop before
+    merging into the live file — the "generalized into an S-curve" limitation
+    noted in the previous entry is resolved by using the right-resolution
+    source, not by hand-editing points.
+  - The first overpass-api.de request timed out (504, server load) — retried
+    against the `overpass.kumi.systems` mirror, which succeeded. Public Overpass
+    instances are shared infrastructure and can be slow/unavailable; a mirror
+    retry is the right first move, not assuming the query itself is wrong.
+  - All 68 UK/Europe + 14 London location points were re-projected under the new
+    bboxes/scales (even where the underlying lat/long didn't change, the pixel
+    position did, since panel extents shifted with the new source geometry).
 
 ---
 
@@ -515,27 +578,25 @@ four extras are ever reused for something else.
   see the changelog entry above. v2's triptych is still the old placeholder-outline
   geometry (never real coastlines); v3 (recovered from git history) is where the real
   coastlines actually came from, but that file itself isn't touched going forward.
-- **All three Atlas panels now use real geographic data** — UK and Europe & the
-  Orient from `johan/world.geo.json` (public-domain, per-country GeoJSON) via direct
-  `curl` fetch; London's river from Natural Earth's `ne_10m_rivers_lake_centerlines`.
-  See the changelog entries above for the full country list and the projection
-  formula. None of this is preserved as a repo file — it was scratchpad build
-  scripts, run once and discarded. If a location needs correcting, a new
-  country/region gets added, or the smoothing/Isle-of-Wight approach needs revisiting,
-  that means re-fetching the relevant source file and re-running the same pipeline
-  (not a manual tweak to the existing SVG path strings): fetch `<ISO3>.geo.json` (or
-  the rivers file for London), project with `x=(lon-lon0)*cos(lat0), y=(lat0-lat)`,
-  scale so viewBox width = 100, then run every ring/line through the Catmull-Rom
-  smoothing step (tension 1/6) before emitting the path.
-- **Mallorca and Isle of Wight are both hand-approximated** (8 points each, traced
-  from memory of their real rough shape), not sourced — neither is in `johan/
-  world.geo.json`'s mainland-only Spain/GBR files. Good enough to recognize at this
-  map's scale, but don't treat either as precise.
-- **The Thames' course through London is real but generalized** — Natural Earth's
-  10m-scale rivers dataset doesn't preserve the tight meander around the Isle of
-  Dogs; it reads as a gentler S-curve instead. That's the source data's own
-  simplification, not a placeholder to eventually replace — a tighter, more dramatic
-  bend would have to come from higher-resolution river data, not hand-editing.
+- **All three Atlas panels use real geographic data, no curve smoothing, no
+  hand-traced shapes** — every path is straight-line SVG segments through actual
+  source coordinates. UK/Ireland and Europe & the Orient come from Natural Earth's
+  `ne_10m_admin_0_countries.geojson` (10m resolution, filtered by ISO_A3 and
+  simplified with `@turf/turf`'s `simplify`, not the earlier `johan/world.geo.json`
+  mirror or any hand-added islands — Isle of Wight and Mallorca are both the real
+  polygons now). London's landmass is 33 real boroughs (`radoi90/housequest-data`'s
+  `london_boroughs.geojson`) dissolved into one boundary via `turf.union`; its
+  river is OpenStreetMap's actual Thames way, pulled via the Overpass API and
+  stitched from 145 separate segments into one line. See the changelog entries
+  above for exact tolerances and country lists. **None of this is preserved as a
+  repo file** — every fetch/simplify/project step was a scratchpad build script,
+  run once and discarded. Reconstructing any of it means re-fetching the source
+  (Natural Earth for coastlines, Overpass for the Thames, the boroughs GeoJSON for
+  London's boundary), re-running `@turf/turf`'s `simplify` at a similar tolerance,
+  and re-projecting with `x=(lon-lon0)*cos(lat0), y=(lat0-lat)` scaled to viewBox
+  width 100 — not a manual tweak to the existing SVG path strings, and not
+  re-adding a smoothing step (that was tried and explicitly rejected: "I did not
+  need a curvier smoother map of the UK, I needed it to be better resolution").
 - **Per-location coordinates for "Unconfirmed"/fictional settings are plausible
   placeholders, not researched positions** — e.g. "Woodleigh Common," "Broadhinny,"
   "Gipsy's Acre" get a reasonable representative point in roughly the right part of
