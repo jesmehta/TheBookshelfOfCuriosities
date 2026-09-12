@@ -13,12 +13,37 @@ quotes from after the compaction are directly from the live transcript.
 Either way, every quoted line below is the user's own words, not a
 paraphrase.
 
+## Before this conversation: bibliography, Atlas, Timeline v1-v3
+
+Everything in this section predates this assistant's involvement
+entirely — a separate prior conversation, recovered afterward from the
+user's own saved files and summarized in
+[`christie-project-history.md`](christie-project-history.md) and
+[`christie-timeline-changelog.md`](christie-timeline-changelog.md). It's
+included here, and replayed as real commits in `projects/christie/`,
+because it's the actual origin of everything that follows — not a
+clean-slate start.
+
+In order: a plain-text bibliography, split into Murder Mysteries vs.
+Others; locations added per work; Tommy & Tuppence, Harley Quin/Mr
+Satterthwaite, and Parker Pyne folded in, with UK place-names matched to
+real-world locations (Abney Hall, Cheshire, identified as the recurring
+real basis behind half a dozen fictional country houses); a full
+reference table delivered as two `.md` files. Then two parallel
+interactive tools built from that same table: the **Christie Atlas**
+(triptych map + table, three revisions — merging Europe/Middle East into
+one band, then rebuilding it on real coastline data), and the **Christie
+Timeline** (protagonist lanes on a shared year axis, three revisions —
+adding Christie's own lifetime as the spine, then settling the location
+filter's granularity). Only Atlas v2 and Timeline v3 persisted into
+ongoing active work; the superseded versions are preserved in this
+repo's history but not in the working tree.
+
 ## The opening ask, and the first redesign
 
-The project started from an existing "dark literary" themed timeline page
-— Poirot, Marple, and the rest of Christie's bibliography plotted against
-her lifespan. The first ask reviewed it and redirected the whole visual
-identity:
+The project picked back up from that Timeline v3 file — still in its
+"dark literary" theme, no Art Deco treatment yet. The first ask reviewed
+it and redirected the whole visual identity:
 
 > **1. Update the colours and linework to 1920s ArtDeco - Swing Jazz - Lost
 > Generation styles, not the "dark and literary" style here / 2. Poirot -
@@ -238,10 +263,19 @@ transcribed into a new, deliberately separate `SHORT_STORIES` dataset.
 ## Recreating this history
 
 Which brings us here: rather than land the finished `christie-timeline-
-v3.html` as one commit, this project's actual build-up — the phases
-above — is being replayed as its own sequence of commits into
-`projects/christie/`, seeded from the pre-redesign file the user supplied
-directly for this purpose. `scifi/` and `asimov/` moved under `projects/`
-in the same pass, since Christie becoming a third standalone project was
-the exact trigger condition this repo's own `README.md` had already
-documented and left ready to execute.
+v3.html` as one commit, this project's actual build-up — every phase
+above, pre-history included — is being replayed as its own sequence of
+commits into `projects/christie/`. `scifi/` and `asimov/` moved under
+`projects/` in a separate pass first, since Christie becoming a third
+standalone project was the exact trigger condition this repo's own
+`README.md` had already documented and left ready to execute.
+
+The seed material — every historical file referenced above, plus a saved
+export of the original pre-repo conversation itself — was supplied
+directly by the user for this purpose, from
+`F:\__SnowCrash\__WebPages\Christie\orig_claude_files\`, with one explicit
+constraint: don't overwrite the actual, fully-worked-on
+`christie-timeline-v3.html` in the live Christie folder while this
+reconstruction is in progress — it stays as the safety net until the
+newly-built `projects/christie/` version is verified to match it and is
+safely committed.
