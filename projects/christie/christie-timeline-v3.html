@@ -607,11 +607,18 @@ function computeLabelLayout(items, xFn, bounds, opts){
   const pad = opts.pad || 6;
   const labelPad = opts.labelPad || 10;
   const offsets = opts.trackOffsets || [0];
+  // Every mark in the lane (not just the labeled ones) is an obstacle a
+  // track has to clear — otherwise a track picked purely to avoid other
+  // LABELS can still land right on top of an unrelated, unlabeled dot.
+  const obstacles = opts.obstacles || [];
+  const baseY = opts.baseY || 0;
+  const dotClear = opts.dotClear || 11;
   const sorted = [...items].sort((a,b)=> a.yr-b.yr || a.id-b.id);
   const tracks = {};
   const placed = [];
   const ensureTrack = k=>{ if(!tracks[k]) tracks[k] = []; return tracks[k]; };
-  const fits = (intervals,start,end)=> intervals.every(iv=> end < iv.start-pad || start > iv.end+pad);
+  const fits = (intervals,start,end,trackY)=> intervals.every(iv=> end < iv.start-pad || start > iv.end+pad)
+    && obstacles.every(o=> Math.abs(o.y-trackY) > dotClear || o.x < start-pad || o.x > end+pad);
   sorted.forEach(d=>{
     const label = truncateTitle(d.t, opts.maxChars || 30);
     const width = approxTextWidth(label, opts.fontSize || 12);
@@ -628,8 +635,9 @@ function computeLabelLayout(items, xFn, bounds, opts){
         const labelX = side==="R" ? xx+labelPad : xx-labelPad;
         const start = side==="R" ? labelX : labelX-width;
         const end = side==="R" ? labelX+width : labelX;
+        const trackY = baseY + offset;
         const intervals = ensureTrack(side+"_"+offset);
-        if(fits(intervals,start,end)){
+        if(fits(intervals,start,end,trackY)){
           intervals.push({start,end}); intervals.sort((a,b)=>a.start-b.start);
           chosen = {d, label, markX:xx, labelX, offset, side};
           break;
@@ -833,10 +841,21 @@ function renderTimeline(){
     const jitter = jitterByLane.get(lane);
     const landmarks = DATA.filter(d=> d.p.includes(lane) && LANDMARK_IDS.has(d.id));
     if(!landmarks.length) return;
+    // Real vertical separation (a track above or below the spine, joined to
+    // the mark by the leader line below) is tried before the on-spine slot —
+    // 0 is a last resort, not the default, since it's also where the densest
+    // band of jittered dots sits. A lane at the height floor (rowH=56) still
+    // gets at least one real offset even though it's short of a full 14px step.
     const maxTrack = Math.max(0, laneH/2 - 16);
-    const trackOffsets = [0];
+    const trackOffsets = [];
     for(let r=14; r<=maxTrack; r+=14) trackOffsets.push(-r, r);
-    const placed = computeLabelLayout(landmarks, x, {minX:left+6, maxX:w-right-6}, {trackOffsets, maxChars:30, fontSize:12});
+    if(!trackOffsets.length && maxTrack>0) trackOffsets.push(-maxTrack, maxTrack);
+    trackOffsets.push(0);
+    // Obstacles = every mark in this lane (labeled or not) at its real
+    // jittered position, so a track is only chosen if it's actually clear —
+    // not just clear of other labels.
+    const obstacles = DATA.filter(d=>d.p.includes(lane)).map(d=>({x:x(d.yr), y:baseY+(jitter.get(d.id)||0)}));
+    const placed = computeLabelLayout(landmarks, x, {minX:left+6, maxX:w-right-6}, {trackOffsets, maxChars:30, fontSize:12, obstacles, baseY});
     placed.forEach(p=>{
       // Track offsets are relative to the lane's shared baseline (baseY),
       // not this mark's own jitter — two labels using different tracks

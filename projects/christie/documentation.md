@@ -615,6 +615,34 @@ four extras are ever reused for something else.
     ~50km apart in reality, so this is real-geography crowding rather than a
     placement bug, and wasn't worth moving either label off its true position
     to avoid.
+- **Fixed the Timeline tab's own landmark labels sitting on the spine / on top
+  of unrelated marks** — user reported labels overlapping other dots or the
+  lane's horizontal line instead of sitting clearly above/below with a leader
+  line. Two separate bugs, both in `computeLabelLayout()`/its one call site
+  (the Timeline chart's landmark labels — the Atlas map's own labels don't use
+  this function and weren't affected):
+  - **`trackOffsets` defaulted to `[0]` first**, i.e. "on the lane's spine,
+    same height as the densest jittered-dot band" was the *first* choice tried,
+    not a last resort — and for any lane sitting at the row-height floor
+    (`rowH=56`, `maxTrack` computes to 12px, short of the first 14px step), it
+    was the *only* choice ever generated, so every landmark label in a
+    lower-density lane rendered exactly on the spine, no leader line needed
+    because there was no vertical gap to bridge. Fixed by building real
+    above/below tracks first (falling back to `±maxTrack` when a lane's too
+    short for a full 14px step) and pushing `0` onto the end of the list as a
+    genuine last resort.
+  - **`computeLabelLayout()` only checked a candidate track against other
+    *labels*, never against the lane's actual dots** — so even a label placed
+    on a real off-spine track could still land directly on top of an
+    unrelated, unlabeled mark that happened to jitter to a nearby y at that
+    x (visually: the mark's own opaque text-halo stroke eats a bite out of
+    the dot behind it). Fixed by passing every dot in the lane (real jittered
+    x/y, not just the labeled subset) into `computeLabelLayout()` as
+    obstacles; a track is now only chosen if it's clear of other labels *and*
+    clear of every dot within an 11px vertical band. Confirmed by screenshot
+    before/after on the Poirot lane's 1933–38 cluster (the worst case) in both
+    themes — no more label/dot collisions, three landmark labels now stack
+    cleanly above the spine with visible leader lines down to their marks.
 
 ---
 

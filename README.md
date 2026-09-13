@@ -116,6 +116,13 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.20** — Fixed the Christie Timeline tab's landmark labels sitting
+  directly on a lane's spine line and/or overlapping unrelated dots instead of
+  sitting clearly above/below with a leader line. Root causes: the on-spine
+  track was tried *first* (and, for shorter lanes, was the *only* track ever
+  generated), and the layout function never checked a candidate track against
+  the lane's actual marks — only against other labels. See
+  `projects/christie/documentation.md`'s changelog for detail.
 - **V4.19** — Christie Atlas: London's focused view now zooms into its real
   cluster (12 of 14 books sit within one small area) instead of showing the
   full, mostly-empty Greater London boundary at the same scale as the
