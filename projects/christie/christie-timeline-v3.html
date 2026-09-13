@@ -163,6 +163,13 @@ tbody tr.dim{opacity:0.28;}
 @keyframes map-pulse{0%{r:8; opacity:1;} 100%{r:2.6; opacity:1;}}
 .map-tip{font-family:'Josefin Sans', sans-serif; font-size:2.4px; fill:var(--ivory-dim); pointer-events:none;}
 .map-dot.dim .map-tip{opacity:0.3;}
+.map-ref{pointer-events:none;}
+.map-ref-mark{stroke:var(--gold-dim); stroke-width:0.4; opacity:0.65;}
+.map-ref-label{font-family:'Josefin Sans', sans-serif; fill:var(--ivory-faint); text-transform:uppercase; letter-spacing:0.05em; opacity:0.75;}
+.map-crop-hint{fill:none; stroke:var(--gold-dim); stroke-width:0.4; stroke-dasharray:1.2,1; opacity:0.5;}
+.map-off-crop{position:absolute; left:16px; right:16px; bottom:10px; font-family:'Josefin Sans', sans-serif; font-size:10.5px; line-height:1.5; color:var(--ivory-faint); z-index:3;}
+.map-off-crop b{color:var(--gold-dim); font-weight:600; cursor:pointer;}
+.map-off-crop b:hover{color:var(--gold-bright);}
 
 .elsewhere-strip{font-family:'Josefin Sans', sans-serif; font-size:11.5px; color:var(--ivory-faint); background:var(--panel); padding:12px 18px; margin-bottom:10px;}
 .elsewhere-strip strong{color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.08em; font-size:10px;}
@@ -377,6 +384,38 @@ const LANES = ["Hercule Poirot","Miss Marple","Parker Pyne","Mr Satterthwaite","
 const LOC_COLOR = {london:"var(--loc-london)", uk:"var(--loc-uk)", europe:"var(--loc-europe)", elsewhere:"var(--loc-elsewhere)"};
 const REGIONS = ["London","UK","The Continent and The Orient","South Africa","Caribbean","Global / Unconfirmed"];
 const FORMAT_SHAPE = {"Novel":"square","Short story":"triangle","Short story collection":"circle"};
+
+// Orientation landmarks — not book data, just fixed real-world reference
+// points (projected through the same lon/lat transform used to build each
+// panel's coastline) so a reader unfamiliar with the geography has something
+// to anchor the dots against. Only drawn in the focused/big panel view.
+const REFERENCE_POINTS = {
+  uk: [
+    {label:"London", cx:80.80, cy:96.11},
+    {label:"Birmingham", cx:67.95, cy:83.89},
+    {label:"Manchester", cx:65.39, cy:71.47},
+    {label:"Edinburgh", cx:58.49, cy:40.59},
+    {label:"Bristol", cx:62.87, cy:96.77},
+    {label:"Dublin", cx:36.10, cy:73.10},
+  ],
+  europe: [
+    {label:"Paris", cx:26.88, cy:11.66},
+    {label:"Rome", cx:38.16, cy:21.34},
+    {label:"Athens", cx:50.64, cy:26.79},
+    {label:"Istanbul", cx:56.47, cy:22.58},
+    {label:"Cairo", cx:58.98, cy:37.84},
+    {label:"Baghdad", cx:73.58, cy:33.29},
+  ],
+  london: [
+    {label:"Hyde Park", cx:40.71, cy:34.52},
+    {label:"Piccadilly Circus", cx:44.00, cy:34.05},
+    {label:"Trafalgar Sq.", cx:44.66, cy:34.40},
+    {label:"Bloomsbury", cx:44.77, cy:32.48},
+    {label:"Chelsea", cx:41.68, cy:37.03},
+    {label:"Westminster", cx:45.03, cy:35.63},
+    {label:"The City", cx:47.78, cy:33.43},
+  ],
+};
 
 const state = {
   filters:{ protagonist:new Set(), region:new Set(), format:new Set() },
@@ -1085,6 +1124,13 @@ const PANELS = {
   london: {
     label:"London",
     viewBox:"0 0 100.00 75.10", fit:"none",
+    // Almost every London case sits in a tight Mayfair/Bloomsbury/Westminster/
+    // Chelsea cluster (see documentation.md) — the full Greater London
+    // boundary makes for a good thumbnail silhouette but wastes the focused
+    // view's space. bigViewBox crops the focused view to that cluster (plus
+    // the reference landmarks below); the thumbnail keeps the full shape and
+    // draws a dashed hint of the crop.
+    bigViewBox:"38.58 28.84 13.45 12.39", bigFit:"xMidYMid meet",
     draw:`
           <path class="landmass" d="M4.55,41.13L5.75,41.36L6.28,42.03L8.03,42.26L8.41,42.72L9.97,43.11L9.67,44.34L10.10,44.33L10.20,46.18L11.27,45.86L11.12,46.70L11.95,46.77L11.93,47.44L13.03,47.75L14.12,47.15L15.51,48.78L17.03,48.84L17.53,49.22L17.58,50.20L17.15,50.19L17.26,50.86L18.42,51.27L20.42,50.60L22.37,52.09L23.70,53.98L24.81,53.72L25.14,54.25L24.86,54.53L25.39,54.72L25.85,56.25L25.71,56.74L24.84,57.17L24.53,59.41L23.42,61.30L23.74,62.04L23.40,64.59L23.65,65.00L24.60,64.77L26.02,63.49L26.21,62.17L27.36,60.63L28.19,59.14L27.85,58.99L28.29,58.48L30.70,56.04L32.28,55.94L32.35,58.19L33.23,58.18L34.29,58.91L35.25,61.77L35.30,62.14L34.05,63.41L34.92,64.42L35.45,64.42L35.87,63.84L35.75,63.47L36.99,62.73L37.40,62.11L39.00,63.08L39.83,63.86L39.96,64.40L40.99,64.36L40.87,65.07L41.69,65.85L41.12,66.15L41.61,67.20L41.49,67.61L41.91,67.73L41.61,68.33L41.89,68.37L41.55,68.71L41.80,69.24L43.69,69.33L45.06,71.69L45.74,71.63L46.05,70.73L48.21,69.55L47.88,69.27L48.54,69.21L48.78,68.24L49.51,67.66L49.21,66.78L49.83,66.12L50.65,65.88L50.75,66.27L51.38,66.32L52.72,65.67L53.08,65.20L52.83,63.96L53.70,63.76L54.13,62.93L55.79,63.04L56.60,64.43L57.19,63.74L58.34,64.55L58.79,66.82L59.19,66.74L58.98,67.71L59.68,70.84L60.11,70.86L60.71,69.09L61.56,68.19L62.54,69.13L62.75,69.70L62.55,70.69L63.43,70.47L64.26,71.25L66.67,70.83L67.66,70.00L66.79,68.51L67.01,68.44L67.03,66.76L69.11,64.84L70.09,64.84L70.48,64.46L70.87,63.79L70.35,62.50L70.54,62.02L71.24,61.73L72.48,62.01L72.40,61.72L73.07,60.91L73.41,59.64L73.33,58.87L73.79,57.80L74.02,57.93L73.80,57.06L74.19,56.31L73.81,55.96L73.83,54.14L73.61,53.82L75.15,53.87L74.40,51.93L73.71,51.23L74.15,51.14L74.24,50.71L73.76,50.51L73.96,49.63L74.33,49.49L73.97,49.16L74.24,47.96L74.46,47.40L75.36,47.78L76.24,45.32L76.58,45.52L77.44,45.08L78.36,43.89L79.45,43.44L79.44,42.70L80.21,42.07L80.30,41.08L80.02,40.64L80.31,39.95L81.58,38.74L80.18,38.13L80.20,37.39L80.67,36.34L82.24,35.86L81.89,34.64L83.50,34.41L83.00,32.49L83.81,32.59L83.40,31.94L83.90,31.79L83.96,31.28L84.43,30.89L84.74,32.74L85.78,32.74L86.09,31.82L85.95,30.33L89.35,29.80L89.30,29.40L89.66,29.22L92.89,29.00L93.16,28.92L93.15,28.59L92.89,28.01L92.62,28.02L92.51,27.16L91.19,26.00L90.96,24.66L88.57,24.91L88.20,23.37L86.58,20.74L86.43,18.97L84.76,18.63L85.19,17.80L85.82,17.40L84.63,15.96L81.62,13.55L79.47,14.65L77.13,14.54L75.83,15.29L72.39,14.92L70.63,16.30L70.35,16.04L69.00,16.78L68.40,16.30L67.79,16.61L68.06,17.08L67.75,17.51L67.82,17.85L67.44,18.08L66.41,17.71L65.75,18.11L63.15,16.65L63.74,15.81L62.40,16.25L60.39,14.04L60.81,13.07L60.49,11.97L58.25,11.87L56.82,11.10L57.17,8.71L56.90,8.14L56.94,5.26L52.94,4.69L51.60,4.90L49.30,3.73L47.10,3.41L42.43,4.48L40.95,4.04L40.94,5.01L40.01,6.58L38.40,7.45L38.06,8.12L37.47,7.86L37.66,7.38L36.76,7.08L36.88,7.47L35.95,7.61L36.29,8.30L35.84,8.56L34.34,9.26L34.08,8.79L31.81,9.45L31.67,10.94L31.10,11.84L30.48,11.34L29.47,11.80L29.38,12.38L27.03,12.92L24.87,12.06L22.60,13.93L22.44,13.70L20.35,14.64L19.11,15.63L16.18,16.63L11.87,15.51L11.35,15.59L11.00,16.31L10.13,16.82L6.91,14.38L6.52,13.71L5.73,13.74L5.60,14.04L5.88,14.40L5.61,15.16L6.12,15.74L5.71,17.39L6.02,18.49L5.54,18.86L5.68,20.21L6.19,21.49L6.72,21.97L6.79,22.72L7.31,23.09L7.23,24.48L8.09,25.97L7.97,26.50L6.54,27.97L6.49,28.74L6.11,29.25L6.63,29.99L6.79,30.85L6.44,32.87L6.70,33.81L7.40,34.63L6.71,35.92L6.64,36.78L5.72,37.67L5.01,40.39L4.55,41.13Z" />
           <path class="thames" d="M21.40,51.20L21.60,51.34L21.68,51.61L21.94,51.86L22.29,52.04L22.42,52.15L22.73,52.69L23.25,53.32L23.47,53.73L23.64,53.93L23.78,54.02L24.04,54.04L24.65,53.78L25.26,53.10L25.37,52.86L25.62,52.59L25.71,52.13L25.67,51.06L25.74,50.48L25.74,50.14L25.83,49.69L25.92,49.42L25.94,49.15L26.00,49.02L25.92,48.74L25.73,48.37L25.37,48.02L24.71,47.57L23.90,47.22L23.70,46.92L23.63,46.47L23.40,45.86L23.39,45.69L23.41,45.58L23.57,45.33L23.67,45.24L24.48,44.87L24.99,44.78L25.75,44.50L26.05,44.27L26.22,44.00L26.28,43.73L26.21,43.44L25.98,43.03L25.78,42.80L25.16,42.44L24.93,42.23L24.52,41.79L24.44,41.59L24.53,41.31L24.55,41.05L24.65,40.67L24.80,40.54L25.44,40.21L25.87,39.90L26.03,39.68L26.16,39.39L26.33,39.13L26.71,38.64L27.13,38.22L27.50,38.04L27.86,37.94L28.32,38.07L28.43,38.16L28.52,38.29L28.81,38.48L29.02,38.75L29.11,38.92L29.34,39.64L29.55,40.01L29.76,40.27L30.24,40.59L30.51,40.66L30.85,40.66L31.10,40.59L31.37,40.44L31.52,40.28L31.67,40.01L31.79,39.59L31.84,38.70L31.93,38.45L32.06,38.24L32.64,37.70L32.86,37.57L33.19,37.49L33.59,37.52L33.94,37.76L34.25,38.17L34.42,38.77L34.43,39.53L34.48,39.82L34.83,40.41L35.40,41.08L35.89,41.41L36.71,41.73L37.62,41.84L38.12,41.77L38.63,41.51L38.91,41.22L39.05,40.95L39.32,40.23L39.46,39.66L39.45,39.53L39.71,39.13L40.02,38.90L40.47,38.75L42.36,38.36L42.76,38.34L43.37,38.47L43.67,38.47L44.16,38.33L44.53,38.12L44.80,37.77L45.09,37.24L45.24,36.51L45.38,35.04L45.44,34.77L45.59,34.50L45.74,34.34L46.04,34.18L46.45,34.10L47.23,34.09L47.85,34.15L48.45,34.34L49.50,34.54L50.39,34.90L50.68,35.10L51.20,35.34L51.76,35.47L52.03,35.42L52.34,35.28L53.33,34.41L53.49,34.34L53.94,34.30L54.52,34.47L54.80,34.67L54.92,34.84L54.99,35.07L55.02,35.30L54.95,36.02L54.94,36.65L54.97,36.93L55.18,37.43L55.51,37.86L55.89,38.15L56.25,38.32L56.70,38.36L56.99,38.32L57.50,38.14L57.87,37.83L58.02,37.55L58.05,37.28L58.01,36.99L57.63,36.03L57.57,35.73L57.57,35.51L57.65,35.21L57.81,34.92L57.96,34.76L58.15,34.66L58.54,34.62L58.90,34.82L59.14,35.06L59.80,35.95L60.12,36.20L60.62,36.40L61.15,36.41L61.77,36.29L62.74,36.19L64.25,36.35L65.05,36.30L65.78,36.11L66.19,35.84L66.52,35.39L67.02,34.49L67.34,34.12L67.64,33.90L67.96,33.81L68.56,33.75L69.45,33.80L70.34,33.54L71.15,33.17L71.56,33.13L72.03,33.19L72.69,33.43L73.64,34.01L74.18,34.19L75.07,34.33L75.62,34.58L75.93,34.81L76.26,35.20L76.46,35.56L76.66,36.25L76.82,37.13L76.99,37.61L77.21,37.95L77.49,38.19L77.85,38.37L78.25,38.42L78.98,38.38L80.17,38.13L80.54,38.17L80.89,38.30L81.79,38.90L83.37,40.39L83.83,40.78L84.62,41.34L85.60,41.92L86.32,42.52L86.65,42.73L87.07,42.89L87.66,42.92L88.01,42.84L88.27,42.69L88.48,42.50L89.45,41.40L89.92,40.93L90.40,40.80L90.99,40.79L91.20,40.85L91.57,41.05L91.94,41.43L92.30,42.03L93.01,43.66L93.16,43.85L93.78,44.20L94.71,44.39L95.45,44.46" fill="none" />
@@ -1488,6 +1534,7 @@ function declutterPoints(items, minDist, maxDrift){
 }
 
 function buildMapPanel(panelKey, big){
+  const svgNS = "http://www.w3.org/2000/svg";
   const conf = PANELS[panelKey];
   const items = DATA.filter(d=>d.panel===panelKey);
   const visibleCount = items.filter(atlasMatches).length;
@@ -1511,27 +1558,88 @@ function buildMapPanel(panelKey, big){
     panelDiv.appendChild(cnt);
   }
 
-  const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-  svg.setAttribute("viewBox", conf.viewBox);
-  svg.setAttribute("preserveAspectRatio", conf.fit);
-  svg.innerHTML = conf.draw;
+  // A panel can define a bigViewBox — a crop, in the same coordinate space
+  // as its viewBox, used only for the focused view. This is how London
+  // zooms into its real cluster instead of showing mostly-empty outer
+  // boroughs. scaleF is how much smaller that crop is than the native
+  // 100-wide viewBox; dot/label sizes below are multiplied by it so a
+  // zoomed-in mark still reads at the same on-screen size as an unzoomed one
+  // (the paths themselves, being fixed absolute coordinates, get the actual
+  // zoom — more of the frame, more visible detail).
+  const useZoom = big && conf.bigViewBox;
+  const activeViewBox = useZoom ? conf.bigViewBox : conf.viewBox;
+  const activeFit = useZoom ? (conf.bigFit || conf.fit) : conf.fit;
+  const nativeW = parseFloat(conf.viewBox.split(" ")[2]);
+  const activeW = parseFloat(activeViewBox.split(" ")[2]);
+  const scaleF = activeW / nativeW;
+  let cropBox = null;
+  if(conf.bigViewBox){
+    const [bx,by,bw,bh] = conf.bigViewBox.split(" ").map(Number);
+    cropBox = {x:bx, y:by, x2:bx+bw, y2:by+bh};
+  }
 
-  const r = big ? 0.9 : 1.3;
+  const svg = document.createElementNS(svgNS,"svg");
+  svg.setAttribute("viewBox", activeViewBox);
+  svg.setAttribute("preserveAspectRatio", activeFit);
+  svg.innerHTML = conf.draw;
+  svg.querySelectorAll(".landmass").forEach(p=> p.style.strokeWidth = (0.35*scaleF).toFixed(3));
+  svg.querySelectorAll(".thames").forEach(p=> p.style.strokeWidth = (0.7*scaleF).toFixed(3));
+
+  // Thumbnail: hint at the crop the focused view will zoom to.
+  if(!big && cropBox){
+    const rect = document.createElementNS(svgNS,"rect");
+    rect.setAttribute("class","map-crop-hint");
+    rect.setAttribute("x",cropBox.x); rect.setAttribute("y",cropBox.y);
+    rect.setAttribute("width",cropBox.x2-cropBox.x); rect.setAttribute("height",cropBox.y2-cropBox.y);
+    svg.appendChild(rect);
+  }
+
+  // Orientation landmarks (real cities / London districts, not book data) —
+  // focused view only, drawn before the book dots so a coincidental overlap
+  // still shows the book dot on top.
+  if(big && REFERENCE_POINTS[panelKey]){
+    const s = 1.1*scaleF, half = s/2;
+    REFERENCE_POINTS[panelKey].forEach(ref=>{
+      const g = document.createElementNS(svgNS,"g");
+      g.setAttribute("class","map-ref");
+      const mark = document.createElementNS(svgNS,"path");
+      mark.setAttribute("class","map-ref-mark");
+      mark.setAttribute("d", `M${(ref.cx-half).toFixed(2)},${ref.cy.toFixed(2)}L${(ref.cx+half).toFixed(2)},${ref.cy.toFixed(2)}M${ref.cx.toFixed(2)},${(ref.cy-half).toFixed(2)}L${ref.cx.toFixed(2)},${(ref.cy+half).toFixed(2)}`);
+      g.appendChild(mark);
+      const txt = document.createElementNS(svgNS,"text");
+      txt.setAttribute("class","map-ref-label");
+      txt.setAttribute("x", ref.cx + half + 0.4*scaleF); txt.setAttribute("y", ref.cy - 1.3*scaleF);
+      txt.style.fontSize = (2.1*scaleF).toFixed(3)+"px";
+      txt.textContent = ref.label;
+      g.appendChild(txt);
+      svg.appendChild(g);
+    });
+  }
+
+  const r = (big ? 0.9 : 1.3) * scaleF;
+  const offCrop = [];
   items.forEach(d=>{
     const [jx, jy] = jittered[d.id];
-    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(cropBox && big && (jx<cropBox.x || jx>cropBox.x2 || jy<cropBox.y || jy>cropBox.y2)){
+      offCrop.push(d);
+      return;
+    }
+    const g = document.createElementNS(svgNS,"g");
     g.setAttribute("class","map-dot" + (atlasMatches(d)?"":" dim") + (d.id===atlasState.selectedId?" selected":""));
     g.dataset.id = d.id;
     const shape = FORMAT_SHAPE[d.f] || "circle";
-    g.appendChild(shapeEl(shape, jx, jy, r, "map-shape"));
+    const shapeNode = shapeEl(shape, jx, jy, r, "map-shape");
+    shapeNode.style.strokeWidth = (0.5*scaleF).toFixed(3);
+    g.appendChild(shapeNode);
     // Only the curated LANDMARK_IDS (same set the Timeline chart labels)
     // get an inline title here — with up to 49 dots on one panel, labeling
     // every one is unreadable regardless of layout; everything else still
     // has the hover tooltip and the table below.
     if(big && LANDMARK_IDS.has(d.id)){
-      const txt = document.createElementNS("http://www.w3.org/2000/svg","text");
+      const txt = document.createElementNS(svgNS,"text");
       txt.setAttribute("class","map-tip");
-      txt.setAttribute("x", jx + r + 0.8); txt.setAttribute("y", jy + 0.7);
+      txt.setAttribute("x", jx + r + 0.8*scaleF); txt.setAttribute("y", jy + 0.7*scaleF);
+      txt.style.fontSize = (2.4*scaleF).toFixed(3)+"px";
       txt.textContent = d.t.replace(/^"|"$/g,"");
       g.appendChild(txt);
     }
@@ -1544,6 +1652,24 @@ function buildMapPanel(panelKey, big){
   });
 
   panelDiv.appendChild(svg);
+
+  // Anything the zoom crop cuts off is still real data — say so rather than
+  // silently dropping it (same spirit as the elsewhere-strip below the
+  // triptych for off-panel regions).
+  if(big && offCrop.length){
+    const note = document.createElement("div");
+    note.className = "map-off-crop";
+    note.appendChild(document.createTextNode("Off this crop: "));
+    offCrop.forEach((d,i)=>{
+      const b = document.createElement("b");
+      b.textContent = `${d.t.replace(/^"|"$/g,"")} (${d.rw})`;
+      b.onclick = ()=> selectAtlasBook(d.id, true);
+      note.appendChild(b);
+      if(i < offCrop.length-1) note.appendChild(document.createTextNode("; "));
+    });
+    panelDiv.appendChild(note);
+  }
+
   if(!big){ panelDiv.onclick = ()=>{ atlasState.focusPanel = panelKey; renderTriptych(); }; }
   return panelDiv;
 }

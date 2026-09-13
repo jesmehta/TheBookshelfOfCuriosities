@@ -116,6 +116,18 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **V4.19** — Christie Atlas: London's focused view now zooms into its real
+  cluster (12 of 14 books sit within one small area) instead of showing the
+  full, mostly-empty Greater London boundary at the same scale as the
+  thumbnail; the true outlier (Croydon Airport) gets an "off this crop" note
+  instead of being silently clipped, and the thumbnail draws a dashed hint of
+  the crop area. All three panels also gained real-world orientation
+  landmarks — 6 UK cities, 6 Continent/Orient cities, 7 London districts —
+  projected through each panel's actual coastline-building transform (which
+  had to be recovered from the scratchpad build scripts, then checked against
+  known baked coordinates) so a reader unfamiliar with the geography has
+  something to place the dots against. See `projects/christie/documentation.md`'s
+  changelog for detail.
 - **V4.18** — Four Christie Atlas follow-ups in one pass: renamed "Europe & the
   Orient" to "The Continent and The Orient" everywhere it appears (panel label,
   Timeline tab's region filter/table, hint text); removed the large decorative

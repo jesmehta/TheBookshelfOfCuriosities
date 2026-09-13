@@ -564,6 +564,57 @@ four extras are ever reused for something else.
     Continent/Orient panel's exact-duplicate pairs (Petra ×2, Luxor ×2) too,
     not just London — the same underlying pattern (a handful of true locations
     reused across the corpus) shows up on all three panels.
+- **London zoom crop + orientation landmarks on all three panels**, from a
+  follow-up asking whether London should zoom in on its cluster, and whether all
+  three maps could use "standard references" (cities for UK/Europe, streets/
+  districts for London) to help a reader unfamiliar with the geography place the
+  dots.
+  - **Recovered each panel's exact lon/lat→SVG projection constants** by
+    re-running the same build scripts (`build_maps3.js` for UK/Europe,
+    `build_london.js` for London) with the projector's internals (`lon0`,
+    `lat0`, `cosLat0`, `minX`/`minY`, `scale`) exposed instead of discarded, and
+    checked the result against a known baked point in the live file (id 0's
+    Abney Hall coordinate, id 6's Lord Edgware Dies coordinate) before trusting
+    it. This is what makes it possible to add new reference points that land in
+    exactly the same coordinate space as the existing coastlines/dots, without
+    re-deriving or re-merging any panel geometry.
+  - **Added `REFERENCE_POINTS`**: 6 real UK cities (London, Birmingham,
+    Manchester, Edinburgh, Bristol, Dublin), 6 Continent/Orient cities (Paris,
+    Rome, Athens, Istanbul, Cairo, Baghdad), and 7 London districts/landmarks
+    (Hyde Park, Piccadilly Circus, Trafalgar Sq., Bloomsbury, Chelsea,
+    Westminster, The City) — all real lat/long, projected through the recovered
+    constants. Drawn as a small neutral "+" cross with a faint uppercase label,
+    focused-panel view only (same as the curated book-landmark labels), so
+    thumbnails stay clean.
+  - **London's focused view now zooms to a `bigViewBox` crop** instead of
+    reusing the full Greater-London viewBox: 12 of London's 14 books cluster
+    within about a 8×10-unit box (Mayfair/Bloomsbury/Westminster/Chelsea/
+    Piccadilly), so the full-boundary view was mostly empty space at that
+    scale. The crop's bounds were taken from the *post-`declutterPoints()`*
+    positions, not the raw `cx`/`cy` — an earlier version sized the crop off
+    the raw coordinates and it clipped two genuinely-clustered books whose
+    jitter had pushed them a couple of units outward (verified by screenshot,
+    caught before merging). Dot radius, label font-size, landmass/Thames
+    stroke-width, and label offsets are all multiplied by `scaleF` (the crop's
+    width ÷ the panel's native 100-unit width) so a zoomed-in mark reads at the
+    same on-screen size as an unzoomed one — the thing that actually changes
+    with the zoom is how much real detail/spacing is visible, not how big the
+    dots are.
+  - **Croydon Airport genuinely falls outside that crop** ("Death in the
+    Clouds") — rather than silently clip it, it's listed in a small
+    "Off this crop: …" note (same spirit as the elsewhere-strip below the
+    triptych), still clickable through to its table row.
+  - **The London thumbnail draws a dashed rectangle** (`.map-crop-hint`) at the
+    same coordinates as the focused view's crop, so the unfocused triptych
+    hints at what clicking through will zoom to, rather than the crop being a
+    surprise. This is generic — any panel that gains a `bigViewBox` in future
+    gets the same hint automatically.
+  - **Known minor overlap**: the UK panel's Manchester reference label sits
+    close enough to the Abney Hall/"Styles" book-landmark label that the two
+    visually touch — Manchester and Abney Hall (Cheshire) are genuinely only
+    ~50km apart in reality, so this is real-geography crowding rather than a
+    placement bug, and wasn't worth moving either label off its true position
+    to avoid.
 
 ---
 
@@ -660,3 +711,27 @@ four extras are ever reused for something else.
   programmatically. If a panel's data changes substantially (many more entries,
   or entries much closer/further apart), these two numbers are the first thing
   to revisit — the function itself doesn't need to change.
+- **London's `bigViewBox` crop is a hardcoded box** (`"38.58 28.84 13.45
+  12.39"`), sized against the *current* London DATA (13 clustered books once
+  Croydon Airport is excluded) plus the 7 reference landmarks — not derived
+  live from whatever's currently plotted. If a future London entry lands well
+  outside that box, it'll silently join the "Off this crop" note instead of
+  being clipped, so it stays visible either way — but if several new entries
+  land just outside the current crop, the box should be recomputed (bbox of
+  the post-`declutterPoints()` positions, not raw `cx`/`cy` — see the
+  changelog entry above for why) rather than nudged by eye.
+- **`REFERENCE_POINTS`'s three lists are curated by hand**, not generated —
+  adding/removing a book location doesn't touch them, and there's no
+  mechanism that would catch a reference city silently becoming irrelevant
+  (e.g. if every UK entry moved south, Edinburgh would stay plotted despite
+  adding nothing). Revisit the lists directly if the underlying book data's
+  geographic spread changes substantially.
+- **The projector constants each panel was built with (`lon0`, `lat0`,
+  `cosLat0`, `minX`/`minY`, `scale`) are not stored anywhere in the live
+  file** — only their output (baked `cx`/`cy` and the SVG path strings) is.
+  `REFERENCE_POINTS`' coordinates were produced by re-deriving those constants
+  in a scratchpad script (re-running the same steps as `build_maps3.js`/
+  `build_london.js`) and verifying against known baked points before trusting
+  the result. Any future point that needs to land in one of these three
+  panels' existing coordinate space (another reference landmark, say) should
+  go through the same re-derive-and-verify step, not a hand-eyeballed guess.
