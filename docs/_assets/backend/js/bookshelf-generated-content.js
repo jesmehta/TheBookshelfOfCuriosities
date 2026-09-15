@@ -259,7 +259,7 @@ const bookshelfEntries = [
     "id": "geography-of-murder",
     "title": "Geography<br>of Murder",
     "subtitle": "Where Poirot and Marple solved their cases.",
-    "href": "agatha/",
+    "href": "christie/",
     "section": "book-data-visualisation",
     "kind": "map",
     "kicker": "Map · Christie",

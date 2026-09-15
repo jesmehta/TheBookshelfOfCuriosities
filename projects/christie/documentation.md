@@ -1,6 +1,6 @@
 # Christie Timeline — Documentation
 
-Covers `christie-timeline-v3.html`: an interactive Art Deco–styled timeline + sortable
+Covers `index.html` (formerly `christie-timeline-v3.html`): an interactive Art Deco–styled timeline + sortable
 table of Agatha Christie's full bibliography, laid along her own lifespan (1890–1976),
 with works branching into protagonist lanes (Hercule Poirot, Miss Marple, Parker Pyne,
 Mr Satterthwaite, Tommy and Tuppence, Standalone, Various).
