@@ -72,8 +72,10 @@ actual back-and-forth that produced it.
 |---|---|
 | `favorite-poems/FAVORITE-POEMS-CONTENT.md` | What the three Favourite Poetry collections (`general/`/`long-poems/`/`workshop/`) are, where their source `.docx` files came from, the now-deleted custom docx→Markdown extraction pipeline, and editorial conventions (no invented prose, cross-link style, `poetry.com` sourcing). |
 | `favorite-poems/conversation-favorite-poems-content.md` | Conversation-log companion — the user's own words behind the decisions above. |
-| `my-writings/MY-WRITINGS-CONTENT.md` | What the three My Writings collections (`essays/`/`miscellany/`/`poems/`) are, their source `.docx`/`.pdf` files, the pandoc-based conversion approach, and editorial conventions (byline/date format, footnote handling). |
-| `my-writings/conversation-my-writings-content.md` | Conversation-log companion for the above. |
+
+My Writings' own `MY-WRITINGS-CONTENT.md`/`conversation-my-writings-content.md`
+moved to the Cabinet repo on 2026-09-16, alongside the content itself —
+see `documentation/content/writings/` there.
 
 ## `content/` — canonical data sources (hand-edited, or via the Admin Dash)
 
@@ -105,8 +107,12 @@ nav placeholder stub) was removed 2026-09-12 once Christie went live as
 |---|---|
 | `docs/index.html` | Standalone landing page — the firefly-lit gallery-wall field. Not rendered through Material's theme; MkDocs copies it through byte-for-byte. |
 | `docs/favorite-poems/` | Plain Material content pages — poems by other poets. See `documentation/content/favorite-poems/FAVORITE-POEMS-CONTENT.md` for the `general/`/`long-poems/`/`workshop/` sub-collection layout and page conventions. |
-| `docs/my-writings/` | Plain Material content pages — my own essays/miscellany/poems. See `documentation/content/my-writings/MY-WRITINGS-CONTENT.md`. |
 | `docs/_images/` | `asimov.jpg`, `favicon.svg`, `hamzanama.jpg`, `scifi.jpg` — nav/card thumbnail images. |
+
+`docs/my-writings/` (my own essays/miscellany/poems) was removed
+2026-09-16 — migrated to the Cabinet repo's `docs/writings/`, since it was
+never publicly launched from Bookshelf. No redirect/breadcrumb was added.
+Bookshelf retains only Favourite Poetry (other people's work).
 
 ### `docs/_assets/` — CSS/JS shipped to production
 
