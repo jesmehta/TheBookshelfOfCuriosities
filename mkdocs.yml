@@ -26,6 +26,7 @@ extra:
 
 theme:
   name: material
+  custom_dir: overrides
   palette:
     # scheme: slate is the dark baseline; exact hex values come from
     # extra_css below (_assets/backend/css/bookshelf-tokens.css ->
