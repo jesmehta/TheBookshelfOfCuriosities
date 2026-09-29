@@ -135,23 +135,25 @@ fffx's own split.
 
 ## `projects/` — standalone static sub-projects (no MkDocs build step)
 
-Copied into `public/` verbatim by `.github/workflows/deploy.yml` (one
-`cp -r` per subfolder, no allow-list — see README's "Adding a new
-standalone static project"), served at their own path (`/scifi/`,
+Copied into `public/` by `.github/workflows/deploy.yml` (one `cp -r` per
+subfolder, no allow-list, minus each project's `documentation/` folder
+and any `.md` file — see README's "Adding a new standalone static
+project"), served at their own path (`/scifi/`,
 `/asimov/`, `/christie/`) alongside the MkDocs site. Moved under this
 parent folder 2026-09-12 when Christie became the third such project,
 firing the "root clutter threshold" plan recorded in README.md. Each
 project's own docs (design notes, conversation logs) live inside its own
-folder here, same as `scifi`'s `README.md`/`ToDo.md` and `asimov`'s
-`Readme_N_*.md` set — the top-level `documentation/` tree is reserved for
+folder here, in a `documentation/` subfolder (since 2026-09-30, so they
+are not published) — `scifi`'s `README.md`/`ToDo.md`, `asimov`'s
+`Readme_N_*.md` set, Christie's doc set — the top-level `documentation/` tree is reserved for
 mainstream MkDocs-integrated Bookshelf content (`bookshelf-editor/`,
 `content/`, `landing-page-notes/`), not these standalone sub-projects.
 
 | Path | Role |
 |---|---|
-| `projects/scifi/` | "The Golden Age of SciFi" interactive timeline — own `README.md`/`ToDo.md`, own `data/` (TSV + generated JSON), own `index.html`/`script.js`/`style.css`. Independent of the Bookshelf TSV/Admin Dash pipeline entirely. |
-| `projects/asimov/` | "Isaac Asimov and the Foundation Series" timeline — own four-file `Readme_N_*.md` doc set (overview, design brief, working context, todo/decisions — an earlier, differently-shaped take on the same four-tier documentation principle), `app.js`, `data.js`, `index.html`, `style.css`. |
-| `projects/christie/` | "Agatha Christie — Murder, She Wrote" — timeline + real-coastline map atlas + Short Stories tab, all in one page (`index.html`, formerly `christie-timeline-v3.html`); `christie-atlas-v2.html` is a superseded standalone predecessor, kept for the record but not live. Also has its own `documentation.md` (design/font/changelog record) and `conversation-christie.md` (the reasoning behind it), the pre-repo conversation's own `christie-project-history.md`/`christie-timeline-changelog.md`, the two bibliography research tables this project started from (`agatha-christie-location-timeline.md`/`-v2.md`), and `fonts/`. |
+| `projects/scifi/` | "The Golden Age of SciFi" interactive timeline — own `documentation/README.md`/`ToDo.md`, own `data/` (TSV + generated JSON), own `index.html`/`script.js`/`style.css`. Independent of the Bookshelf TSV/Admin Dash pipeline entirely. |
+| `projects/asimov/` | "Isaac Asimov and the Foundation Series" timeline — own four-file `documentation/Readme_N_*.md` doc set (overview, design brief, working context, todo/decisions — an earlier, differently-shaped take on the same four-tier documentation principle), `app.js`, `data.js`, `index.html`, `style.css`. |
+| `projects/christie/` | "Agatha Christie — Murder, She Wrote" — timeline + real-coastline map atlas + Short Stories tab, all in one page (`index.html`, formerly `christie-timeline-v3.html`); `christie-atlas-v2.html` is a superseded standalone predecessor, kept for the record but not live. Its `documentation/` folder holds `documentation.md` (design/font/changelog record) and `conversation-christie.md` (the reasoning behind it), the pre-repo conversation's own `christie-project-history.md`/`christie-timeline-changelog.md`, the two bibliography research tables this project started from (`agatha-christie-location-timeline.md`/`-v2.md`); `fonts/` sits beside it. |
 
 ## Archival / not-live
 

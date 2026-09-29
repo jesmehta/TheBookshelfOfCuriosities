@@ -36,9 +36,14 @@ jobs:
 
     - name: Copy static interactive projects
       run: |
+        # Each project's own docs live in its documentation/ subfolder and
+        # stay in the repo only: that folder, and any stray .md file, is
+        # not published.
         for proj in projects/*/; do
           name=$(basename "$proj")
           cp -r "$proj" "public/$name"
+          rm -rf "public/$name/documentation"
+          find "public/$name" -name '*.md' -delete
         done
 
     - name: Setup Pages

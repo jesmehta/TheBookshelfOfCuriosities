@@ -44,11 +44,19 @@ Projects like `projects/scifi/` (plain HTML/CSS/JS, no build step, edited and co
     for proj in projects/*/; do
       name=$(basename "$proj")
       cp -r "$proj" "public/$name"
+      rm -rf "public/$name/documentation"
+      find "public/$name" -name '*.md' -delete
     done
 ```
 
+A project's own documentation (design notes, conversation logs, TODOs,
+screenshots) goes in **`projects/<name>/documentation/`**. The loop
+drops that folder and any stray `.md` file, so docs stay in the repo
+but are not served on the live site (added 2026-09-30; before that,
+every doc file was reachable by URL).
+
 To add a new one:
-1. Create the project's folder at **`projects/<name>/`**, self-contained (its own `index.html`, assets, data).
+1. Create the project's folder at **`projects/<name>/`**, self-contained (its own `index.html`, assets, data), with its docs in `projects/<name>/documentation/`.
 2. Nothing to add to `deploy.yml` — the loop picks up every folder under `projects/` automatically.
 3. Push to `main` — it'll be live at `/<name>/`, served standalone (no MkDocs theme/sidebar — mkdocs never processes these folders, they're copied byte-for-byte).
 
@@ -56,7 +64,7 @@ This keeps everything under one custom domain with path-based routing (`bookshel
 
 **Root clutter threshold — resolved 2026-09-12.** This was flagged 2026-09-05 as a ready-to-execute plan: two standalone folders (`scifi/`, `asimov/`) at repo root was tolerable, but a **third** standalone project (`christie/`) was set as the trigger to introduce a `projects/` parent folder and move all of them into it together in one pass. That trigger fired when Christie was added, so `scifi/` and `asimov/` moved to `projects/scifi/` and `projects/asimov/` alongside the new `projects/christie/`, and the `deploy.yml` loop switched from an explicit name list to iterating `projects/*/` — URL-preserving as planned (`/scifi/`, `/asimov/`, `/christie/` are all unchanged).
 
-**Watch for — recover scifi's/asimov's original conversations:** neither project has a conversation-log doc, unlike the recovered origin conversation now archived for the main landing page (see `documentation/landing-page-notes/`), and unlike Christie's own (see `projects/christie/conversation-christie.md`, recovered at the time of its addition since that transcript was still available). Both scifi and asimov show clear signs of a pre-repo history built elsewhere: `projects/scifi/ToDo.md` describes a "handover" and a stable "v14 baseline" (the versioned `zips/sf_timeline_web_v1`-`v14`/`sf_timeline_data_v16` snapshots in this repo's `zips/` folder are that history, but not the conversation behind it); `projects/asimov/Readme_3_working_context.md`/`Readme_4_todo_decisions.md` reference a "Codex" working context and a missing `readme2.md` last seen at `D:\Projects\AsimovPage\asimov_foundation_prototype_v12_Codex` on the local machine, not in this repo. Worth tracking down and recovering a conversation-log doc for each, alongside their own existing docs in `projects/scifi/`/`projects/asimov/` (not under top-level `documentation/` — that's reserved for mainstream MkDocs-integrated content, per the standalone-projects note above), if the original transcripts can still be found, same as fffx's landing-page origin-conversation recovery — archival value drops the longer this waits.
+**Watch for — recover scifi's/asimov's original conversations:** neither project has a conversation-log doc, unlike the recovered origin conversation now archived for the main landing page (see `documentation/landing-page-notes/`), and unlike Christie's own (see `projects/christie/documentation/conversation-christie.md`, recovered at the time of its addition since that transcript was still available). Both scifi and asimov show clear signs of a pre-repo history built elsewhere: `projects/scifi/documentation/ToDo.md` describes a "handover" and a stable "v14 baseline" (the versioned `zips/sf_timeline_web_v1`-`v14`/`sf_timeline_data_v16` snapshots in this repo's `zips/` folder are that history, but not the conversation behind it); `projects/asimov/documentation/Readme_3_working_context.md`/`Readme_4_todo_decisions.md` reference a "Codex" working context and a missing `readme2.md` last seen at `D:\Projects\AsimovPage\asimov_foundation_prototype_v12_Codex` on the local machine, not in this repo. Worth tracking down and recovering a conversation-log doc for each, alongside their own existing docs in `projects/scifi/documentation/`/`projects/asimov/documentation/` (not under top-level `documentation/` — that's reserved for mainstream MkDocs-integrated content, per the standalone-projects note above), if the original transcripts can still be found, same as fffx's landing-page origin-conversation recovery — archival value drops the longer this waits.
 
 ## Landing page
 
