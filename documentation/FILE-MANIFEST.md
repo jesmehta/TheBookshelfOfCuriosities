@@ -36,11 +36,13 @@ the other two repos.
 Organized 2026-09-05 into one folder per feature, mirroring Cabinet's and
 fffx's own `documentation/` structure. A subsystem with only one doc file
 stays flat at `documentation/` root rather than getting a single-file
-folder of its own — currently none do besides this manifest.
+folder of its own — currently this manifest and the two todo files.
 
 | File | Role |
 |---|---|
 | `FILE-MANIFEST.md` | This file. |
+| `toDo - content.md` | Content tracking: registry of every section, card, ticker term, chip and band word with its meaning, origin and status (incl. hidden/removed cards), plus the content order. Detail for Cabinet's one-line Bookshelf summaries. Created 2026-10-02. |
+| `toDo - website.md` | Technical/structural/visual todos: landing-page blocks, cross-world links, hygiene, deployment history. Created 2026-10-02. |
 
 ### `landing-page-notes/` — the landing page's visual + implementation design
 
