@@ -248,8 +248,10 @@ three highlighted excerpts a second time after the poem's real ending).
   its own content-reference doc when picked up/verified, out of scope
   here. Its own source folder, `Convert/My writings/`, is also still
   present and unprocessed-vs-deleted by that other session's own account.
-  **Resolved 2026-09-06** — see
-  [`../my-writings/MY-WRITINGS-CONTENT.md`](../my-writings/MY-WRITINGS-CONTENT.md).
+  **Resolved 2026-09-06** — see `MY-WRITINGS-CONTENT.md`, which moved
+  with the writings themselves to the Cabinet repo on 2026-09-16
+  (`CabinetOfCuriosities/documentation/content/writings/MY-WRITINGS-CONTENT.md`;
+  Bookshelf `117a2cc`) — `docs/my-writings/` no longer exists here.
   That same later session also retroactively nested this section's own
   three nav entries (previously flat) under one "Favourite Poetry" group,
   matching the pattern it introduced for My Writings.
