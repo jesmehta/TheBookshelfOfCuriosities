@@ -1,0 +1,6 @@
+id	type	order	status	kicker	title	text	attribution	items
+ticker	ticker	5	true					Golden Age Sci-Fi|Isaac Asimov|Arthur C. Clarke|Agatha Christie|Indrajal Comics|Foundation Universe|Rudyard Kipling|The Great Game|Hamzanama|Comic Book History|Story Maps|Marginalia
+empire-band	band	15	false		Empire			Kipling|Kim|The Great Game|The Himalayas|The Raj
+library-quote	quote	35	true		READING	A library implies an act of faith which generations still in darkness hallow to those <em>who walk among the stars.</em>	Victor Hugo · Les Misérables	
+dataviz	section-intro		true	Interactive · Data Portraits	Books<br>as Data	Timelines, geographies, networks — when books become datasets, patterns emerge that pure reading misses.		Foundation Universe Timeline|Christie Murder Map|Authors vs Books|Sci-Fi Publication Graph|Reading Geography
+writings	section-note		false		On the pleasures,<br>peculiarities &amp;<br>private rituals of reading	Personal essays, dispatches, and occasional marginalia.		In preparation

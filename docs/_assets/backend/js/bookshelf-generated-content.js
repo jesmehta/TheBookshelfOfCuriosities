@@ -1,5 +1,5 @@
 // AUTO-GENERATED FILE. Do not edit directly.
-// Edit content/bookshelf-sections.tsv and content/bookshelf-entries.tsv, then run:
+// Edit content/bookshelf-{sections,entries,blocks}.tsv, then run:
 // node tools/build-bookshelf-content.js
 
 const bookshelfSections = [
@@ -264,5 +264,90 @@ const bookshelfEntries = [
     "order": 10,
     "ghost": "FP",
     "span": "c4"
+  }
+];
+
+const bookshelfBlocks = [
+  {
+    "id": "ticker",
+    "type": "ticker",
+    "order": 5,
+    "status": true,
+    "kicker": "",
+    "title": "",
+    "text": "",
+    "attribution": "",
+    "items": [
+      "Golden Age Sci-Fi",
+      "Isaac Asimov",
+      "Arthur C. Clarke",
+      "Agatha Christie",
+      "Indrajal Comics",
+      "Foundation Universe",
+      "Rudyard Kipling",
+      "The Great Game",
+      "Hamzanama",
+      "Comic Book History",
+      "Story Maps",
+      "Marginalia"
+    ]
+  },
+  {
+    "id": "empire-band",
+    "type": "band",
+    "order": 15,
+    "status": false,
+    "kicker": "",
+    "title": "Empire",
+    "text": "",
+    "attribution": "",
+    "items": [
+      "Kipling",
+      "Kim",
+      "The Great Game",
+      "The Himalayas",
+      "The Raj"
+    ]
+  },
+  {
+    "id": "library-quote",
+    "type": "quote",
+    "order": 35,
+    "status": true,
+    "kicker": "",
+    "title": "READING",
+    "text": "A library implies an act of faith which generations still in darkness hallow to those <em>who walk among the stars.</em>",
+    "attribution": "Victor Hugo · Les Misérables",
+    "items": []
+  },
+  {
+    "id": "dataviz",
+    "type": "section-intro",
+    "order": null,
+    "status": true,
+    "kicker": "Interactive · Data Portraits",
+    "title": "Books<br>as Data",
+    "text": "Timelines, geographies, networks — when books become datasets, patterns emerge that pure reading misses.",
+    "attribution": "",
+    "items": [
+      "Foundation Universe Timeline",
+      "Christie Murder Map",
+      "Authors vs Books",
+      "Sci-Fi Publication Graph",
+      "Reading Geography"
+    ]
+  },
+  {
+    "id": "writings",
+    "type": "section-note",
+    "order": null,
+    "status": false,
+    "kicker": "",
+    "title": "On the pleasures,<br>peculiarities &amp;<br>private rituals of reading",
+    "text": "Personal essays, dispatches, and occasional marginalia.",
+    "attribution": "",
+    "items": [
+      "In preparation"
+    ]
   }
 ];

@@ -1,8 +1,9 @@
 /*
-  Render engine for the V4.0 landing page. Reads hand-edited display
-  blocks from bookshelf-data.js plus generated sections/entries from
-  bookshelf-generated-content.js, then renders into the mount points left
-  empty in index.html. No content strings or entry data live in this file.
+  Render engine for the V4.0 landing page. Reads generated sections,
+  entries and blocks from bookshelf-generated-content.js (built from
+  content/bookshelf-{sections,entries,blocks}.tsv), then renders into the
+  mount points left empty in index.html. No content strings or entry data
+  live in this file.
 */
 
 function toRoman(n) {
@@ -10,10 +11,10 @@ function toRoman(n) {
   return numerals[n - 1] || String(n);
 }
 
-function createTickerMarkup() {
-  if (!bookshelfTicker.enabled) return "";
+const blocksById = new Map(bookshelfBlocks.map(block => [block.id, block]));
 
-  const items = bookshelfTicker.items
+function createTickerMarkup(block) {
+  const items = block.items
     .map(item => `<span class="ticker-item"><b>✦</b>${item}</span>`)
     .join("");
 
@@ -51,64 +52,71 @@ function createSecHeadMarkup(num, name) {
   `;
 }
 
-function createTextBandMarkup() {
-  if (!bookshelfTextBand.enabled) return "";
-
-  const topics = bookshelfTextBand.topics
+function createTextBandMarkup(block) {
+  const topics = block.items
     .map(topic => `<span class="text-band-item">${topic}</span>`)
     .join("");
 
   return `
     <div class="text-band reveal" aria-hidden="true">
-      <span class="text-band-big">${bookshelfTextBand.word}</span>
+      <span class="text-band-big">${block.title}</span>
       <div class="text-band-items">${topics}</div>
     </div>
   `;
 }
 
-function createQuoteBreakMarkup() {
-  if (!bookshelfQuoteBreak.enabled) return "";
-
+function createQuoteBreakMarkup(block) {
   return `
     <div class="type-break reveal">
-      <div class="type-break-bg" aria-hidden="true"><span>${bookshelfQuoteBreak.bgWord}</span></div>
+      <div class="type-break-bg" aria-hidden="true"><span>${block.title}</span></div>
       <div class="type-break-content">
-        <p class="type-break-q">&ldquo;${bookshelfQuoteBreak.quote}&rdquo;</p>
-        <span class="type-break-attr">${bookshelfQuoteBreak.attribution}</span>
+        <p class="type-break-q">&ldquo;${block.text}&rdquo;</p>
+        <span class="type-break-attr">${block.attribution}</span>
       </div>
     </div>
   `;
 }
 
-function createDatavizMarkup() {
-  if (!bookshelfDataviz.enabled) return "";
-
-  const chips = bookshelfDataviz.chips
+// section-intro: the wide "Books as Data"-style block above a section's cards.
+function createSectionIntroMarkup(block) {
+  const chips = block.items
     .map(chip => `<span class="chip">${chip}</span>`)
     .join("");
 
   return `
     <div class="dv-block reveal">
-      <p class="dv-kicker">${bookshelfDataviz.kicker}</p>
-      <h2 class="dv-title">${bookshelfDataviz.title}</h2>
-      <p class="dv-desc">${bookshelfDataviz.desc}</p>
+      <p class="dv-kicker">${block.kicker}</p>
+      <h2 class="dv-title">${block.title}</h2>
+      <p class="dv-desc">${block.text}</p>
       <div class="dv-chips">${chips}</div>
     </div>
   `;
 }
 
-function createWritingsMarkup() {
-  if (!bookshelfWritings.enabled) return "";
-
+// section-note: the dormant writings-style band below a section's cards;
+// its first item is the chip label.
+function createSectionNoteMarkup(block) {
   return `
     <div class="writings-card card-dormant reveal">
       <div>
-        <p class="writings-big">${bookshelfWritings.big}</p>
-        <p class="writings-sub">${bookshelfWritings.sub}</p>
+        <p class="writings-big">${block.title}</p>
+        <p class="writings-sub">${block.text}</p>
       </div>
-      <span class="soon-chip" style="align-self:flex-start;">${bookshelfWritings.chip}</span>
+      <span class="soon-chip" style="align-self:flex-start;">${block.items[0] || ""}</span>
     </div>
   `;
+}
+
+const orderedBlockRenderers = {
+  ticker: createTickerMarkup,
+  band: createTextBandMarkup,
+  quote: createQuoteBreakMarkup
+};
+
+// The section's `feature` block, if it names one of `type` that is on.
+function sectionFeature(section, type) {
+  const block = section.feature ? blocksById.get(section.feature) : null;
+  return block && block.type === type && block.status === true ? block : null;
 }
 
 function createEntryMarkup(entry, delayIndex) {
@@ -146,9 +154,8 @@ function createEntryMarkup(entry, delayIndex) {
 function createSectionMarkup(section, num) {
   let html = createSecHeadMarkup(num, section.title);
 
-  if (section.feature === "dataviz") {
-    html += createDatavizMarkup();
-  }
+  const intro = sectionFeature(section, "section-intro");
+  if (intro) html += createSectionIntroMarkup(intro);
 
   const sectionEntries = orderedEntries.filter(entry =>
     entry.section === section.id && entry.status !== false
@@ -159,9 +166,8 @@ function createSectionMarkup(section, num) {
     html += `<div class="grid">${entries}</div>`;
   }
 
-  if (section.feature === "writings") {
-    html += createWritingsMarkup();
-  }
+  const note = sectionFeature(section, "section-note");
+  if (note) html += createSectionNoteMarkup(note);
 
   return html;
 }
@@ -170,30 +176,33 @@ function renderSections() {
   const mount = document.getElementById("bookshelf-sections");
   if (!mount) return;
 
+  // Sections and ordered blocks share one `order` number line. On a tie the
+  // block comes first, so a block given a section's own order sits above it.
+  const items = [
+    ...orderedSections
+      .filter(section => section.status !== false)
+      .map(section => ({ order: section.order, rank: 1, section })),
+    ...bookshelfBlocks
+      .filter(block => block.status === true && orderedBlockRenderers[block.type])
+      .map(block => ({ order: block.order, rank: 0, block }))
+  ].sort((a, b) => a.order - b.order || a.rank - b.rank);
+
   let html = "";
   let num = 0;
 
-  orderedSections.forEach(section => {
-    if (section.status === false) return;
-
-    if (bookshelfTextBand.enabled && bookshelfTextBand.beforeSection === section.id) {
-      html += createTextBandMarkup();
+  items.forEach(item => {
+    if (item.block) {
+      html += orderedBlockRenderers[item.block.type](item.block);
+      return;
     }
-    if (bookshelfQuoteBreak.enabled && bookshelfQuoteBreak.beforeSection === section.id) {
-      html += createQuoteBreakMarkup();
-    }
-
     num += 1;
-    html += createSectionMarkup(section, toRoman(num));
+    html += createSectionMarkup(item.section, toRoman(num));
   });
 
   mount.innerHTML = html;
 }
 
 function renderBookshelfLanding() {
-  const tickerMount = document.getElementById("bookshelf-ticker");
-  if (tickerMount) tickerMount.innerHTML = createTickerMarkup();
-
   const heroIndexMount = document.getElementById("bookshelf-hero-index");
   if (heroIndexMount) heroIndexMount.innerHTML = createHeroIndexMarkup();
 
