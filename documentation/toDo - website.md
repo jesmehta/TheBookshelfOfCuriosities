@@ -41,15 +41,13 @@ Content tracking is in `toDo - content.md`.
 
 ## Hygiene
 
-- [ ] **Add `site/` to `.gitignore`.** A bare `mkdocs build` writes `site/`
-  into the repo; it is not ignored (happened once, 2026-10-02, deleted).
-- [ ] **Stale My Writings reference** in
-  `documentation/content/favorite-poems/FAVORITE-POEMS-CONTENT.md` (~242–252,
-  points at `docs/my-writings/` and a now-missing `MY-WRITINGS-CONTENT.md`;
-  that doc now lives in Cabinet at
-  `documentation/content/writings/MY-WRITINGS-CONTENT.md`).
-- [ ] **LF/CRLF warnings** on the TSVs and generated JS at every commit —
-  consider a `.gitattributes` so they stop.
+- [x] **`site/` in `.gitignore`** (`cf3907f`, 2026-10-02).
+- [x] **Stale My Writings reference** in `FAVORITE-POEMS-CONTENT.md` now
+  points at the doc's new home in Cabinet (`031f2d8`, 2026-10-02).
+- [x] **LF/CRLF warnings stopped** with `.gitattributes`: `* text=auto eol=lf`,
+  `*.bat text eol=crlf` (`197e2e1`, 2026-10-02). Index was already LF; only
+  working copies changed. A TSV re-saved from Excel (CRLF) may still warn
+  once when staged — git normalises it to LF.
 - [ ] **Recover the original SciFi and Asimov conversation records if still
   available.** README flags both as archival gaps; keep them inside their own
   project folders.
