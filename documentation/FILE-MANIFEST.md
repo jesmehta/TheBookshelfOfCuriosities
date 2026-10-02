@@ -84,6 +84,7 @@ see `documentation/content/writings/` there.
 | File | Role |
 |---|---|
 | `content/bookshelf-sections.tsv` | Section registry: `id, title, order, status, feature`. `feature` is optional, skipped from generated output when blank. No `weight` column — see `WORLD-SYSTEMS.md`'s note that Bookshelf has none; card size is set directly per-entry via `span` instead. |
+| `content/bookshelf-blocks.tsv` | Non-section page blocks: `id, type, order, status, kicker, title, text, attribution, items`. `type` is `ticker`/`band`/`quote` (placed by `order`, shared with sections) or `section-intro`/`section-note` (placed by a section's `feature`). `items` is `|`-separated. Replaced the hand-edited `bookshelf-data.js` 2026-10-02. |
 | `content/bookshelf-entries.tsv` | Entry registry: `id, title, subtitle, href, section, kind, kicker, displayTag, tags, location, status, order, ghost, span, titleVariant`. `titleVariant` is optional, skipped when blank. `span` is a fixed `c4`–`c12` 12-column grid width, not a derived weight. Literal `<br>` and quote characters in cells (e.g. `scifi`'s `title`/`subtitle`) are real content, not TSV escaping — the parser/serializer must stay a naive tab-splitter, never CSV-quote-aware. |
 
 ## `tools/` — build and authoring scripts (never shipped to `docs/`)
@@ -128,7 +129,6 @@ fffx's own split.
 |---|---|
 | `backend/css/bookshelf-tokens.css` | Single source of truth for colour/font `--bookshelf-*` custom properties — shared between the landing page and the Material theme mapping below. |
 | `backend/css/bookshelf-landing.css` | All landing-page CSS, scoped under `.bookshelf-landing`. V4.0 full replacement of the V1–V3 frame/mat system, removed entirely rather than left dead. |
-| `backend/js/bookshelf-data.js` | Hand-edited stable config — display/config blocks not sourced from TSV. |
 | `backend/js/bookshelf-generated-content.js` | Auto-generated from `content/bookshelf-*.tsv` by `tools/build-bookshelf-content.js` — do not hand-edit. |
 | `backend/js/bookshelf-gallery.js` | Gallery rendering: card layout, dormant-card states, `span`-based grid placement. |
 | `backend/js/bookshelf-cursor.js` | Custom cursor behaviour for the landing page. |

@@ -8,19 +8,22 @@ Content tracking is in `toDo - content.md`.
 
 ## Landing-page blocks
 
-- [ ] **Decide how non-section blocks are managed** — ticker, text band,
-  quote break, "Books as Data" block, writings band (all hand-edited in
-  `docs/_assets/backend/js/bookshelf-data.js`), plus the hero description and
-  footer in `docs/index.html`. Managing them means both *order/placement* and
-  *wording*; a stretch goal is several instances of a type (e.g. two or three
-  quotes). Editing the JS by hand is the fallback if no better plan works.
-  Under discussion 2026-10-02.
-- [ ] **Re-anchor the blocks pinned to sections.** The text band and quote
-  break use `beforeSection: "<section id>"`; if that section is hidden, the
-  block silently disappears with it. Already happened: the Empire text band
-  (anchored to the now-hidden `empire-adventure-great-game`). The quote break
-  is anchored to `book-data-visualisation` and is at risk if that section is
-  hidden. Dealt with as part of the block-management decision above.
+- [x] **Non-section blocks managed in a TSV** (2026-10-02, `307e162`,
+  `4fa8f29`) — ticker, bands, quotes and the section feature blocks moved
+  from hand-edited `bookshelf-data.js` (deleted) into
+  `content/bookshelf-blocks.tsv`, with an Admin Dash Blocks tab. Order and
+  wording are both editable; more quotes/bands are just more rows. Hero
+  description and footer deliberately stay in `docs/index.html`.
+- [x] **Re-anchoring** — `beforeSection` is gone: ticker/band/quote have
+  their own `order` on the sections' number line, so hiding a section no
+  longer hides a neighbouring block. The Empire band is kept at order 15
+  with `status false` (it is about the hidden Empire section).
+- [ ] **Stretch: more quotes/bands.** Now just new rows in the Blocks tab —
+  a content decision, not a build task.
+- [ ] **`WORLD-SYSTEMS.md` still describes `bookshelf-data.js`.** That file
+  is meant to be synced identically across Cabinet/Bookshelf/FFFX and is
+  already marked stale; fix Bookshelf's lines in the next sync rather than
+  editing one copy alone.
 - [ ] **Footer links are dead** — Cabinet ↗ / About / Index all point at `#`.
 
 ## Cross-world and navigation
@@ -29,9 +32,10 @@ Content tracking is in `toDo - content.md`.
   in Bookshelf's `docs/` or content registries (confirmed 2026-09-16). Also add
   a Bookshelf home link inside the standalone SciFi, Asimov and Christie
   projects, which do not inherit MkDocs navigation.
-- [ ] **Regenerate Cabinet's sitemap** (`CabinetOfCuriosities/tools/generate_sitemap.py`
-  → `docs/compass/sitemap.md`) after Bookshelf TSV changes — it still lists the
-  pre-2026-10-02 Bookshelf cards.
+- [x] **Regenerate Cabinet's sitemap** after the 2026-10-02 restructure
+  (`CabinetOfCuriosities/tools/generate_sitemap.py` → `docs/compass/sitemap.md`).
+  It reads Bookshelf's TSVs from GitHub, so re-run it after any future pushed
+  Bookshelf TSV change.
 
 ## Hygiene
 

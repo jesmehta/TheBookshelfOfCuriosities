@@ -81,10 +81,8 @@ don't come back by accident:
 
 ## Feature-block wording
 
-Source: `docs/_assets/backend/js/bookshelf-data.js`. How these blocks are
-managed (order, placement, content) is an open design question — see
-`toDo - website.md`. Until then, this records what each piece of wording
-refers to.
+Source: `content/bookshelf-blocks.tsv` (Admin Dash → Blocks tab) since
+2026-10-02. This records what each piece of wording refers to.
 
 **Ticker** (marquee above the first section):
 

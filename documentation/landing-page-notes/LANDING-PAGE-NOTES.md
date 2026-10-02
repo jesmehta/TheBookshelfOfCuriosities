@@ -18,13 +18,14 @@ real content:
   containing static brand chrome (hero text, footer) plus a few empty
   `<div id="...">` mount points, and `<script src="...">` tags at the
   bottom.
-- Keep bulk content in spreadsheet-friendly TSV files, generate a browser
-  JS data file from them, and keep hand-edited display/config blocks in a
-  separate JS file. Here, `content/bookshelf-sections.tsv` and
-  `content/bookshelf-entries.tsv` generate
-  `bookshelf-generated-content.js`; `bookshelf-data.js` holds ticker/text
-  band/quote/dataviz/writings config.
-- One JS "render engine" file reads the hand-edited config plus generated
+- Keep content in spreadsheet-friendly TSV files and generate a browser
+  JS data file from them. Here, `content/bookshelf-{sections,entries,blocks}.tsv`
+  generate `bookshelf-generated-content.js`. (Until 2026-10-02 the
+  ticker/band/quote/feature blocks were a separate hand-edited
+  `bookshelf-data.js`, pinned to sections by `beforeSection` — hiding a
+  section silently hid its block. Giving blocks their own `order` on the
+  sections' number line fixed that; worth doing from the start.)
+- One JS "render engine" file reads the generated
   data on `DOMContentLoaded` and fills the mount points with generated
   markup.
 - All CSS lives in one stylesheet, every rule scoped under the wrapper

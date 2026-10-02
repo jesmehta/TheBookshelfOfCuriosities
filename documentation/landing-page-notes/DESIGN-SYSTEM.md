@@ -279,7 +279,7 @@ const bookshelfEntries = [
 
 **TSV punctuation convention:** keep source TSVs ASCII-safe for Excel. Use ` / ` in compact labels where the page should display a middle dot, and `...` where the page should display an ellipsis. The generator restores those typographic characters in generated JS.
 
-Feature blocks still use their own `enabled` flags, and `beforeSection` pinning for the text-band/quote-break still matches section IDs. See `README.md`'s "Current data model" section for the full current shape.
+Non-section blocks (ticker, text band, quote break, section feature blocks) live in `content/bookshelf-blocks.tsv` with a `true`/`false` status; ticker/band/quote are placed by an `order` shared with sections (replacing `beforeSection` pinning, 2026-10-02). See `README.md`'s "Current data model" section for the full current shape.
 
 ---
 

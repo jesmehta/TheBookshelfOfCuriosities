@@ -74,6 +74,7 @@ throwaway tmp site-dir.
 ```text
 content/bookshelf-sections.tsv     -- source of truth, hand-edited or via the admin server
 content/bookshelf-entries.tsv      -- source of truth, hand-edited or via the admin server
+content/bookshelf-blocks.tsv       -- source of truth, hand-edited or via the admin server (v1.1)
       |
       |  tools/bookshelf-tsv.js (shared: parse/serialize/validate)
       v
@@ -96,6 +97,7 @@ POST   /api/sections           PUT /api/sections/:index           DELETE /api/se
 POST   /api/sections/:index/move
 POST   /api/entries            PUT /api/entries/:index            DELETE /api/entries/:index
 POST   /api/entries/:index/move
+POST   /api/blocks             PUT /api/blocks/:index             DELETE /api/blocks/:index
 POST   /api/run/rebuild-content
 POST   /api/run/mkdocs-check
 ```
@@ -104,8 +106,8 @@ Binds `127.0.0.1` only, no auth, port `7858` by default (configurable via
 `BOOKSHELF_EDITOR_PORT` — distinct from FFFX's `6858` and Cabinet's
 `5757`/`5858`/`5959` so any of them can run side by side).
 
-`tools/bookshelf-editor-ui/` — same three-tab (Sections / Entries /
-Build) UI as FFFX's, same sortable/resizable columns, same
+`tools/bookshelf-editor-ui/` — Sections / Entries / Blocks / Build tabs
+(FFFX's three plus Blocks, v1.1), otherwise the same UI as FFFX's, same sortable/resizable columns, same
 `change`-event-saves, same "⇕ Expand text" toggle. `kicker`, `displayTag`,
 `ghost`, `tags`, `href`, and `subtitle` render as textareas (the
 "wide fields" set) specifically because these are the columns most likely
@@ -118,6 +120,7 @@ itself comes from the serializer, not the widget.
 ```text
 content/bookshelf-sections.tsv    -- source of truth
 content/bookshelf-entries.tsv     -- source of truth
+content/bookshelf-blocks.tsv      -- source of truth
 
 tools/bookshelf-tsv.js            -- shared TSV parse/serialize/validate
 tools/build-bookshelf-content.js  -- TSV -> docs/assets/js/bookshelf-generated-content.js (pre-existing, untouched)
@@ -132,7 +135,7 @@ run-bookshelf-editor.bat          -- double-click launcher
    `run-bookshelf-editor.bat` from the repo root). Prints a URL — open
    `http://127.0.0.1:7858/admin/` (port configurable via
    `BOOKSHELF_EDITOR_PORT`). `Ctrl+C` stops it.
-2. Add/edit/reorder/delete sections and entries through the UI. Rows in
+2. Add/edit/reorder/delete sections, entries and blocks through the UI. Rows in
    red show a validation problem on hover.
 3. Build tab → "Rebuild content" regenerates
    `docs/assets/js/bookshelf-generated-content.js`; "mkdocs check" runs a
@@ -158,6 +161,14 @@ Hand-editing the TSVs directly still works exactly as before.
   on one pre-existing, unrelated warning (see Todo below).
 - `/admin/` served the UI (`200`).
 
+- **v1.1 Blocks tab** (2026-10-02), exercised on a scratch copy of the
+  repo: `/api/state` returns blocks + problems; create/update round-trip
+  to the TSV; deleting a block still named as a section's `feature` is
+  refused; a section `feature` naming no block is flagged in the UI and
+  fails "Rebuild content"; the sections TSV re-saved byte-identical.
+  Headless browser: Blocks tab renders with no console errors, page-order
+  preview correct, a textarea edit saved through to the TSV.
+
 ## Todo / watch out for
 
 - **`mkdocs --strict` currently fails** on one pre-existing issue: the
@@ -178,8 +189,31 @@ Hand-editing the TSVs directly still works exactly as before.
   in `FFFX-EDITOR.md`.
 - **No image/thumbnail upload**, no cascade-rename of section ids —
   same stance as FFFX's copy and Cabinet's original.
+- **Blocks have no ▲▼ on purpose** — their `order` shares the sections'
+  number line, so renumbering blocks in steps of 10 would land them in
+  section slots. Note the converse: section ▲▼ renumbers sections
+  10/20/30…, so a block at 35 stays between whichever sections end up
+  3rd and 4th, not next to a particular section.
+- **Renaming a block id** doesn't cascade to sections' `feature` — the
+  section turns red until its feature is re-picked.
 
 ## Changelog
+
+### v1.1 — Blocks tab (2026-10-02)
+
+Initial need: the landing page's ticker, bands, quote and section feature
+blocks were hand-edited JS (`bookshelf-data.js`), placed by
+`beforeSection`, so hiding a section silently hid its neighbouring block
+(the Empire band vanished when Empire was hidden), and there was no way to
+edit wording or order outside the JS. They moved to
+`content/bookshelf-blocks.tsv` (see README's data model) and got a
+Blocks tab: table + a read-only page-order preview merging sections and
+ordered blocks. A third TSV rather than a `type` column on sections,
+because blocks' fields barely overlap sections'. Sections' `feature`
+became a dropdown of the section-intro/section-note blocks and is
+validated against them. `bookshelf-tsv.js` gained `BLOCKS_COLS`,
+`readBlocks`/`writeBlocks`, `findBlockProblems`/`validateBlocks`, and an
+optional feature-id check in `findSectionProblems`.
 
 ### v1.0 — initial build (2026-09-04/05)
 

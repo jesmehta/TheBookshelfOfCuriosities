@@ -78,7 +78,7 @@ This keeps everything under one custom domain with path-based routing (`bookshel
 
 ## Landing page
 
-The landing page (`docs/index.html` + `docs/_assets/backend/css/bookshelf-landing.css` + `docs/_assets/backend/js/bookshelf-data.js` / `bookshelf-gallery.js`) is a fully custom, JS-rendered front page that MkDocs copies through as static HTML alongside the normal Material documentation pages. Visual rules (fonts, colour tokens, component anatomy) live in `DESIGN-SYSTEM.md`; portable implementation lessons (bugs hit, MkDocs-vs-plain-HTML reconciliations, a starter checklist for a sibling site) live in `LANDING-PAGE-NOTES.md`. This section covers intent and the current data model; the full version history is in the Changelog below.
+The landing page (`docs/index.html` + `docs/_assets/backend/css/bookshelf-landing.css` + `docs/_assets/backend/js/bookshelf-gallery.js`) is a fully custom, JS-rendered front page that MkDocs copies through as static HTML alongside the normal Material documentation pages. Visual rules (fonts, colour tokens, component anatomy) live in `DESIGN-SYSTEM.md`; portable implementation lessons (bugs hit, MkDocs-vs-plain-HTML reconciliations, a starter checklist for a sibling site) live in `LANDING-PAGE-NOTES.md`. This section covers intent and the current data model; the full version history is in the Changelog below.
 
 ### Intent
 
@@ -96,7 +96,7 @@ While an entry isn't ready, it renders as a dormant card (see `DESIGN-SYSTEM.md`
 
 ### Current data model (V4.0+)
 
-The landing page is still data-driven, but bulk-editable content is now split from hand-edited display/config blocks. Feature/display blocks remain in `docs/_assets/backend/js/bookshelf-data.js`; sections and entries are edited in TSV files under `content/` and generated into `docs/_assets/backend/js/bookshelf-generated-content.js`. `docs/_assets/backend/js/bookshelf-gallery.js` reads those globals and renders them into empty mount points in `index.html` — no content strings or rendering logic live in the HTML shell.
+The landing page is data-driven from three TSV files under `content/` — sections, entries (cards), and blocks (ticker, bands, quotes, section feature blocks) — generated into `docs/_assets/backend/js/bookshelf-generated-content.js`. Only the hero and footer wording stay hand-written in `docs/index.html`. `docs/_assets/backend/js/bookshelf-gallery.js` reads those globals and renders them into empty mount points in `index.html` — no content strings or rendering logic live in the HTML shell.
 
 Regenerate after editing the TSV files:
 
@@ -104,7 +104,7 @@ Regenerate after editing the TSV files:
 node tools/build-bookshelf-content.js
 ```
 
-Do not manually edit `docs/_assets/backend/js/bookshelf-generated-content.js`; it is auto-generated from `content/bookshelf-sections.tsv` and `content/bookshelf-entries.tsv` — or use the local Admin Dash (`run-bookshelf-editor.bat`, `http://127.0.0.1:7858/admin/`) to edit both TSVs in a browser and run that build (plus an mkdocs strict check) with a button instead. See `BOOKSHELF-EDITOR.md` for the full design notes. Feature blocks still have an `enabled` flag; `bookshelfSections` and `bookshelfEntries` use the normalized `status` model (`true` = visible/live, `"wip"` = visible dormant/work-in-progress, `false` = hidden).
+Do not manually edit `docs/_assets/backend/js/bookshelf-generated-content.js`; it is auto-generated from `content/bookshelf-{sections,entries,blocks}.tsv` — or use the local Admin Dash (`run-bookshelf-editor.bat`, `http://127.0.0.1:7858/admin/`) to edit all three TSVs in a browser and run that build (plus an mkdocs strict check) with a button instead. See `BOOKSHELF-EDITOR.md` for the full design notes. `bookshelfSections` and `bookshelfEntries` use the normalized `status` model (`true` = visible/live, `"wip"` = visible dormant/work-in-progress, `false` = hidden); blocks are `true`/`false` only.
 
 Spreadsheet/Excel notes:
 
@@ -114,17 +114,13 @@ Spreadsheet/Excel notes:
 
 | Variable | Shape | Renders as |
 |---|---|---|
-| `bookshelfTicker` | `{ enabled, items: string[] }` | the scrolling marquee band |
-| `bookshelfTextBand` | `{ enabled, beforeSection, word, topics: string[] }` | full-bleed ghost-word break, pinned immediately above the named section |
-| `bookshelfQuoteBreak` | `{ enabled, beforeSection, bgWord, quote, attribution }` | centered pull-quote over a ghost-word texture, same pinning mechanism |
-| `bookshelfDataviz` | `{ enabled, kicker, title, desc, chips: string[] }` | the wide feature block — only rendered for the section with `feature: "dataviz"` |
-| `bookshelfWritings` | `{ enabled, big, sub, chip }` | the single dormant writings band — only rendered for the section with `feature: "writings"` |
 | `content/bookshelf-sections.tsv` -> `bookshelfSections` | `id, title, order, status, feature` | section/container metadata; section headers are numbered i/ii/iii… by `order` |
 | `content/bookshelf-entries.tsv` -> `bookshelfEntries` | `id, title, subtitle, href, section, kind, kicker, displayTag, tags, location, status, order, ghost, span, titleVariant` | entry/card metadata rendered into each section's 12-col card grid |
+| `content/bookshelf-blocks.tsv` -> `bookshelfBlocks` | `id, type, order, status, kicker, title, text, attribution, items` | non-section blocks, by `type`: `ticker` (marquee; `items`), `band` (ghost-word break; `title` + `items`), `quote` (pull-quote; `text`, `attribution`, `title` = background word), `section-intro` (the wide "Books as Data"-style block above a section's cards; `kicker`, `title`, `text`, `items` = chips), `section-note` (dormant band below a section's cards; `title`, `text`, `items` = chip). `items` is `|`-separated. |
 
 An entry's `status` is now explicit and no longer derived from `live` (the legacy `live` field is gone). `status: true` + a real `href` renders an `<a class="card">` with a "Live ↗" badge; `status: "wip"` renders a `<div class="card card-dormant">` (hatched overlay, `pointer-events: none`, a "soon-chip" instead); `status: false` does not render the entry. `subtitle` feeds the card body text, `kicker` feeds `.card-cat`, and `displayTag` feeds the footer tag. `span` is one of `c4`/`c5`/`c6`/`c7`/`c8`/`c12` (12-column grid). `ghost: ""` omits the card-ghost letter entirely (used for the three dataviz entries, which don't have one in the source reference). `titleVariant: "inst"` swaps the title font from Libre Baskerville to Instrument Serif for that one card.
 
-`bookshelfEntries[].section` and `bookshelfTextBand`/`bookshelfQuoteBreak`'s `beforeSection` must exactly match an `id` in `bookshelfSections` — the renderer groups entries and inserts feature breaks by stable section id, not display title.
+`bookshelfEntries[].section` must exactly match an `id` in `bookshelfSections` — the renderer groups entries by stable section id, not display title. Ticker/band/quote blocks are placed by `order`, which shares one number line with sections (a quote at 35 sits between sections 30 and 40; on a tie the block comes first), so hiding a section never hides a neighbouring block. `section-intro`/`section-note` blocks have no order: a section's `feature` names one by id, and the build fails if it names none.
 
 The header/tab-bar hiding mechanism, cursor behaviour, and the firefly particle field are implementation details — see `LANDING-PAGE-NOTES.md` and the Changelog below rather than restating them here.
 
@@ -134,6 +130,13 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **2026-10-02** — Landing-page blocks moved from hand-edited
+  `bookshelf-data.js` into `content/bookshelf-blocks.tsv` (generated like
+  sections/entries; `bookshelf-data.js` deleted) with a Blocks tab in the
+  Admin Dash. `order` shared with sections replaces `beforeSection`;
+  several quotes/bands are just more rows. Same day: sections
+  restructured (new Poetry section, Empire hidden, duplicate cards
+  merged) — see `documentation/toDo - content.md`.
 - **2026-10-02** — Deployment checks brought up to Cabinet parity: strict
   MkDocs build, generated-content drift check, `projects/*/` entry-point
   and collision checks, and `tools/validate-deployment.js` route
