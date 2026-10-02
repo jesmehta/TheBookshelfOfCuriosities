@@ -71,13 +71,13 @@ don't come back by accident:
   life") — a placeholder from the original mock-up with no notes behind it;
   its slot became My Reading Journey. The name returns as an idea, with a
   real meaning — see *Ideas* below.
+- *My Writings* — moved to Cabinet Writings (`117a2cc`).
 
 ## Ideas (no card yet)
 
 | Idea | What it is | Notes |
 |---|---|---|
 | Authors vs Books — bibliography explorations | One page per favourite author whose bibliography is complex: novels, short stories, anthologies/collections, non-fiction, and other work — a quick, easy reference to what exists and how it fits together. | Added 2026-10-02. Not the mock-up's "shape of a writing life" placeholder. Could be a series (one page per author) and could share data with the author pages (Asimov already curates a bibliography). |
-- *My Writings* — moved to Cabinet Writings (`117a2cc`).
 
 ## Feature-block wording
 
