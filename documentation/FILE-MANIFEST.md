@@ -27,7 +27,7 @@ the other two repos.
 | `mkdocs.yml` | MkDocs site config: nav tree, theme (slate scheme, custom primary via token override), plugins (`mkdocs-video`, `section-index` — see `LANDING-PAGE-NOTES.md` bug #8 for why the latter is needed), `extra_css`. |
 | `requirements.txt` | Python deps for `mkdocs build`/`mkdocs serve`. If this machine has more than one Python install, `mkdocs` on `PATH` may resolve to a different one than `pip`/`py -3` — check `where mkdocs` vs `where python`/`py -3 -m pip show mkdocs` before assuming a package installed in one is visible to the other. |
 | `CNAME` | Custom domain (`bookshelf.cabinetofcuriosities.in`) for GitHub Pages. |
-| `.github/workflows/deploy.yml` | CI: `mkdocs build --site-dir public`, copies every standalone static sub-project under `projects/` into `public/`, then `actions/configure-pages` → `upload-pages-artifact` → `deploy-pages`. |
+| `.github/workflows/deploy.yml` | CI: generated-content drift check, `mkdocs build --strict` (tee'd to `mkdocs-build.log`), copies every standalone static sub-project under `projects/` into `public/` (failing on a missing `index.html` or a MkDocs collision), runs `tools/validate-deployment.js`, then `actions/configure-pages` → `upload-pages-artifact` → `deploy-pages`. |
 | `run-bookshelf-editor.bat` | Double-click launcher for `tools/bookshelf-editor.js` (the Admin Dash). |
 | `.gitignore` | Ignores the versioned `.zip` archives under `zips/` (see below) and standard editor/OS cruft. |
 
@@ -89,7 +89,8 @@ see `documentation/content/writings/` there.
 | File | Role |
 |---|---|
 | `build-bookshelf-content.js` | Parses both `bookshelf-*.tsv` files into `docs/_assets/backend/js/bookshelf-generated-content.js`. Independent implementation from `bookshelf-tsv.js`'s parser (not refactored onto it), same as fffx's equivalent script. |
-| `bookshelf-tsv.js` | Shared TSV parse/serialize/validate logic used by the Admin Dash server. Plain strict tab/newline splitter (no CSV-quote-awareness) — load-bearing here, since this schema's data genuinely contains literal `<br>`/quote characters that quoting would corrupt. |
+| `validate-deployment.js` | CI-only post-build route check (2026-10-02, ported from Cabinet's `#84` script; FFFX has the same port): every true/wip entry href (self-domain absolute ones included), self-domain nav target, and MkDocs-reported doc-body link must exist in the assembled `public/`. |
+| `bookshelf-tsv.js` | Shared TSV parse/serialize/validate logic used by the Admin Dash server (and `validate-deployment.js`). Plain strict tab/newline splitter (no CSV-quote-awareness) — load-bearing here, since this schema's data genuinely contains literal `<br>`/quote characters that quoting would corrupt. |
 | `bookshelf-editor.js` | Local-only zero-dependency Node HTTP Admin Dash server (`/admin/`, port `7858` by default, `BOOKSHELF_EDITOR_PORT` to override) — TSV CRUD/validate API plus two build-script routes (`rebuild-content`, `mkdocs-check`), all in one process (unlike Cabinet's editor-server/admin-controls-server split). |
 | `bookshelf-editor-ui/index.html`, `editor.css`, `editor.js` | The Admin Dash's browser UI — Sections/Entries/Build tabs, sortable/resizable columns, a `<select>` for `span`/`location` from the fixed value lists documented in `WORLD-SYSTEMS.md`. |
 

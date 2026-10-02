@@ -55,9 +55,19 @@ drops that folder and any stray `.md` file, so docs stay in the repo
 but are not served on the live site (added 2026-09-30; before that,
 every doc file was reachable by URL).
 
+Since 2026-10-02 the loop (abridged above) also fails the deploy if a
+project folder has no `index.html`, or if its name collides with a path
+the MkDocs build already produced. A later step,
+`node tools/validate-deployment.js`, then checks that every active
+`content/bookshelf-entries.tsv` href (including the absolute `/scifi/`
+and `/asimov/` ones), every self-domain nav target, and every doc-body
+link exists in `public/`. Before that, `deploy.yml` also runs the build
+with `--strict` and fails if `bookshelf-generated-content.js` is stale.
+All ported from Cabinet's deploy checks; FFFX has the same set.
+
 To add a new one:
 1. Create the project's folder at **`projects/<name>/`**, self-contained (its own `index.html`, assets, data), with its docs in `projects/<name>/documentation/`.
-2. Nothing to add to `deploy.yml` — the loop picks up every folder under `projects/` automatically.
+2. Nothing to add to `deploy.yml` — the loop picks up every folder under `projects/` automatically (and refuses one without `index.html`).
 3. Push to `main` — it'll be live at `/<name>/`, served standalone (no MkDocs theme/sidebar — mkdocs never processes these folders, they're copied byte-for-byte).
 
 This keeps everything under one custom domain with path-based routing (`bookshelf.cabinetofcuriosities.in/scifi/`, etc.) without extra infrastructure. The tradeoff: all these projects live in one repo rather than each having its own. Splitting them into separate repos would mean giving up path-based subpaths for subdomains (or adding a reverse-proxy layer) — not pursued here since subpath routing under one domain was the goal.
@@ -124,6 +134,10 @@ Raised at various points pre-V4.0, never picked up, presumed still open: an actu
 
 ## Changelog
 
+- **2026-10-02** — Deployment checks brought up to Cabinet parity: strict
+  MkDocs build, generated-content drift check, `projects/*/` entry-point
+  and collision checks, and `tools/validate-deployment.js` route
+  validation before upload. See "Adding a new standalone static project".
 - **V4.20** — Fixed the Christie Timeline tab's landmark labels sitting
   directly on a lane's spine line and/or overlapping unrelated dots instead of
   sitting clearly above/below with a leader line. Root causes: the on-spine
