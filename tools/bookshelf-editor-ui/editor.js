@@ -11,14 +11,19 @@
 const STATUS_OPTIONS = ["true", "false", "wip"];
 const LOCATION_OPTIONS = ["internal-html", "internal-md", "external", ""];
 const SPAN_OPTIONS = ["c4", "c5", "c6", "c7", "c8", "c12", ""];
+const BLOCK_TYPE_OPTIONS = ["ticker", "band", "quote", "section-intro", "section-note"];
+const ORDERED_BLOCK_TYPES = ["ticker", "band", "quote"];
+const FEATURE_BLOCK_TYPES = ["section-intro", "section-note"];
+const BLOCK_STATUS_OPTIONS = ["true", "false"];
 
 const NUMERIC_FIELDS = new Set(["order"]);
 // kicker/displayTag/ghost/tags/subtitle/href can carry literal <br> and
 // quote characters as real content -- textarea so long/multi-part values
 // are actually readable, not because they need any special escaping
 // (esc() already round-trips those characters losslessly through the
-// textarea's text content, same as every other field).
-const WIDE_FIELDS = new Set(["subtitle", "kicker", "displayTag", "tags", "href", "ghost"]);
+// textarea's text content, same as every other field). text/attribution/
+// items are the Blocks tab's long fields.
+const WIDE_FIELDS = new Set(["subtitle", "kicker", "displayTag", "tags", "href", "ghost", "text", "attribution", "items"]);
 
 // Starting column widths (px) -- purely a first-render default; dragging a
 // column's resize handle overrides it for the rest of the session (not
@@ -27,16 +32,22 @@ const DEFAULT_COL_WIDTH = {
   id: 120, section: 130, title: 170, subtitle: 220, href: 200, order: 82,
   status: 80, kind: 130, tags: 160, location: 130, kicker: 160,
   displayTag: 140, ghost: 160, span: 70, titleVariant: 130,
+  type: 130, text: 300, attribution: 170, items: 300, feature: 130,
 };
 
-let state = { sections: [], entries: [], sectionProblems: [], entryProblems: [], columns: { sections: [], entries: [] } };
+let state = {
+  sections: [], entries: [], blocks: [],
+  sectionProblems: [], entryProblems: [], blockProblems: [],
+  columns: { sections: [], entries: [], blocks: [] },
+};
 let searchSections = "";
 let searchEntries = "";
-const colWidths = { sections: {}, entries: {} };
-const textExpanded = { sections: false, entries: false };
+let searchBlocks = "";
+const colWidths = { sections: {}, entries: {}, blocks: {} };
+const textExpanded = { sections: false, entries: false, blocks: false };
 // col: null means "file order" (the order ▲▼ actually operate on); dir is
 // 1 (ascending) or -1 (descending).
-const sortState = { sections: { col: null, dir: 1 }, entries: { col: null, dir: 1 } };
+const sortState = { sections: { col: null, dir: 1 }, entries: { col: null, dir: 1 }, blocks: { col: null, dir: 1 } };
 
 /* ---------- server calls ---------- */
 
@@ -55,6 +66,7 @@ async function loadState() {
   state = await apiCall("GET", "/api/state");
   renderSections();
   renderEntries();
+  renderBlocks();
 }
 
 function showStatus(message, kind) {
@@ -250,7 +262,12 @@ function updateExpandButton(kind) {
 
 /* ---------- sections ---------- */
 
-const SECTION_SELECT_MAP = { status: STATUS_OPTIONS };
+// feature's options are the current section-intro/section-note block ids,
+// so they're rebuilt from state on every render.
+function sectionSelectMap() {
+  const featureIds = state.blocks.filter(b => FEATURE_BLOCK_TYPES.includes(b.row.type)).map(b => b.row.id);
+  return { status: STATUS_OPTIONS, feature: [...featureIds, ""] };
+}
 
 function renderSections() {
   const container = document.getElementById("table-sections");
@@ -280,7 +297,7 @@ function renderSections() {
       <button class="icon" data-act="del" title="Delete row">✕</button>
     </td>`;
     cols.forEach(col => {
-      const control = fieldControl(row[col], col, SECTION_SELECT_MAP);
+      const control = fieldControl(row[col], col, sectionSelectMap());
       html += `<td>${badFields.has(col) ? control.replace(/(<(?:input|select))/, `$1 class="bad"`) : control}</td>`;
     });
     html += `</tr>`;
@@ -386,6 +403,95 @@ document.getElementById("add-entry").addEventListener("click", () => {
   searchEntries = ""; document.getElementById("search-entries").value = "";
 });
 
+/* ---------- blocks ---------- */
+
+const BLOCK_SELECT_MAP = { type: BLOCK_TYPE_OPTIONS, status: BLOCK_STATUS_OPTIONS };
+
+// Read-only preview of the landing page's top-to-bottom sequence: visible
+// sections and switched-on ticker/band/quote blocks merged on their shared
+// `order`, same rule as bookshelf-gallery.js (block first on a tie). Hidden
+// ones are listed too, struck through, so a number can be picked relative
+// to everything that could be on the page.
+function renderPageOrder() {
+  const items = [
+    ...state.sections.map(({ row }) => ({
+      order: Number(row.order), rank: 1, on: row.status.trim().toLowerCase() !== "false",
+      label: row.title || row.id, kind: "section",
+      note: row.feature ? `feature: ${row.feature}` : "",
+    })),
+    ...state.blocks.filter(({ row }) => ORDERED_BLOCK_TYPES.includes(row.type)).map(({ row }) => ({
+      order: Number(row.order), rank: 0, on: row.status.trim().toLowerCase() === "true",
+      label: row.id, kind: row.type, note: "",
+    })),
+  ].sort((a, b) => a.order - b.order || a.rank - b.rank);
+
+  document.getElementById("page-order").innerHTML = items.map(item => `
+    <li class="${item.on ? "" : "off"} ${item.kind === "section" ? "is-section" : "is-block"}">
+      <span class="po-order">${esc(item.order)}</span>
+      <span class="po-kind">${esc(item.kind)}</span>
+      <span class="po-label">${esc(item.label)}</span>
+      ${item.note ? `<span class="po-note">${esc(item.note)}</span>` : ""}
+    </li>`).join("");
+}
+
+function renderBlocks() {
+  renderPageOrder();
+
+  const container = document.getElementById("table-blocks");
+  const q = searchBlocks.trim().toLowerCase();
+  const rows = state.blocks;
+  let visible = rows.filter(({ row }) => !q || [row.id, row.type, row.title, row.text, row.items].join(" ").toLowerCase().includes(q));
+  document.getElementById("count-blocks").textContent = `${rows.length} block${rows.length !== 1 ? "s" : ""}`;
+
+  if (!rows.length) { container.innerHTML = `<div class="empty">No blocks yet. Add one to get started.</div>`; return; }
+
+  visible = applySort(visible, "blocks");
+  const problems = problemsByIndex(state.blockProblems);
+  const cols = displayCols("blocks");
+
+  let html = `<table>${renderColgroup("blocks", cols)}<thead>${renderHeaderRow("blocks", cols)}</thead><tbody>`;
+
+  visible.forEach(({ index, row }) => {
+    const rowProblems = problems.get(index) || [];
+    const badFields = new Set(rowProblems.map(p => p.field));
+    const title = rowProblems.length ? rowProblems.map(p => p.message).join("; ") : "";
+
+    html += `<tr class="${rowProblems.length ? "invalid" : ""}" data-idx="${index}" ${title ? `title="${esc(title)}"` : ""}>`;
+    html += `<td class="rowctl">
+      <button class="icon" data-act="del" title="Delete row">✕</button>
+    </td>`;
+    cols.forEach(col => {
+      const control = fieldControl(row[col], col, BLOCK_SELECT_MAP);
+      html += `<td>${badFields.has(col) ? control.replace(/(<(?:input|select|textarea))/, `$1 class="bad"`) : control}</td>`;
+    });
+    html += `</tr>`;
+  });
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+
+  wireTableHeader(container, "blocks", cols, renderBlocks);
+
+  container.querySelectorAll("tbody tr").forEach(tr => {
+    const index = Number(tr.dataset.idx);
+    wireRowTextareaSync(tr);
+    tr.querySelectorAll("[data-field]").forEach(el => {
+      el.addEventListener("change", () => runMutation(() => apiCall("PUT", `/api/blocks/${index}`, { [el.dataset.field]: el.value })));
+    });
+    tr.querySelector('[data-act="del"]').addEventListener("click", async () => {
+      const ok = await confirmDialog("Delete block?", `Delete block "${esc(state.blocks[index].row.id || "(untitled)")}"? This can't be undone. A block still named as a section's feature must be cleared there first.`);
+      if (ok) runMutation(() => apiCall("DELETE", `/api/blocks/${index}`));
+    });
+  });
+
+  applyExpandState(container, "blocks");
+  updateExpandButton("blocks");
+}
+
+document.getElementById("add-block").addEventListener("click", () => {
+  runMutation(() => apiCall("POST", "/api/blocks", { type: "quote", status: "false" }));
+  searchBlocks = ""; document.getElementById("search-blocks").value = "";
+});
+
 /* ---------- tabs / search ---------- */
 
 document.querySelectorAll("nav.tabs button").forEach(btn => {
@@ -398,9 +504,11 @@ document.querySelectorAll("nav.tabs button").forEach(btn => {
 });
 document.getElementById("search-sections").addEventListener("input", e => { searchSections = e.target.value; renderSections(); });
 document.getElementById("search-entries").addEventListener("input", e => { searchEntries = e.target.value; renderEntries(); });
+document.getElementById("search-blocks").addEventListener("input", e => { searchBlocks = e.target.value; renderBlocks(); });
 
 document.getElementById("expand-sections").addEventListener("click", () => { textExpanded.sections = !textExpanded.sections; renderSections(); });
 document.getElementById("expand-entries").addEventListener("click", () => { textExpanded.entries = !textExpanded.entries; renderEntries(); });
+document.getElementById("expand-blocks").addEventListener("click", () => { textExpanded.blocks = !textExpanded.blocks; renderBlocks(); });
 
 /* ---------- confirm dialog ---------- */
 

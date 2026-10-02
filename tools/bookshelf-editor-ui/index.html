@@ -10,7 +10,7 @@
 <header>
   <div>
     <h1>Bookshelf — Admin Dash</h1>
-    <div class="sub">Local editor for content/bookshelf-sections.tsv &amp; content/bookshelf-entries.tsv — reads and writes the real files directly.</div>
+    <div class="sub">Local editor for content/bookshelf-sections.tsv, content/bookshelf-entries.tsv &amp; content/bookshelf-blocks.tsv — reads and writes the real files directly.</div>
   </div>
   <div class="header-actions">
     <span class="compass">jesmehta / TheBookshelfOfCuriosities</span>
@@ -22,6 +22,7 @@
 <nav class="tabs">
   <button data-tab="sections" class="active">Sections</button>
   <button data-tab="entries">Entries</button>
+  <button data-tab="blocks">Blocks</button>
   <button data-tab="build">Build</button>
 </nav>
 
@@ -38,7 +39,8 @@
     <footer class="hint">
       <strong>id</strong> must be unique — it's what entries reference in their <strong>section</strong> column.
       <strong>order</strong> controls draw sequence. Use ▲▼ to reorder — order values renumber automatically in steps of 10.
-      <strong>feature</strong> is optional and only used if set.
+      <strong>feature</strong> is optional: pick a section-intro/section-note block from the Blocks tab to show with this section.
+      Blocks (ticker, bands, quotes) share the same <strong>order</strong> number line — ▲▼ renumbers sections 10, 20, 30…, so a block at 35 stays between whichever sections end up 3rd and 4th.
     </footer>
   </section>
 
@@ -59,11 +61,30 @@
     </footer>
   </section>
 
+  <section class="panel" id="panel-blocks">
+    <ul class="page-order" id="page-order"></ul>
+    <div class="toolbar">
+      <input type="text" id="search-blocks" placeholder="Filter blocks by id, type, wording…">
+      <span class="count-pill" id="count-blocks">0 blocks</span>
+      <button class="btn" id="expand-blocks">⇕ Expand text</button>
+      <button class="btn primary" id="add-block">+ Add block</button>
+    </div>
+    <div class="table-wrap"><div id="table-blocks"></div></div>
+    <footer class="hint">
+      The list above is the page top to bottom (struck through = hidden).
+      <strong>ticker / band / quote</strong> are placed by <strong>order</strong>, on the same number line as sections — e.g. 35 sits between sections 30 and 40; on a tie the block goes first. Type the number directly (no ▲▼ here).
+      <strong>section-intro / section-note</strong> have no order: a section's <strong>feature</strong> picks one, shown above (intro) or below (note) its cards.
+      <strong>status</strong> is true or false only.
+      Columns by type — ticker: <strong>items</strong>. band: <strong>title</strong> (big word), <strong>items</strong> (topics). quote: <strong>text</strong>, <strong>attribution</strong>, <strong>title</strong> (background word). section-intro: <strong>kicker</strong>, <strong>title</strong>, <strong>text</strong>, <strong>items</strong> (chips). section-note: <strong>title</strong>, <strong>text</strong>, <strong>items</strong> (chip).
+      <strong>items</strong> are separated by <code>|</code> (not <code>;</code> — wording can contain <code>&amp;amp;</code>). Text may contain <code>&lt;br&gt;</code>/<code>&lt;em&gt;</code>, saved exactly as typed.
+    </footer>
+  </section>
+
   <section class="panel" id="panel-build">
     <div class="build-actions">
       <div class="build-card">
         <h3>Rebuild content</h3>
-        <p>Validates both TSVs, then runs <code>node tools/build-bookshelf-content.js</code>, regenerating <code>docs/_assets/backend/js/bookshelf-generated-content.js</code>.</p>
+        <p>Validates all three TSVs, then runs <code>node tools/build-bookshelf-content.js</code>, regenerating <code>docs/_assets/backend/js/bookshelf-generated-content.js</code>.</p>
         <button class="btn primary" id="run-rebuild-content">Rebuild content</button>
       </div>
       <div class="build-card">

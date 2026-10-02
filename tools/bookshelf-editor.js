@@ -1,7 +1,8 @@
-// Bookshelf -- local admin server for content/bookshelf-sections.tsv and
-// content/bookshelf-entries.tsv. Zero dependencies, localhost-only, no
-// auth -- nothing here is meant to be reachable off the machine it runs
-// on. One page (Sections / Entries / Build tabs) rather than Cabinet's
+// Bookshelf -- local admin server for content/bookshelf-sections.tsv,
+// content/bookshelf-entries.tsv and content/bookshelf-blocks.tsv. Zero
+// dependencies, localhost-only, no auth -- nothing here is meant to be
+// reachable off the machine it runs on. One page (Sections / Entries /
+// Blocks / Build tabs) rather than Cabinet's
 // split editor-server + admin-controls-server -- Bookshelf has no
 // pre-existing separate servers to avoid duplicating, so there's no
 // reason to split. Modeled on
@@ -15,14 +16,16 @@ const path = require("path");
 const os = require("os");
 const { execFileSync } = require("child_process");
 const {
-  SECTIONS_COLS, ENTRIES_COLS,
-  readSections, writeSections, readEntries, writeEntries,
-  findSectionProblems, findEntryProblems, validateSections, validateEntries,
+  SECTIONS_COLS, ENTRIES_COLS, BLOCKS_COLS,
+  readSections, writeSections, readEntries, writeEntries, readBlocks, writeBlocks,
+  findSectionProblems, findEntryProblems, findBlockProblems, featureBlockIds,
+  validateSections, validateEntries, validateBlocks,
 } = require("./bookshelf-tsv");
 
 const ROOT = path.resolve(__dirname, "..");
 const SECTIONS_TSV_PATH = path.join(ROOT, "content", "bookshelf-sections.tsv");
 const ENTRIES_TSV_PATH = path.join(ROOT, "content", "bookshelf-entries.tsv");
+const BLOCKS_TSV_PATH = path.join(ROOT, "content", "bookshelf-blocks.tsv");
 const DOCS_ROOT = path.join(ROOT, "docs");
 const UI_ROOT = path.join(__dirname, "bookshelf-editor-ui");
 const PORT = Number(process.env.BOOKSHELF_EDITOR_PORT) || 7858;
@@ -111,6 +114,12 @@ function readAllEntries() {
 function writeAllEntries(rows) {
   fs.writeFileSync(ENTRIES_TSV_PATH, writeEntries(rows), "utf8");
 }
+function readAllBlocks() {
+  return readBlocks(fs.readFileSync(BLOCKS_TSV_PATH, "utf8"), "content/bookshelf-blocks.tsv");
+}
+function writeAllBlocks(rows) {
+  fs.writeFileSync(BLOCKS_TSV_PATH, writeBlocks(rows), "utf8");
+}
 
 function blankRow(cols) {
   return Object.fromEntries(cols.map(c => [c, ""]));
@@ -139,13 +148,16 @@ function renumberWithinGroups(rows, groupField, orderField, step) {
 function apiState(res) {
   const sections = readAllSections();
   const entries = readAllEntries();
+  const blocks = readAllBlocks();
   const sectionIds = new Set(sections.map(s => s.id));
   sendJson(res, 200, {
     sections: sections.map((row, index) => ({ index, row })),
     entries: entries.map((row, index) => ({ index, row })),
-    sectionProblems: findSectionProblems(sections),
+    blocks: blocks.map((row, index) => ({ index, row })),
+    sectionProblems: findSectionProblems(sections, featureBlockIds(blocks)),
     entryProblems: findEntryProblems(entries, sectionIds),
-    columns: { sections: SECTIONS_COLS, entries: ENTRIES_COLS },
+    blockProblems: findBlockProblems(blocks),
+    columns: { sections: SECTIONS_COLS, entries: ENTRIES_COLS, blocks: BLOCKS_COLS },
   });
 }
 
@@ -270,6 +282,46 @@ async function apiMoveEntry(req, res, index) {
 }
 
 // ---------------------------------------------------------------------------
+// blocks API -- no move/renumber route on purpose: a block's `order` shares
+// one number line with sections (a quote at 35 sits between sections 30 and
+// 40), so renumbering blocks in steps of 10 the way sections/entries are
+// would push them into the sections' own slots. order is typed directly.
+
+async function apiCreateBlock(req, res) {
+  try {
+    const body = await readJsonBody(req);
+    const rows = readAllBlocks();
+    rows.push(applyFields(blankRow(BLOCKS_COLS), BLOCKS_COLS, body));
+    writeAllBlocks(rows);
+    sendJson(res, 200, { ok: true, index: rows.length - 1 });
+  } catch (err) { sendJson(res, 422, { error: err.message }); }
+}
+
+async function apiUpdateBlock(req, res, index) {
+  try {
+    const body = await readJsonBody(req);
+    const rows = readAllBlocks();
+    if (index < 0 || index >= rows.length) throw new Error(`no block at index ${index}`);
+    rows[index] = applyFields(rows[index], BLOCKS_COLS, body);
+    writeAllBlocks(rows);
+    sendJson(res, 200, { ok: true });
+  } catch (err) { sendJson(res, 422, { error: err.message }); }
+}
+
+function apiDeleteBlock(res, index) {
+  try {
+    const rows = readAllBlocks();
+    if (index < 0 || index >= rows.length) throw new Error(`no block at index ${index}`);
+    const id = rows[index].id;
+    const users = readAllSections().filter(s => s.feature === id).map(s => s.id);
+    if (users.length) throw new Error(`"${id}" is the feature of section ${users.join(", ")} -- clear that section's feature first`);
+    rows.splice(index, 1);
+    writeAllBlocks(rows);
+    sendJson(res, 200, { ok: true });
+  } catch (err) { sendJson(res, 422, { error: err.message }); }
+}
+
+// ---------------------------------------------------------------------------
 // build tab -- two actions, matching what the repo actually has: no
 // static-build/promote/sitemap step exists here (Bookshelf deploys
 // straight from docs/ via GitHub Actions on push), so this is just
@@ -296,8 +348,10 @@ function apiRun(res, label, fn) {
 
 function apiRebuildContent(res) {
   apiRun(res, "rebuild-content", () => {
+    const blocks = readAllBlocks();
+    validateBlocks(blocks);
     const sections = readAllSections();
-    validateSections(sections);
+    validateSections(sections, featureBlockIds(blocks));
     const entries = readAllEntries();
     validateEntries(entries, new Set(sections.map(s => s.id)));
     return runScript(process.execPath, [path.join(__dirname, "build-bookshelf-content.js")], ROOT);
@@ -339,6 +393,10 @@ const server = http.createServer(async (req, res) => {
       if (parts[0] === "entries" && parts.length === 2 && req.method === "PUT") return await apiUpdateEntry(req, res, Number(parts[1]));
       if (parts[0] === "entries" && parts.length === 2 && req.method === "DELETE") return apiDeleteEntry(res, Number(parts[1]));
       if (parts[0] === "entries" && parts.length === 3 && parts[2] === "move" && req.method === "POST") return await apiMoveEntry(req, res, Number(parts[1]));
+
+      if (parts[0] === "blocks" && parts.length === 1 && req.method === "POST") return await apiCreateBlock(req, res);
+      if (parts[0] === "blocks" && parts.length === 2 && req.method === "PUT") return await apiUpdateBlock(req, res, Number(parts[1]));
+      if (parts[0] === "blocks" && parts.length === 2 && req.method === "DELETE") return apiDeleteBlock(res, Number(parts[1]));
 
       if (parts[0] === "run" && parts.length === 2 && req.method === "POST") {
         if (parts[1] === "rebuild-content") return apiRebuildContent(res);

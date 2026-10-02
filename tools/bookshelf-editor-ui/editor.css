@@ -149,3 +149,16 @@ dialog .actions{ padding:12px 20px; border-top:1px solid var(--hairline); displa
   font-family:var(--mono); font-size:12px; white-space:pre-wrap; word-break:break-word;
   margin:0; color:var(--ink); max-height:50vh; overflow-y:auto;
 }
+
+/* Blocks tab: read-only page-order preview (sections + ordered blocks). */
+.page-order{
+  list-style:none; margin:0 0 16px; padding:10px 12px; background:var(--card);
+  border:1px solid var(--hairline); border-radius:4px; columns:2 320px; column-gap:24px;
+}
+.page-order li{ display:flex; gap:10px; align-items:baseline; padding:2px 0; break-inside:avoid; }
+.page-order .po-order{ width:3em; text-align:right; color:var(--ink-soft); }
+.page-order .po-kind{ width:7em; color:var(--ink-soft); font-size:11px; }
+.page-order .is-section .po-label{ font-family:var(--serif); font-weight:bold; }
+.page-order .is-block .po-label{ color:var(--accent); }
+.page-order .po-note{ color:var(--wip); font-size:11px; }
+.page-order li.off{ opacity:0.45; text-decoration:line-through; }
