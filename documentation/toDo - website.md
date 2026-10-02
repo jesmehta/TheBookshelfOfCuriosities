@@ -20,10 +20,12 @@ Content tracking is in `toDo - content.md`.
   with `status false` (it is about the hidden Empire section).
 - [ ] **Stretch: more quotes/bands.** Now just new rows in the Blocks tab —
   a content decision, not a build task.
-- [ ] **`WORLD-SYSTEMS.md` still describes `bookshelf-data.js`.** That file
-  is meant to be synced identically across Cabinet/Bookshelf/FFFX and is
-  already marked stale; fix Bookshelf's lines in the next sync rather than
-  editing one copy alone.
+- [x] **Bookshelf's `WORLD-SYSTEMS.md` updated for the blocks TSV**
+  (2026-10-02) — this copy now runs ahead of Cabinet's and fffx's, with a
+  note at the top saying so.
+- [ ] **Reconcile `WORLD-SYSTEMS.md` across all three repos** — one later
+  pass covering every recent update, shared or world-specific (tracked in
+  Cabinet's website todo).
 - [ ] **Footer links are dead** — Cabinet ↗ / About / Index all point at `#`.
 
 ## Cross-world and navigation

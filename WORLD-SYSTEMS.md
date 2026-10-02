@@ -15,6 +15,14 @@ easy to forget to check. Keep both copies in sync by hand when this
 pattern changes; if they drift, treat whichever was edited more recently
 as correct and backport.
 
+> **Bookshelf copy ahead of the others (2026-10-02):** this copy records
+> Bookshelf's move of its non-section landing blocks from `bookshelf-data.js`
+> into `content/bookshelf-blocks.tsv` (the "content data outside the
+> renderer" bullet, the naming list, and "Order-based rendering" below). Bookshelf-specific, not a shared
+> pattern change — fffx has no equivalent blocks. Cabinet's and fffx's
+> copies have not been touched; a reconcile pass across all three repos is
+> planned.
+
 ## Conceptual levels
 
 - **Level 1** — a world/domain. The Cabinet of Curiosities itself,
@@ -37,11 +45,13 @@ Every Level 1 world in this ecosystem:
   `docs/index.html` shells that bypass Material for the homepage. See
   "Homepage rule" below for which pattern new worlds should use.
 - Keeps **content data outside the renderer** — no content strings or entry
-  data live in gallery/layout code. Bookshelf uses hand-edited
-  `docs/assets/js/bookshelf-data.js` for display/config blocks plus
-  generated `docs/assets/js/bookshelf-generated-content.js` from TSV
-  sources; fffx follows the same split with `fffx-data.js` and
-  `fffx-generated-content.js`.
+  data live in gallery/layout code. Bookshelf generates everything —
+  sections, entries, and its non-section blocks (ticker, bands, quotes,
+  section feature blocks) — into
+  `docs/_assets/backend/js/bookshelf-generated-content.js` from three TSV
+  sources; its former hand-edited `bookshelf-data.js` was retired
+  2026-10-02. fffx keeps the original split: hand-edited `fffx-data.js`
+  plus generated `fffx-generated-content.js`.
 - Maps **CSS tokens into MkDocs Material pages** — a `*-tokens.css` file
   (raw colour/font values, `:root`-scoped, single source of truth) feeds
   both the landing page's own stylesheet and a `*-material.css` file
@@ -197,11 +207,11 @@ Browser-facing JS, spreadsheet sources, and generator scripts follow the
 same world prefix:
 
 ```text
-bookshelf-data.js
 bookshelf-generated-content.js
 bookshelf-gallery.js
 content/bookshelf-sections.tsv
 content/bookshelf-entries.tsv
+content/bookshelf-blocks.tsv
 tools/build-bookshelf-content.js
 
 fffx-data.js
@@ -254,6 +264,14 @@ silently broke the pin. Both fixed: sections carry `id`/`order`, entries
 carry `section`/`order`, and `beforeSection` matches against the stable
 `id` instead of the display title. See this repo's `README.md` changelog
 for the specific commit.
+
+**Superseded 2026-10-02:** `beforeSection` is gone. Bookshelf's
+ticker/band/quote blocks now have their own `order` on the same number
+line as sections (a quote at 35 sits between sections 30 and 40; on a tie
+the block renders first), so hiding a section no longer silently hides
+the block pinned to it. Section feature blocks (`section-intro` /
+`section-note`) are still attached by the section's `feature` column,
+which now names a block id in `content/bookshelf-blocks.tsv`.
 
 fffx's `entries[]`/`sections[]` already used explicit `order` from the
 start; no change needed there.
