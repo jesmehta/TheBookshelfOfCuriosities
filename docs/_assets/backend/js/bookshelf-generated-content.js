@@ -32,7 +32,7 @@ const bookshelfSections = [
     "id": "writings-on-reading",
     "title": "Writings on Reading",
     "order": 50,
-    "status": false,
+    "status": true,
     "feature": "writings"
   }
 ];
@@ -297,6 +297,27 @@ const bookshelfEntries = [
     "status": "wip",
     "order": 30,
     "ghost": "",
+    "span": "c4"
+  },
+  {
+    "id": "favorite-poems",
+    "title": "Favourite<br>Poetry",
+    "subtitle": "\"Poems by other poets I keep returning to - a personal anthology, long poems, and a British Poetry Workshop archive.\"",
+    "href": "favorite-poems/",
+    "section": "writings-on-reading",
+    "kind": "poetry-collection",
+    "kicker": "Poetry · Anthology",
+    "displayTag": "Anthology · Archive",
+    "tags": [
+      "poetry",
+      "anthology",
+      "workshop",
+      "favourites"
+    ],
+    "location": "internal-md",
+    "status": true,
+    "order": 20,
+    "ghost": "FP",
     "span": "c4"
   }
 ];
