@@ -107,8 +107,8 @@ const bookshelfEntries = [
   {
     "id": "christie",
     "title": "Agatha<br>Christie",
-    "subtitle": "The geography of murder.",
-    "href": "",
+    "subtitle": "\"The geography of murder - where Poirot and Marple solved their cases.\"",
+    "href": "christie/",
     "section": "author-explorations",
     "kind": "author-page",
     "kicker": "Author · Crime",
@@ -117,32 +117,14 @@ const bookshelfEntries = [
       "crime",
       "author",
       "christie",
-      "map"
+      "map",
+      "dataviz",
+      "geography"
     ],
     "location": "internal-md",
-    "status": "wip",
+    "status": true,
     "order": 40,
     "ghost": "Ch",
-    "span": "c4"
-  },
-  {
-    "id": "more-authors",
-    "title": "More<br>Authors",
-    "subtitle": "\"Heinlein, Dick, Bradbury, Le Guin.\"",
-    "href": "",
-    "section": "author-explorations",
-    "kind": "collection",
-    "kicker": "Expanding",
-    "displayTag": "Forthcoming",
-    "tags": [
-      "authors",
-      "science-fiction",
-      "roadmap"
-    ],
-    "location": "internal-md",
-    "status": "wip",
-    "order": 50,
-    "ghost": "…",
     "span": "c4"
   },
   {
@@ -233,49 +215,6 @@ const bookshelfEntries = [
     "order": 20,
     "ghost": "IJ",
     "span": "c6"
-  },
-  {
-    "id": "foundation-universe",
-    "title": "Foundation<br>Universe",
-    "subtitle": "\"10,000 years of Galactic history, laid flat.\"",
-    "href": "",
-    "section": "book-data-visualisation",
-    "kind": "timeline",
-    "kicker": "Timeline · Dataviz",
-    "displayTag": "Interactive",
-    "tags": [
-      "foundation",
-      "asimov",
-      "timeline",
-      "dataviz"
-    ],
-    "location": "internal-html",
-    "status": "wip",
-    "order": 10,
-    "ghost": "",
-    "span": "c4"
-  },
-  {
-    "id": "geography-of-murder",
-    "title": "Geography<br>of Murder",
-    "subtitle": "Where Poirot and Marple solved their cases.",
-    "href": "christie/",
-    "section": "book-data-visualisation",
-    "kind": "map",
-    "kicker": "Map · Christie",
-    "displayTag": "Interactive Map",
-    "tags": [
-      "christie",
-      "crime",
-      "map",
-      "dataviz",
-      "geography"
-    ],
-    "location": "internal-md",
-    "status": true,
-    "order": 20,
-    "ghost": "",
-    "span": "c4"
   },
   {
     "id": "authors-vs-books",
