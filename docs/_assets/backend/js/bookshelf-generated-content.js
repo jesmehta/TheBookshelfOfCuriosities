@@ -13,7 +13,7 @@ const bookshelfSections = [
     "id": "empire-adventure-great-game",
     "title": "Empire, Adventure & The Great Game",
     "order": 20,
-    "status": true
+    "status": false
   },
   {
     "id": "comics-sequential-art",
@@ -29,10 +29,16 @@ const bookshelfSections = [
     "feature": "dataviz"
   },
   {
+    "id": "poetry",
+    "title": "Poetry",
+    "order": 50,
+    "status": true
+  },
+  {
     "id": "writings-on-reading",
     "title": "Writings on Reading",
-    "order": 50,
-    "status": true,
+    "order": 60,
+    "status": false,
     "feature": "writings"
   }
 ];
@@ -100,7 +106,7 @@ const bookshelfEntries = [
     ],
     "location": "internal-html",
     "status": "wip",
-    "order": 30,
+    "order": 40,
     "ghost": "C",
     "span": "c4"
   },
@@ -123,7 +129,7 @@ const bookshelfEntries = [
     ],
     "location": "internal-md",
     "status": true,
-    "order": 40,
+    "order": 30,
     "ghost": "Ch",
     "span": "c4"
   },
@@ -144,7 +150,7 @@ const bookshelfEntries = [
       "maps"
     ],
     "location": "internal-md",
-    "status": "wip",
+    "status": false,
     "order": 10,
     "ghost": "K",
     "span": "c5"
@@ -154,7 +160,7 @@ const bookshelfEntries = [
     "title": "Mapping the<br>Hamzanama",
     "subtitle": "\"Adventures of Hamza - the Mughal manuscript that kept a thousand illustrators busy. Tracing the folios, the stories, the migrations of a scattered book.\"",
     "href": "",
-    "section": "empire-adventure-great-game",
+    "section": "book-data-visualisation",
     "kind": "mapping-project",
     "kicker": "Project · Mapping",
     "displayTag": "Interactive Map · Research",
@@ -217,33 +223,33 @@ const bookshelfEntries = [
     "span": "c6"
   },
   {
-    "id": "authors-vs-books",
-    "title": "Authors<br>vs Books",
-    "subtitle": "\"Output, genre, influence - the shape of a writing life.\"",
+    "id": "my-reading-journey",
+    "title": "My Reading<br>Journey",
+    "subtitle": "\"A decade of Goodreads, year by year and all together - and the books bought along the way.\"",
     "href": "",
     "section": "book-data-visualisation",
-    "kind": "network",
-    "kicker": "Network · Authors",
-    "displayTag": "Dataviz",
+    "kind": "dataviz",
+    "kicker": "Dataviz · Personal",
+    "displayTag": "Data Analysis",
     "tags": [
-      "authors",
-      "books",
-      "network",
+      "reading",
+      "goodreads",
+      "book-buying",
       "dataviz",
-      "influence"
+      "personal"
     ],
     "location": "internal-html",
     "status": "wip",
-    "order": 30,
+    "order": 10,
     "ghost": "",
-    "span": "c4"
+    "span": "c5"
   },
   {
     "id": "favorite-poems",
     "title": "Favourite<br>Poetry",
     "subtitle": "\"Poems by other poets I keep returning to - a personal anthology, long poems, and a British Poetry Workshop archive.\"",
     "href": "favorite-poems/",
-    "section": "writings-on-reading",
+    "section": "poetry",
     "kind": "poetry-collection",
     "kicker": "Poetry · Anthology",
     "displayTag": "Anthology · Archive",
@@ -255,7 +261,7 @@ const bookshelfEntries = [
     ],
     "location": "internal-md",
     "status": true,
-    "order": 20,
+    "order": 10,
     "ghost": "FP",
     "span": "c4"
   }
